@@ -4,25 +4,24 @@
   ...
 }: {
   imports = [
-    inputs.hardware.nixosModules.common-pc-ssd
-    inputs.hardware.nixosModules.framework-13-7040-amd
-
     ./hardware-configuration.nix
-
     ../common/global
     ../common/users/andriano
-
-    ../common/optional/peripherals.nix
-    ../common/optional/regreet.nix
     ../common/optional/pipewire.nix
-    ../common/optional/quietboot.nix
+    ../common/optional/systemd-boot.nix
+    ../common/optional/docker.nix
 
-    ../common/optional/wireless.nix
   ];
 
-  networking = {
+  hardware.bluetooth.enable = true;
+services.power-profiles-daemon.enable = true;
+services.upower.enable = true;
+networking = {
+    networkmanager.enable = true;
     hostName = "freedompc";
   };
+
+  environment.systemPackages = with pkgs; [wget vim];
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
 

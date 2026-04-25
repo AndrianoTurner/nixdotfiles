@@ -7,7 +7,8 @@
   imports =
     [
       inputs.home-manager.nixosModules.home-manager
-      ./fish.nix
+      inputs.niri-flake.nixosModules.niri
+        ./fish.nix
       ./locale.nix
       ./nix.nix
     ]
