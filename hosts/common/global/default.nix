@@ -11,6 +11,7 @@
         ./fish.nix
       ./locale.nix
       ./nix.nix
+      ./display-manager.nix
     ]
     ++ (builtins.attrValues outputs.nixosModules);
 
