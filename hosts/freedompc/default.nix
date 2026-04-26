@@ -17,28 +17,27 @@
   services.upower.enable = true;
   services.openssh.enable = true;
 
-hardware.nvidia = {
-  modesetting.enable = true;
-  powerManagement.enable = false;
-  powerManagement.finegrained = false;
-  open = false;        # use proprietary kernel module
-  nvidiaSettings = true;
-  package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false; # use proprietary kernel module
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-prime = {
-   offload.enable = true;
-    nvidiaBusId = "PCI:1@0:0:0";
-    amdgpuBusId = "PCI:65@0:0:0"; # If you have an AMD iGPU
+    prime = {
+      offload.enable = true;
+      nvidiaBusId = "PCI:1@0:0:0";
+      amdgpuBusId = "PCI:65@0:0:0"; # If you have an AMD iGPU
+    };
   };
-};
 
   services.xserver.videoDrivers = [
-    "amdgpu"  
+    "amdgpu"
     "nvidia"
   ];
 
-
-hardware.graphics.enable = true;
+  hardware.graphics.enable = true;
 
   services.xserver.xkb = {
     layout = "us,ru";
