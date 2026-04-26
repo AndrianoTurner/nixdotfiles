@@ -7,11 +7,11 @@
   imports =
     [
       inputs.home-manager.nixosModules.home-manager
-      inputs.niri-flake.nixosModules.niri
-        ./fish.nix
+      ./fish.nix
       ./locale.nix
       ./nix.nix
       ./display-manager.nix
+      ./niri.nix
     ]
     ++ (builtins.attrValues outputs.nixosModules);
 

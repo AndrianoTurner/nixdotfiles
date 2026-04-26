@@ -8,7 +8,7 @@
     ./pavucontrol.nix
     ./playerctl.nix
     ./alacritty.nix
-    ./niri.nix
+    ./niri
   ];
 
   xdg.mimeApps.enable = true;
