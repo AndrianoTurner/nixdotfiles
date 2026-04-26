@@ -68,7 +68,7 @@
             '"Any fool can write code that a computer can understand. Good programmers write code that humans can understand." —Martin Fowler' \
             '"The function of good software is to make the complex appear simple." —Grady Booch' \
             '"First, solve the problem. Then, write the code." —John Johnson' \
-            '"Code is like humor. When you have to explain it, it'\'s bad." —Cory House' \
+            '"Code is like humor. When you have to explain it, its bad." —Cory House' \
             '"Simplicity is the soul of efficiency." —Austin Freeman' \
             '"A good programmer is someone who looks both ways before crossing a one-way street." —Doug Linder' \
             '"Computers are useless. They can only give you answers." —Pablo Picasso' \
@@ -76,7 +76,7 @@
             '"Weeks of coding can save you hours of planning." —Anonymous' \
             '"If it hurts, do it more often." —Jez Humble (on CI/CD 😅)' \
             '"There are only two kinds of languages: the ones people complain about and the ones nobody uses." —Bjarne Stroustrup' \
-            '"It'\'s not a bug — it'\'s an undocumented feature." —Old Programmer Proverb'
+            '"Its not a bug — its an undocumented feature." —Old Programmer Proverb'
 
           set q_idx (random 1 (count $quotes))
           echo "Thought for the day:$normal"
