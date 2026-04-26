@@ -20,8 +20,10 @@
       which-key.enable = true;
       indent-blankline.enable = true;
       gitsigns.enable = true;
-      mini.enable = true;
-
+      mini-icons = {
+        enable = true;
+        mockDevIcons = true;
+      };
       # LSP
       lsp = {
         enable = true;

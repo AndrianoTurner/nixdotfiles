@@ -22,7 +22,16 @@
     nerd-fonts.jetbrains-mono
   ];
 
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-wlr];
-
-  xdg.portal.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [pkgs.xdg-desktop-portal-gnome]; # or whatever you use
+    config = {
+      niri = {
+        default = ["gnome" "gtk"];
+      };
+      common = {
+        default = ["gtk"];
+      };
+    };
+  };
 }

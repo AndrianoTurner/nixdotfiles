@@ -1,4 +1,3 @@
-{ pkgs-unstable, ... }:
-{
-  home.packages = [ pkgs-unstable.clash-verge-rev ];
+{pkgs-unstable, ...}: {
+  home.packages = [pkgs-unstable.clash-verge-rev];
 }
