@@ -9,6 +9,8 @@
     ./playerctl.nix
     ./alacritty.nix
     ./niri
+    ./zen-browser.nix
+    ./vicinae.nix
   ];
 
   xdg.mimeApps.enable = true;

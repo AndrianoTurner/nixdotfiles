@@ -2,6 +2,7 @@
 {
   inputs,
   outputs,
+  pkgs-unstable,
   ...
 }: {
   imports =
@@ -17,7 +18,7 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
-    inherit inputs outputs;
+    inherit inputs outputs pkgs-unstable;
   };
 
   nixpkgs = {

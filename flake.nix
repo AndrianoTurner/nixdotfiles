@@ -13,6 +13,7 @@
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
  nixvim.url = "github:nix-community/nixvim";
+ zen-browser.url = "github:0xc000022070/zen-browser-flake";
 };
 
   outputs = {
@@ -25,6 +26,10 @@
     systems = [
       "x86_64-linux"
     ];
+   pkgs-unstable = import inputs.nixpkgs-unstable {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
+    };
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -50,7 +55,8 @@
     nixosConfigurations = {
       # Personal Laptop
       freedompc = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; outputs = self.outputs; };
+        specialArgs = { inherit inputs pkgs-unstable; outputs = self.outputs;
+  };
 	modules = [
           ./hosts/freedompc
         ];
