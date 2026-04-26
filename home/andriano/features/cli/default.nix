@@ -8,5 +8,6 @@
     ./fzf.nix
     ./git.nix
     ./ssh.nix
+    ./nvim
   ];
 }
