@@ -1,6 +1,11 @@
 {
   description = "Your new nix config";
 
+  nixConfig = {
+    extra-substituters = ["https://noctalia.cachix.org"];
+    extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+  };
+
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
@@ -12,9 +17,11 @@
     # Home manager
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
- nixvim.url = "github:nix-community/nixvim";
- zen-browser.url = "github:0xc000022070/zen-browser-flake";
-};
+    nixvim.url = "github:nix-community/nixvim";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs-unstable"; # requires unstable
+  };
 
   outputs = {
     self,
@@ -26,7 +33,7 @@
     systems = [
       "x86_64-linux"
     ];
-   pkgs-unstable = import inputs.nixpkgs-unstable {
+    pkgs-unstable = import inputs.nixpkgs-unstable {
       system = "x86_64-linux";
       config.allowUnfree = true;
     };
@@ -55,9 +62,11 @@
     nixosConfigurations = {
       # Personal Laptop
       freedompc = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs pkgs-unstable; outputs = self.outputs;
-  };
-	modules = [
+        specialArgs = {
+          inherit inputs pkgs-unstable;
+          outputs = self.outputs;
+        };
+        modules = [
           ./hosts/freedompc
         ];
       };

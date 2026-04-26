@@ -1,9 +1,8 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
-  ./zoxide.nix
-  ./starship.nix
-];
+    ./zoxide.nix
+    ./starship.nix
+  ];
   programs.fish = {
     enable = true;
 
@@ -13,29 +12,29 @@
       la = "eza --classify=auto --color --group-directories-first --sort=extension -a -l --octal-permissions --no-permissions";
 
       # git
-      ga   = "git add";
-      gam  = "git add -A && git commit -m";
-      gap  = "git add -p";
-      gs   = "git status";
-      gcm  = "git commit -m";
-      gca  = "git commit --amend --no-edit";
-      gco  = "git checkout";
+      ga = "git add";
+      gam = "git add -A && git commit -m";
+      gap = "git add -p";
+      gs = "git status";
+      gcm = "git commit -m";
+      gca = "git commit --amend --no-edit";
+      gco = "git checkout";
       gcob = "git checkout -b";
-      gb   = "git branch";
-      gba  = "git branch -a";
-      gbd  = "git branch -d";
-      gbD  = "git branch -D";
-      gp   = "git push";
-      gpo  = "git push origin HEAD";
-      gl   = "git pull";
-      glo  = "git pull origin";
-      glg  = ''git log --graph --pretty=format:"%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(green)%an%C(reset)%C(auto)%d %C(reset)%s" --date=short'';
-      gls  = "git log --oneline -10";
+      gb = "git branch";
+      gba = "git branch -a";
+      gbd = "git branch -d";
+      gbD = "git branch -D";
+      gp = "git push";
+      gpo = "git push origin HEAD";
+      gl = "git pull";
+      glo = "git pull origin";
+      glg = ''git log --graph --pretty=format:"%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(green)%an%C(reset)%C(auto)%d %C(reset)%s" --date=short'';
+      gls = "git log --oneline -10";
       glof = "git log --oneline --first-parent";
-      gd   = "git diff";
-      gds  = "git diff --staged";
-      gdh  = "git diff HEAD";
-      gsh  = "git show";
+      gd = "git diff";
+      gds = "git diff --staged";
+      gdh = "git diff HEAD";
+      gsh = "git show";
     };
 
     functions = {
@@ -93,5 +92,5 @@
   };
 
   # Ensure eza is available (if not already in global packages)
-  home.packages = with pkgs; [ eza ];
+  home.packages = with pkgs; [eza];
 }

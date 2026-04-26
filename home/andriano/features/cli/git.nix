@@ -4,7 +4,6 @@
   lib,
   ...
 }: {
-
   programs.git = {
     enable = true;
     package = pkgs.gitFull;
@@ -39,6 +38,5 @@
       "result"
       ".jj"
     ];
-};
+  };
 }
-

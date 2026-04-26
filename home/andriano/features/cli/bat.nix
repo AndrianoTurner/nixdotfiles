@@ -4,4 +4,3 @@
     config.theme = "base16";
   };
 }
-

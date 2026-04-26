@@ -1,4 +1,3 @@
-
 {
   pkgs,
   config,
@@ -29,6 +28,4 @@ in {
   };
 
   home-manager.users.andriano = import ../../../../home/andriano/${config.networking.hostName}.nix;
-
 }
-

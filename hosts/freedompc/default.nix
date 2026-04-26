@@ -10,14 +10,12 @@
     ../common/optional/pipewire.nix
     ../common/optional/systemd-boot.nix
     ../common/optional/docker.nix
-
   ];
-
-hardware.bluetooth.enable = true;
-services.power-profiles-daemon.enable = true;
-services.upower.enable = true;
-services.openssh.enable = true;
-networking = {
+  hardware.bluetooth.enable = true;
+  services.power-profiles-daemon.enable = true;
+  services.upower.enable = true;
+  services.openssh.enable = true;
+  networking = {
     networkmanager.enable = true;
     hostName = "freedompc";
   };
@@ -31,4 +29,3 @@ networking = {
 
   system.stateVersion = "22.05";
 }
-

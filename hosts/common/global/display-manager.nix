@@ -1,7 +1,6 @@
-{ ... }:
-{
+{...}: {
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;  # needed for niri
+    wayland.enable = true; # needed for niri
   };
 }

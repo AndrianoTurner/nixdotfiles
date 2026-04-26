@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.alacritty = {
     enable = true;
     settings = {
@@ -28,7 +27,10 @@
       mouse = {
         hide_when_typing = true;
         bindings = [
-          { mouse = "Right"; action = "Paste"; }
+          {
+            mouse = "Right";
+            action = "Paste";
+          }
         ];
       };
     };

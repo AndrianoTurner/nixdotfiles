@@ -1,3 +1,4 @@
+spawn-at-startup "noctalia-shell"
 include "settings.kdl"
 include "keybinds.kdl"
 include "windowrules.kdl"

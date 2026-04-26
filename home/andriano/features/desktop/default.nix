@@ -19,9 +19,7 @@
     wl-clipboard
   ];
 
-
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-wlr];
 
   xdg.portal.enable = true;
 }
-

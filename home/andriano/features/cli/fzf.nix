@@ -4,4 +4,3 @@
     defaultOptions = ["--color 16"];
   };
 }
-

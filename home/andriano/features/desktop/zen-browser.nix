@@ -1,6 +1,9 @@
-{ inputs, pkgs, ... }:
 {
-  imports = [ inputs.zen-browser.homeModules.default ];
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.zen-browser.homeModules.default];
 
   programs.zen-browser = {
     enable = true;
@@ -15,7 +18,6 @@
         "media.ffmpeg.vaapi.enabled" = true;
         "gfx.webrender.all" = true;
       };
-
 
       search = {
         default = "ddg";
