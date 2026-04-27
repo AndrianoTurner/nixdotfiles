@@ -1,16 +1,22 @@
-{pkgs,config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
-    networkmanager-l2tp
-    networkmanager-strongswan
     networkmanagerapplet
   ];
 
   services.strongswan.enable = true;
-
-  services.xl2tpd.enable = true;
-
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-l2tp
+    networkmanager-strongswan
+  ];
+  environment.etc."strongswan.conf" = {
+    text = '''';
+  };
   networking.networkmanager.ensureProfiles = {
-    environmentFiles = [ config.sops.templates.l2tp-env.path ];
+    environmentFiles = [config.sops.templates.l2tp-env.path];
     profiles = {
       mdr = {
         connection = {
