@@ -11,6 +11,7 @@
     ../common/optional/systemd-boot.nix
     ../common/optional/docker.nix
     ../common/optional/throne.nix
+    ../common/optional/l2tp.nix
   ];
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;

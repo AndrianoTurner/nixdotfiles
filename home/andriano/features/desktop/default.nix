@@ -9,6 +9,7 @@
     ./vicinae.nix
     ./noctalia.nix
     ./zed.nix
+    ./telegram.nix
   ];
 
   xdg.mimeApps.enable = true;

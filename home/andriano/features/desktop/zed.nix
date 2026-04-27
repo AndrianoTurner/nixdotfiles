@@ -11,7 +11,7 @@
       "docker-compose"
       "gruvbox"
     ];
-    settings = {
+    userSettings = {
       autosave = "on_focus_change";
       vim_mode = true;
       format_on_save = "on";
