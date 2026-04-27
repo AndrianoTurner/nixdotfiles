@@ -54,9 +54,8 @@
   environment.systemPackages = with pkgs; [wget vim];
 
   boot = {
-
-   kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-   kernelParams = [ "usbcore.autosuspend=-1" ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+    kernelParams = ["usbcore.autosuspend=-1"];
   };
 
   powerManagement.powertop.enable = true;

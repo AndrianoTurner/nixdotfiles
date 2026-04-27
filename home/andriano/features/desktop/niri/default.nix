@@ -1,4 +1,4 @@
-{pkgs,...}: {
+{pkgs, ...}: {
   xdg.configFile = {
     "niri/config.kdl".source = ./config.kdl;
     "niri/keybinds.kdl".source = ./keybinds.kdl;
@@ -7,9 +7,9 @@
   };
 
   home.packages = with pkgs; [
-  brightnessctl
-  wireplumber
-  kdePackages.dolphin
-  playerctl
+    brightnessctl
+    wireplumber
+    kdePackages.dolphin
+    playerctl
   ];
 }

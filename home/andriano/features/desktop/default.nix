@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./font.nix
     ./pavucontrol.nix
@@ -11,6 +8,7 @@
     ./zen-browser.nix
     ./vicinae.nix
     ./noctalia.nix
+    ./zed.nix
   ];
 
   xdg.mimeApps.enable = true;
