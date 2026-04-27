@@ -10,13 +10,12 @@
     ../common/optional/pipewire.nix
     ../common/optional/systemd-boot.nix
     ../common/optional/docker.nix
-    #    ../common/optional/mihomo.nix
+    ../common/optional/throne.nix
   ];
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
   services.openssh.enable = true;
-
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -54,7 +53,11 @@
 
   environment.systemPackages = with pkgs; [wget vim];
 
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+  boot = {
+
+   kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+   kernelParams = [ "usbcore.autosuspend=-1" ];
+  };
 
   powerManagement.powertop.enable = true;
   programs.dconf.enable = true;

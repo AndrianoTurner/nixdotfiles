@@ -22,6 +22,7 @@ in {
       "video"
       "wheel"
       "wireshark"
+      "networkmanager"
     ];
 
     packages = [pkgs.home-manager];

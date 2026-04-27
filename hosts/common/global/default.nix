@@ -13,6 +13,7 @@
       ./nix.nix
       ./display-manager.nix
       ./niri.nix
+      ./time.nix
     ]
     ++ (builtins.attrValues outputs.nixosModules);
 

@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   ...
 }: {
   imports = [
@@ -12,7 +11,6 @@
     ./zen-browser.nix
     ./vicinae.nix
     ./noctalia.nix
-    ./clash-verge.nix
   ];
 
   xdg.mimeApps.enable = true;
