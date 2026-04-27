@@ -29,6 +29,9 @@
     git.enable = true;
   };
 
+xdg.configFile = {
+ "face".source = "./face";
+};
   home = {
     username = lib.mkDefault "andriano";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";

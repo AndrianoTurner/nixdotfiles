@@ -6,7 +6,9 @@
   ...
 }: {
   imports =
+
     [
+inputs.sops-nix.nixosModules.sops
       inputs.home-manager.nixosModules.home-manager
       ./fish.nix
       ./locale.nix
@@ -14,6 +16,7 @@
       ./display-manager.nix
       ./niri.nix
       ./time.nix
+      ./sops.nix
     ]
     ++ (builtins.attrValues outputs.nixosModules);
 

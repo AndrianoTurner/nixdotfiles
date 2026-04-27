@@ -21,6 +21,10 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs-unstable"; # requires unstable
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

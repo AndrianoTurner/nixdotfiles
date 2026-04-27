@@ -1,0 +1,8 @@
+keys:
+  - &master age138vmfg3gctc896jw06u2zmwzd4tjusfs6xl3xt90yszalkgj5gjqm0ghpf
+creation_rules:
+  - path_regex: hosts/common/secrets.ya?ml$
+    key_groups:
+    - age:
+      - *master
+

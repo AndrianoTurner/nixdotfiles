@@ -198,7 +198,28 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "noctalia": "noctalia",
+        "sops-nix": "sops-nix",
         "zen-browser": "zen-browser"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1776771786,
+        "narHash": "sha256-DRFGPfFV6hbrfO9a1PH1FkCi7qR5FgjSqsQGGvk1rdI=",
+        "owner": "mic92",
+        "repo": "sops-nix",
+        "rev": "bef289e2248991f7afeb95965c82fbcd8ff72598",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mic92",
+        "repo": "sops-nix",
+        "type": "github"
       }
     },
     "systems": {
