@@ -30,7 +30,7 @@
   };
 
 xdg.configFile = {
- "face".source = "./face";
+ "face".source = ./face;
 };
   home = {
     username = lib.mkDefault "andriano";

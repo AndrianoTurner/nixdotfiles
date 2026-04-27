@@ -206,7 +206,7 @@
       };
 
       general = {
-        avatarImage = "/home/andriano/.face";
+        avatarImage = "/home/andriano/.config/face";
         dimmerOpacity = 0.2;
         showScreenCorners = false;
         forceBlackScreenCorners = false;
