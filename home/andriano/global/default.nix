@@ -31,7 +31,10 @@
 
   xdg.configFile = {
     "face".source = ./face;
+    "wallpapers".source = ./wallpapers;
   };
+
+
   home = {
     username = lib.mkDefault "andriano";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
