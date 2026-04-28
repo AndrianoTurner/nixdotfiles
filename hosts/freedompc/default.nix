@@ -17,6 +17,14 @@
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
   services.openssh.enable = true;
+
+  nix.settings.max-jobs = 1;
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 8192; # Size in Megabytes (8192 = 8GB)
+    }
+  ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
