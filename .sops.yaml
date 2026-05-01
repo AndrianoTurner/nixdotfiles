@@ -6,3 +6,7 @@ creation_rules:
     - age:
       - *master
 
+  - path_regex: home/andriano/secrets.ya?ml$
+    key_groups:
+    - age:
+      - *master

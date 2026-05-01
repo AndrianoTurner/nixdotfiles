@@ -8,6 +8,7 @@
   ];
 
   services.strongswan.enable = true;
+  networking.firewall.checkReversePath = "loose";
   networking.networkmanager.plugins = with pkgs; [
     networkmanager-l2tp
     networkmanager-strongswan

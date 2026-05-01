@@ -1,43 +1,94 @@
 {
-  pkgs,
-  config,
-  lib,
   ...
 }: {
-  programs.git = {
-    enable = true;
-    package = pkgs.gitFull;
-    signing.format = "openpgp";
-    settings = {
-      user = {
-        name = "AndrianoTurner";
-        email = lib.mkDefault "danya.shibaev@gmail.com";
-      };
-      aliases = {
-        p = "pull --ff-only";
-        ff = "merge --ff-only";
-        graph = "log --decorate --oneline --graph";
-        pushall = "!git remote | xargs -L1 git push --all";
-      };
-      init.defaultBranch = "main";
-      gpg.program = "${config.programs.gpg.package}/bin/gpg2";
 
-      merge.conflictStyle = "zdiff3";
-      commit.verbose = true;
-      diff.algorithm = "histogram";
-      log.date = "iso";
-      column.ui = "auto";
-      branch.sort = "committerdate";
-      # Automatically track remote branch
-      push.autoSetupRemote = true;
-      # Reuse merge conflict fixes when rebasing
-      rerere.enabled = true;
-    };
-    lfs.enable = true;
-    ignores = [
-      ".direnv"
-      "result"
-      ".jj"
-    ];
+ enable = true;
+
+  userName  = "AndrianoTurner";
+  userEmail = "danya.shibaev@gmail.com";
+
+  signing = {
+    key    = ../../keys/github.pub;
+    signByDefault = true;
   };
-}
+
+  extraConfig = {
+    init.defaultBranch = "main";
+
+    core = {
+      editor      = "nvim";
+      whitespace  = "error";
+      autocrlf    = "input";   
+      compression = 9;
+    };
+
+    advice = {
+      addEmptyPathspec     = false;
+      pushNonFastForward   = false;
+      statusHints          = false;
+    };
+
+    blame = {
+      coloring = "highlightRecent";
+      date     = "relative";
+    };
+
+    diff = {
+      context          = 3;
+      renames          = "copies";
+      interHunkContext = 10;
+    };
+
+    log = {
+      abbrevCommit = true;
+      graphColors  = "blue,yellow,cyan,magenta,green,red";
+    };
+
+    status = {
+      branch            = true;
+      short             = true;
+      showStash         = true;
+      showUntrackedFiles = "all";
+    };
+
+    push = {
+      autoSetupRemote = true;
+      default         = "current";
+      followTags      = true;
+    };
+
+    pull.rebase = true;
+
+    submodule.fetchJobs = 16;
+
+    rebase.autoStash = true;
+
+    rerere.enabled = true;
+
+    gpg.format = "ssh";
+
+    commit.gpgsign = true;
+  };
+
+  includes = [
+    {
+      condition = "gitdir:~/work/**/";
+      contents = {
+        user = {
+          name       = "Даниил Шибаев";
+          email      = "d.shibaev@madrigal.expert";
+          signingKey = ../../keys/gitlab-work.pub;
+        };
+      };
+    }
+    {
+      condition = "gitdir:~/personal/**/";
+      contents = {
+        user = {
+          name       = "AndrianoTurner";
+          email      = "danya.shibaev@gmail.com";
+          signingKey = ../../keys/github.pub;
+        };
+      };
+    }
+  ];}

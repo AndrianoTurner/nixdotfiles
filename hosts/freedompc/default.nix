@@ -12,6 +12,7 @@
     #    ../common/optional/docker.nix
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
+    ../common/optional/firewall.nix
   ];
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
