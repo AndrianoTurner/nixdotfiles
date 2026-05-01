@@ -52,5 +52,5 @@
   powerManagement.powertop.enable = true;
   programs.dconf.enable = true;
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "25.05";
 }
