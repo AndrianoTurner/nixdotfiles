@@ -1,14 +1,15 @@
 {
   ...
 }: {
-
+programs.git = {
  enable = true;
 
   userName  = "AndrianoTurner";
   userEmail = "danya.shibaev@gmail.com";
 
   signing = {
-    key    = ../../keys/github.pub;
+    format = "ssh";
+    key    = builtins.readFile ../../global/keys/github.pub;
     signByDefault = true;
   };
 
@@ -77,7 +78,7 @@
         user = {
           name       = "Даниил Шибаев";
           email      = "d.shibaev@madrigal.expert";
-          signingKey = ../../keys/gitlab-work.pub;
+          signingKey = builtins.readFile ../../global/keys/gitlab-work.pub;
         };
       };
     }
@@ -87,8 +88,9 @@
         user = {
           name       = "AndrianoTurner";
           email      = "danya.shibaev@gmail.com";
-          signingKey = ../../keys/github.pub;
+          signingKey = builtins.readFile ../../global/keys/github.pub;
         };
       };
     }
-  ];}
+  ];};
+  }

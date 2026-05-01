@@ -1,4 +1,4 @@
-{...}: {
+{config,...}: {
 programs.ssh = {
   enable = true;
 
@@ -7,24 +7,24 @@ programs.ssh = {
       host         = "10.0.0.53";
       user         = "git";
       port         = 222;
-      identityFile = "/run/secrets/ssh/github";
+      identityFile = config.sops.secrets."ssh/github".path;
     };
 
     "proxmox" = {
       host         = "10.0.0.50";
       user         = "root";
       port         = 22;
-      identityFile = "/run/secrets/ssh/proxmox";
+      identityFile = config.sops.secrets."ssh/proxmox".path;
     };
 
     "gitlab.internal.madrigal.ru" = {
       user         = "git";
-      identityFile = "/run/secrets/ssh/gitlab-work";
+      identityFile = config.sops.secrets."ssh/gitlab-work".path;
     };
 
     "github.com" = {
       user         = "git";
-      identityFile = "/run/secrets/ssh/github";
+      identityFile = config.sops.secrets."ssh/github".path;
     };
 
 

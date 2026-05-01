@@ -8,7 +8,9 @@
 }: {
   imports =
     [
+ inputs.sops-nix.homeManagerModules.sops  
       ../features/cli
+      ./sops.nix
     ]
     ++ (builtins.attrValues outputs.homeManagerModules);
 
