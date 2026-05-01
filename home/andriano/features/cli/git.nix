@@ -7,11 +7,6 @@ programs.git = {
   userName  = "AndrianoTurner";
   userEmail = "danya.shibaev@gmail.com";
 
-  signing = {
-    format = "ssh";
-    key    = builtins.readFile ../../global/keys/github.pub;
-    signByDefault = true;
-  };
 
   extraConfig = {
     init.defaultBranch = "main";
@@ -68,7 +63,6 @@ programs.git = {
 
     gpg.format = "ssh";
 
-    commit.gpgsign = true;
   };
 
   includes = [
@@ -78,7 +72,6 @@ programs.git = {
         user = {
           name       = "Даниил Шибаев";
           email      = "d.shibaev@madrigal.expert";
-          signingKey = builtins.readFile ../../global/keys/gitlab-work.pub;
         };
       };
     }
@@ -88,7 +81,6 @@ programs.git = {
         user = {
           name       = "AndrianoTurner";
           email      = "danya.shibaev@gmail.com";
-          signingKey = builtins.readFile ../../global/keys/github.pub;
         };
       };
     }
