@@ -1,7 +1,6 @@
-
-{...}:{
-
-networking.firewall = {
-enable = true;
-  allowedUDPPorts = [ 500 4500 1701 ];
-};}
+{...}: {
+  networking.firewall = {
+    enable = true;
+    allowedUDPPorts = [500 4500 1701];
+  };
+}

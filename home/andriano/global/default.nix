@@ -8,7 +8,7 @@
 }: {
   imports =
     [
- inputs.sops-nix.homeManagerModules.sops  
+      inputs.sops-nix.homeManagerModules.sops
       ../features/cli
       ./sops.nix
     ]
@@ -35,7 +35,6 @@
     "face".source = ./face;
     "wallpapers".source = ./wallpapers;
   };
-
 
   home = {
     username = lib.mkDefault "andriano";

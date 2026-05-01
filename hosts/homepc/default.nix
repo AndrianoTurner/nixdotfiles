@@ -27,7 +27,6 @@
     }
   ];
 
-
   hardware.graphics.enable = true;
 
   services.xserver.xkb = {
