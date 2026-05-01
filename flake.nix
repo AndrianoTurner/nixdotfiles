@@ -66,12 +66,23 @@
     nixosConfigurations = {
       # Personal Laptop
       freedompc = nixpkgs.lib.nixosSystem {
+
         specialArgs = {
           inherit inputs pkgs-unstable;
           outputs = self.outputs;
         };
         modules = [
           ./hosts/freedompc
+        ];
+      };
+
+      homepc = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs pkgs-unstable;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/homepc
         ];
       };
     };
