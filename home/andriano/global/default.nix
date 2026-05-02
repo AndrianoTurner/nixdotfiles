@@ -35,6 +35,14 @@
     "face".source = ./face;
     "wallpapers".source = ./wallpapers;
   };
+  home.packages = with pkgs; [ bibata-cursors
+    libreoffice-fresh
+  ];
+
+  home.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    XCURSOR_SIZE  = "24";
+  };
 
   home = {
     username = lib.mkDefault "andriano";
