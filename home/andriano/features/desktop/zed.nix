@@ -16,9 +16,7 @@
       vim_mode = true;
       format_on_save = "on";
 
-      # Theme: Gruvbox (ensure the extension is installed above)
-      theme = "Gruvbox"; # or "Gruvbox Dark", "Gruvbox Light" — check extension docs
-
+      theme = "Gruvbox Dark"; 
       diagnostics = {
         inline = {
           enabled = true;
