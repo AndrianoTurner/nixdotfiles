@@ -31,7 +31,7 @@
         "gfx.webrender.all" = true;
       };
 
-      containersForce = true; # Delete containers not declared here
+      #      containersForce = true; # Delete containers not declared here
       containers = {
         Personal = {
           color = "purple";
@@ -49,7 +49,7 @@
           id = 3;
         };
       };
-      spacesForce = true; # Delete spaces not declared here
+      #spacesForce = true; # Delete spaces not declared here
       spaces = {
         "Personal" = {
           id = "c6de089c-410d-4206-961d-ab11f988d40a";

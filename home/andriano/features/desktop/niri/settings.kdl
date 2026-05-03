@@ -53,6 +53,7 @@ layout {
     }
     border { off; }
     struts {}
+
 }
 
 output "LG Electronics MP59G 0x01010101" {
@@ -78,5 +79,9 @@ output "Dell Inc. DELL S2421HS F5P2BP3" {
 
 
 
-cursor {}
+cursor {
+  hide-when-typing
+  hide-after-inactive-ms 1500 
+
+}
 animations {}
