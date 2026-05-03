@@ -5,14 +5,18 @@
   config,
   outputs,
   ...
-}: {
-  imports =
-    [
-      inputs.sops-nix.homeManagerModules.sops
-      ../features/cli
-      ./sops.nix
-    ]
-    ++ (builtins.attrValues outputs.homeManagerModules);
+}:
+let
+  cursorTheme = "Bibata-Modern-Classic";
+  cursorSize = 24;
+in
+{
+  imports = [
+    inputs.sops-nix.homeManagerModules.sops
+    ../features/cli
+    ./sops.nix
+  ]
+  ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
     package = lib.mkDefault pkgs.nix;
@@ -35,19 +39,30 @@
     "face".source = ./face;
     "wallpapers".source = ./wallpapers;
   };
-  home.packages = with pkgs; [ bibata-cursors
-    libreoffice-fresh
-  ];
-
-  home.sessionVariables = {
-    XCURSOR_THEME = "Bibata-Modern-Classic";
-    XCURSOR_SIZE  = "24";
-  };
 
   home = {
     username = lib.mkDefault "andriano";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
     stateVersion = lib.mkDefault "22.05";
-    sessionPath = ["$HOME/.local/bin"];
+    sessionPath = [ "$HOME/.local/bin" ];
+    packages = with pkgs; [
+      bibata-cursors
+      libreoffice-fresh
+    ];
+    sessionVariables = {
+      XCURSOR_THEME = cursorTheme;
+      XCURSOR_SIZE = toString cursorSize;
+    };
+    pointerCursor = {
+      package = pkgs.bibata-cursors;
+      name = cursorTheme;
+      size = cursorSize;
+      gtk.enable = true;
+      x11.enable = true;
+    };
+
+    shellAliases = {
+      rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
+    };
   };
 }

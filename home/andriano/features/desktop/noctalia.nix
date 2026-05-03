@@ -5,29 +5,28 @@
     enable = true;
 
     plugins = {
-        sources = [
-          {
-            enabled = true;
-            name = "Official Noctalia Plugins";
-            url = "https://github.com/noctalia-dev/noctalia-plugins";
-          }
-        ];
-        states = {
-          catwalk = {
-            enabled = true;
-            sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-          };
-        };
-        version = 2;
-      };
-
-      pluginSettings = {
+      sources = [
+        {
+          enabled = true;
+          name = "Official Noctalia Plugins";
+          url = "https://github.com/noctalia-dev/noctalia-plugins";
+        }
+      ];
+      states = {
         catwalk = {
-          minimumThreshold = 25;
-          hideBackground = true;
+          enabled = true;
+          sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
         };
       };
+      version = 2;
+    };
 
+    pluginSettings = {
+      catwalk = {
+        minimumThreshold = 25;
+        hideBackground = true;
+      };
+    };
 
     settings = {
       settingsVersion = 59;

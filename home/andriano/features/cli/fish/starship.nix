@@ -80,9 +80,9 @@
       };
 
       hostname = {
-        ssh_only = false;  
+        ssh_only = false;
         style = "bg:color_orange fg:color_fg0";
-        format = "[@$hostname](bold $style)";  
+        format = "[@$hostname](bold $style)";
         disabled = false;
       };
 

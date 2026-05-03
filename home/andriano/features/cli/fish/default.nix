@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./zoxide.nix
     ./starship.nix
@@ -35,6 +36,7 @@
       gds = "git diff --staged";
       gdh = "git diff HEAD";
       gsh = "git show";
+      rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
     };
 
     functions = {
@@ -92,5 +94,5 @@
   };
 
   # Ensure eza is available (if not already in global packages)
-  home.packages = with pkgs; [eza];
+  home.packages = with pkgs; [ eza ];
 }

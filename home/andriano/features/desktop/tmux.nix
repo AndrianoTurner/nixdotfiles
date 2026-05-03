@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   programs.tmux = {
     enable = true;
 
@@ -7,7 +10,7 @@
     mouse = true;
     prefix = "C-a";
     escapeTime = 0;
-    keyMode = "vi"; 
+    keyMode = "vi";
 
     plugins = with pkgs.tmuxPlugins; [
       vim-tmux-navigator
