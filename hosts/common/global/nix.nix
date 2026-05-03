@@ -2,11 +2,9 @@
   inputs,
   lib,
   ...
-}:
-let
+}: let
   flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-in
-{
+in {
   nix = {
     settings = {
       trusted-users = [
@@ -35,7 +33,7 @@ in
     };
 
     # Add each flake input as a registry and nix_path
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
+    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 }

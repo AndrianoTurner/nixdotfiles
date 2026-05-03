@@ -1,11 +1,17 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     nil
-    nixd
+    alejandra
   ];
+
   programs.zed-editor = {
     enable = true;
+
+    mutableUserDebug = false;
+    mutableUserSettings = false;
+    mutableUserKeymaps = false;
+    mutableUserTasks = false;
+
     extensions = [
       "ansible"
       "html"
@@ -63,16 +69,6 @@
           "space f f" = "file_finder::Toggle";
         };
         context = "Editor && vim_mode == normal";
-      }
-      # Recent files → <space>fr
-      {
-        bindings = {
-          "space f r" = [
-            "projects::OpenRecent"
-            { create_new_window = false; }
-          ];
-        };
-        context = "Workspace";
       }
       # New file     → <space>fn
       {
@@ -238,6 +234,15 @@
     ];
 
     userSettings = {
+      buffer_font_family = "JetBrainsMono Nerd Font";
+      ui_font_family = "JetBrainsMono Nerd Font";
+      terminal = {
+        font_family = "JetBrainsMono Nerd Font";
+        shell = {
+          program = "${pkgs.fish}/bin/fish";
+        };
+      };
+
       show_edit_predictions = false;
       features = {
         edit_prediction_provider = "none";
@@ -267,9 +272,27 @@
             "basedpyright"
           ];
         };
+
+        Nix = {
+          language_servers = [
+            "nil"
+            "!nixd"
+          ];
+        };
       };
 
       lsp = {
+        "nil" = {
+          initialization_options = {
+            formatting = {
+              command = [
+                "${pkgs.alejandra}/bin/alejandra"
+                "--quiet"
+                "--"
+              ];
+            };
+          };
+        };
         "rust-analyzer" = {
           initialization_options = {
             check = {

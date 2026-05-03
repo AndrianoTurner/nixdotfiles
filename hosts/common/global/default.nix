@@ -3,22 +3,24 @@
   inputs,
   outputs,
   pkgs-unstable,
+  pkgs,
   ...
-}:
-{
-  imports = [
-    inputs.sops-nix.nixosModules.sops
-    inputs.home-manager.nixosModules.home-manager
-    ./fish.nix
-    ./locale.nix
-    ./nix.nix
-    ./display-manager.nix
-    ./niri.nix
-    ./time.nix
-    ./sops.nix
-  ]
-  ++ (builtins.attrValues outputs.nixosModules);
+}: {
+  imports =
+    [
+      inputs.sops-nix.nixosModules.sops
+      inputs.home-manager.nixosModules.home-manager
+      ./fish.nix
+      ./locale.nix
+      ./nix.nix
+      ./display-manager.nix
+      ./niri.nix
+      ./time.nix
+      ./sops.nix
+    ]
+    ++ (builtins.attrValues outputs.nixosModules);
 
+  fonts.packages = [pkgs.nerd-fonts.jetbrains-mono];
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
     inherit inputs outputs pkgs-unstable;

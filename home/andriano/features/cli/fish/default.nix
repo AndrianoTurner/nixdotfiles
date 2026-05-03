@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./zoxide.nix
     ./starship.nix
@@ -94,5 +93,5 @@
   };
 
   # Ensure eza is available (if not already in global packages)
-  home.packages = with pkgs; [ eza ];
+  home.packages = with pkgs; [eza];
 }

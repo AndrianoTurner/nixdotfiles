@@ -1,8 +1,7 @@
-{ ... }:
-{
+{...}: {
   sops = {
     defaultSopsFile = ../secrets.yaml;
-    age.sshKeyPaths = [ "/home/andriano/.ssh/andriano" ];
+    age.sshKeyPaths = ["/home/andriano/.ssh/andriano"];
 
     secrets = {
       "ssh/gitea" = {

@@ -5,18 +5,17 @@
   config,
   outputs,
   ...
-}:
-let
+}: let
   cursorTheme = "Bibata-Modern-Classic";
   cursorSize = 24;
-in
-{
-  imports = [
-    inputs.sops-nix.homeManagerModules.sops
-    ../features/cli
-    ./sops.nix
-  ]
-  ++ (builtins.attrValues outputs.homeManagerModules);
+in {
+  imports =
+    [
+      inputs.sops-nix.homeManagerModules.sops
+      ../features/cli
+      ./sops.nix
+    ]
+    ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
     package = lib.mkDefault pkgs.nix;
@@ -44,7 +43,7 @@ in
     username = lib.mkDefault "andriano";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
     stateVersion = lib.mkDefault "22.05";
-    sessionPath = [ "$HOME/.local/bin" ];
+    sessionPath = ["$HOME/.local/bin"];
     packages = with pkgs; [
       bibata-cursors
       libreoffice-fresh

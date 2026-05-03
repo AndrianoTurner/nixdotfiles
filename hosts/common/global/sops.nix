@@ -1,9 +1,8 @@
-{ config, ... }:
-{
+{config, ...}: {
   sops = {
     defaultSopsFile = ../secrets.yaml;
     age = {
-      sshKeyPaths = [ "/etc/ssh/id_ed25519" ];
+      sshKeyPaths = ["/etc/ssh/id_ed25519"];
       keyFile = "/var/lib/sops-nix/keys.txt";
 
       generateKey = true;
