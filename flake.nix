@@ -84,6 +84,17 @@
           ./hosts/homepc
         ];
       };
+
+
+      mdr018 = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs pkgs-unstable;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/mdr018
+        ];
+      };
     };
   };
 }

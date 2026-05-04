@@ -1,8 +1,15 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./zoxide.nix
     ./starship.nix
   ];
+
+  programs.nix-your-shell = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
   programs.fish = {
     enable = true;
 
@@ -93,5 +100,5 @@
   };
 
   # Ensure eza is available (if not already in global packages)
-  home.packages = with pkgs; [eza];
+  home.packages = with pkgs; [ eza ];
 }

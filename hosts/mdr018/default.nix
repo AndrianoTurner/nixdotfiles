@@ -35,7 +35,7 @@
 
   networking = {
     networkmanager.enable = true;
-    hostName = "homepc";
+    hostName = "mdr018";
   };
 
   environment.systemPackages = with pkgs; [
