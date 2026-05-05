@@ -1,5 +1,6 @@
-{inputs, ...}: {
-  imports = [inputs.noctalia.homeModules.default];
+{ inputs, ... }:
+{
+  imports = [ inputs.noctalia.homeModules.default ];
 
   programs.noctalia-shell = {
     enable = true;
@@ -34,7 +35,7 @@
       bar = {
         barType = "floating";
         position = "top";
-        monitors = [];
+        monitors = [ ];
         density = "default";
         showOutline = false;
         showCapsule = true;
@@ -65,7 +66,7 @@
         rightClickAction = "controlCenter";
         rightClickFollowMouse = true;
         rightClickCommand = "";
-        screenOverrides = [];
+        screenOverrides = [ ];
         widgets = {
           left = [
             {
@@ -150,12 +151,12 @@
             }
             {
               id = "Tray";
-              blacklist = [];
+              blacklist = [ ];
               chevronColor = "none";
               colorizeIcons = false;
               drawerEnabled = true;
               hidePassive = false;
-              pinned = [];
+              pinned = [ ];
             }
             {
               id = "NotificationHistory";
@@ -204,12 +205,12 @@
             {
               id = "plugin:screen-toolkit";
               defaultSettings = {
-                colorHistory = [];
+                colorHistory = [ ];
                 detectedCompositor = "";
                 detectedRecorder = "";
                 filenameFormat = "";
-                installedLangs = ["eng"];
-                paletteColors = [];
+                installedLangs = [ "eng" ];
+                paletteColors = [ ];
                 screenshotPath = "";
                 selectedOcrLang = "eng";
                 transAvailable = false;
@@ -264,19 +265,22 @@
         clockStyle = "custom";
         clockFormat = "dd.MM.yyyy HH:mm:ss ";
         passwordChars = true;
-        lockScreenMonitors = [];
+        lockScreenMonitors = [ ];
         lockScreenBlur = 0.2;
         lockScreenTint = 0;
         reverseScroll = false;
         smoothScrollEnabled = true;
         keybinds = {
-          keyUp = ["Up"];
-          keyDown = ["Down"];
-          keyLeft = ["Left"];
-          keyRight = ["Right"];
-          keyEnter = ["Return" "Enter"];
-          keyEscape = ["Esc"];
-          keyRemove = ["Del"];
+          keyUp = [ "Up" ];
+          keyDown = [ "Down" ];
+          keyLeft = [ "Left" ];
+          keyRight = [ "Right" ];
+          keyEnter = [
+            "Return"
+            "Enter"
+          ];
+          keyEscape = [ "Esc" ];
+          keyRemove = [ "Del" ];
         };
       };
 
@@ -370,7 +374,14 @@
         wallpaperChangeMode = "random";
         randomIntervalSec = 120;
         transitionDuration = 1500;
-        transitionType = ["fade" "disc" "stripes" "wipe" "pixelate" "honeycomb"];
+        transitionType = [
+          "fade"
+          "disc"
+          "stripes"
+          "wipe"
+          "pixelate"
+          "honeycomb"
+        ];
         skipStartupTransition = false;
         transitionEdgeSmoothness = 0.05;
         panelPosition = "follow_bar";
@@ -390,11 +401,11 @@
         wallhavenResolutionWidth = "";
         wallhavenResolutionHeight = "";
         sortOrder = "date_asc";
-        favorites = [];
+        favorites = [ ];
       };
 
       appLauncher = {
-        enableClipboardHistory = false;
+        enableClipboardHistory = true;
         autoPasteClipboard = false;
         enableClipPreview = true;
         clipboardWrapText = true;
@@ -403,7 +414,7 @@
         clipboardWatchTextCommand = "wl-paste --type text --watch cliphist store";
         clipboardWatchImageCommand = "wl-paste --type image --watch cliphist store";
         position = "center";
-        pinnedApps = [];
+        pinnedApps = [ ];
         sortByMostUsed = true;
         terminalCommand = "alacritty -e";
         customLaunchPrefixEnabled = false;
@@ -426,16 +437,16 @@
         diskPath = "/";
         shortcuts = {
           left = [
-            {id = "Network";}
-            {id = "Bluetooth";}
-            {id = "WallpaperSelector";}
-            {id = "NoctaliaPerformance";}
+            { id = "Network"; }
+            { id = "Bluetooth"; }
+            { id = "WallpaperSelector"; }
+            { id = "NoctaliaPerformance"; }
           ];
           right = [
-            {id = "Notifications";}
-            {id = "PowerProfile";}
-            {id = "KeepAwake";}
-            {id = "NightLight";}
+            { id = "Notifications"; }
+            { id = "PowerProfile"; }
+            { id = "KeepAwake"; }
+            { id = "NightLight"; }
           ];
         };
         cards = [
@@ -504,8 +515,8 @@
         floatingRatio = 1;
         size = 1;
         onlySameOutput = true;
-        monitors = [];
-        pinnedApps = [];
+        monitors = [ ];
+        pinnedApps = [ ];
         colorizeIcons = false;
         showLauncherIcon = false;
         launcherPosition = "end";
@@ -610,7 +621,7 @@
         enabled = true;
         enableMarkdown = false;
         density = "default";
-        monitors = [];
+        monitors = [ ];
         location = "top_right";
         overlayLayer = true;
         backgroundOpacity = 1;
@@ -644,8 +655,12 @@
         autoHideMs = 2000;
         overlayLayer = true;
         backgroundOpacity = 1;
-        enabledTypes = [0 1 2];
-        monitors = [];
+        enabledTypes = [
+          0
+          1
+          2
+        ];
+        monitors = [ ];
       };
 
       audio = {
@@ -654,7 +669,7 @@
         spectrumFrameRate = 30;
         visualizerType = "linear";
         spectrumMirrored = true;
-        mprisBlacklist = [];
+        mprisBlacklist = [ ];
         preferredPlayer = "";
         volumeFeedback = false;
         volumeFeedbackSoundFile = "";
@@ -664,7 +679,7 @@
         brightnessStep = 5;
         enforceMinimum = true;
         enableDdcSupport = false;
-        backlightDeviceMappings = [];
+        backlightDeviceMappings = [ ];
       };
 
       nightLight = {
@@ -715,11 +730,11 @@
         overviewEnabled = true;
         gridSnap = false;
         gridSnapScale = false;
-        monitorWidgets = [];
+        monitorWidgets = [ ];
       };
 
       templates = {
-        activeTemplates = [];
+        activeTemplates = [ ];
         enableUserTheming = false;
       };
     };
