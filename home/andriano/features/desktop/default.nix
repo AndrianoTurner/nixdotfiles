@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./font.nix
     ./pavucontrol.nix
@@ -6,6 +7,7 @@
     ./alacritty.nix
     ./niri
     ./zen-browser.nix
+    ./firefox.nix
     ./vicinae.nix
     ./noctalia.nix
     ./zed.nix
@@ -22,13 +24,16 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gnome]; # or whatever you use
+    extraPortals = [ pkgs.xdg-desktop-portal-gnome ]; # or whatever you use
     config = {
       niri = {
-        default = ["gnome" "gtk"];
+        default = [
+          "gnome"
+          "gtk"
+        ];
       };
       common = {
-        default = ["gtk"];
+        default = [ "gtk" ];
       };
     };
   };

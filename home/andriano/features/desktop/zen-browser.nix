@@ -1,5 +1,6 @@
-{inputs, ...}: {
-  imports = [inputs.zen-browser.homeModules.default];
+{ inputs, ... }:
+{
+  imports = [ inputs.zen-browser.homeModules.default ];
 
   programs.zen-browser = {
     enable = true;
@@ -8,8 +9,6 @@
       DisableTelemetry = true;
       DisablePocket = true;
     };
-
-    setAsDefaultBrowser = true;
 
     profiles.andriano = {
       isDefault = true;
