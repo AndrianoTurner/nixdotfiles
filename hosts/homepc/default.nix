@@ -4,7 +4,7 @@
     ../common/global
     ../common/users/andriano
     ../common/optional/pipewire.nix
-    ../common/optional/systemd-boot.nix
+    ../common/optional/grub-boot.nix
     #    ../common/optional/docker.nix
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
@@ -23,7 +23,14 @@
     }
   ];
 
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr.icd
+    ];
+  };
+  hardware.amdgpu.opencl.enable = true;
 
   services.xserver.xkb = {
     layout = "us,ru";
@@ -41,6 +48,13 @@
   environment.systemPackages = with pkgs; [
     wget
     vim
+    #amd
+    rocmPackages.rocm-smi
+    rocmPackages.rocminfo
+    rocmPackages.clr
+    rocmPackages.rocsolver
+    rocmPackages.rocblas
+    clinfo
   ];
 
   boot = {

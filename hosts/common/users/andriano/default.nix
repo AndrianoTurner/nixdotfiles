@@ -22,6 +22,7 @@ in {
       "wheel"
       "wireshark"
       "networkmanager"
+      "render"
     ];
 
     packages = [pkgs.home-manager];
