@@ -16,6 +16,7 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "media.ffmpeg.vaapi.enabled" = true;
         "gfx.webrender.all" = true;
+        "widget.wayland.fractional-scale.enabled" = true;
       };
       containers = {
         Personal = {

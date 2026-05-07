@@ -1,7 +1,8 @@
-{config, ...}: {
+{ config, ... }:
+{
   programs.ssh = {
     enable = true;
-
+    enableDefaultConfig = false;
     matchBlocks = {
       "gitea-internal" = {
         host = "10.0.0.53";

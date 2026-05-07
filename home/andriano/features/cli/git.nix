@@ -1,11 +1,13 @@
-{...}: {
+{ ... }:
+{
   programs.git = {
     enable = true;
 
-    settings.user.name = "AndrianoTurner";
-    settings.user.email = "danya.shibaev@gmail.com";
+    settings = {
 
-    extraConfig = {
+      user.name = "AndrianoTurner";
+      user.email = "danya.shibaev@gmail.com";
+
       init.defaultBranch = "main";
 
       core = {
@@ -82,4 +84,5 @@
       }
     ];
   };
+
 }

@@ -25,6 +25,7 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "media.ffmpeg.vaapi.enabled" = true;
         "gfx.webrender.all" = true;
+        "widget.wayland.fractional-scale.enabled" = true;
       };
 
       #      containersForce = true; # Delete containers not declared here

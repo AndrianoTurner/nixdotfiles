@@ -1,11 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ../common/global
     ../common/users/andriano
     ../common/optional/pipewire.nix
     ../common/optional/systemd-boot.nix
-    #    ../common/optional/docker.nix
+    ../common/optional/docker.nix
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
     ../common/optional/firewall.nix
@@ -45,7 +46,7 @@
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = ["usbcore.autosuspend=-1"];
+    kernelParams = [ "usbcore.autosuspend=-1" ];
   };
 
   powerManagement.powertop.enable = true;
