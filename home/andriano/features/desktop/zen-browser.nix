@@ -1,6 +1,5 @@
-{ inputs, ... }:
-{
-  imports = [ inputs.zen-browser.homeModules.default ];
+{inputs, ...}: {
+  imports = [inputs.zen-browser.homeModules.default];
 
   programs.zen-browser = {
     enable = true;
@@ -29,23 +28,6 @@
       };
 
       #      containersForce = true; # Delete containers not declared here
-      containers = {
-        Personal = {
-          color = "purple";
-          icon = "fingerprint";
-          id = 1;
-        };
-        Work = {
-          color = "blue";
-          icon = "briefcase";
-          id = 2;
-        };
-        Shopping = {
-          color = "yellow";
-          icon = "dollar";
-          id = 3;
-        };
-      };
       #spacesForce = true; # Delete spaces not declared here
       #TODO: fix
       # spaces = {
