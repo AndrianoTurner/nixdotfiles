@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ../common/global
@@ -55,11 +56,12 @@
     rocmPackages.rocsolver
     rocmPackages.rocblas
     clinfo
+    cifs-utils
   ];
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = ["usbcore.autosuspend=-1"];
+    kernelParams = [ "usbcore.autosuspend=-1" ];
   };
 
   powerManagement.powertop.enable = true;

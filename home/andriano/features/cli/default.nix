@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./bash.nix
     ./bat.nix
@@ -8,5 +9,6 @@
     ./git.nix
     ./ssh.nix
     ./nvim
+    ./yazi.nix
   ];
 }
