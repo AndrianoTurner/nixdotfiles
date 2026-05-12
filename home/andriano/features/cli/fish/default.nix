@@ -96,6 +96,30 @@
 
     interactiveShellInit = ''
       set -gx fish_greeting  # suppress default, our function handles it
+
+      set -g fish_color_normal normal
+      set -g fish_color_command F75D00
+      set -g fish_color_keyword F75D00
+      set -g fish_color_quote A8FF3E
+      set -g fish_color_redirection 00BFFF
+      set -g fish_color_end FF4500
+      set -g fish_color_error FF0000
+      set -g fish_color_param FFD700
+      set -g fish_color_comment 808080
+      set -g fish_color_selection --background=F75D00
+      set -g fish_color_search_match --background=F75D00
+      set -g fish_color_operator FF8C00
+      set -g fish_color_escape FF6347
+      set -g fish_color_autosuggestion 808080
+      set -g fish_pager_color_selected_background --background=F75D00
+
+
+          # Nix dev shell aliases — only active inside nix develop
+               if set -q IN_NIX_SHELL
+                 if set -q CARGO_NIGHTLY; and set -q RUSTC_NIGHTLY
+                   alias cargo-nightly="RUSTC=$RUSTC_NIGHTLY $CARGO_NIGHTLY"
+                 end
+               end
     '';
   };
 

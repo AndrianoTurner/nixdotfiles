@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
@@ -15,6 +16,8 @@
         "$git_branch"
         "$git_status"
         "[](fg:color_aqua bg:color_blue)"
+        "$nix_shell"
+        "$shlvl"
         "$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python"
         "[](fg:color_blue bg:color_bg3)"
         "$docker_context$conda$pixi"
@@ -66,6 +69,21 @@
           Pop = "";
           NixOS = "";
         };
+      };
+
+      nix_shell = {
+        disabled = false;
+        impure_msg = "impure";
+        symbol = "  ";
+        format = "[[ $symbol$state ](fg:color_fg0 bg:color_blue)]($style)";
+      };
+
+      shlvl = {
+        disabled = false;
+        threshold = 2;
+        symbol = " ";
+        style = "bg:color_blue fg:color_fg0";
+        format = "[[ $symbol$shlvl ](fg:color_fg0 bg:color_blue)]($style)";
       };
 
       username = {
