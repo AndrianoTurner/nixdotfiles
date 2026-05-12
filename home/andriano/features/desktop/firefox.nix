@@ -18,23 +18,6 @@
         "gfx.webrender.all" = true;
         "widget.wayland.fractional-scale.enabled" = true;
       };
-      containers = {
-        Personal = {
-          color = "purple";
-          icon = "fingerprint";
-          id = 1;
-        };
-        Work = {
-          color = "blue";
-          icon = "briefcase";
-          id = 2;
-        };
-        Shopping = {
-          color = "yellow";
-          icon = "dollar";
-          id = 3;
-        };
-      };
       #    containersForce = true;
     };
   };
