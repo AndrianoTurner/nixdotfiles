@@ -6,7 +6,7 @@
     ../common/users/andriano
     ../common/optional/pipewire.nix
     ../common/optional/grub-boot.nix
-    #    ../common/optional/docker.nix
+    ../common/optional/docker.nix
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
     ../common/optional/firewall.nix
