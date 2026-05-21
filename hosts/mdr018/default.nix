@@ -17,6 +17,7 @@
   services.openssh.enable = true;
 
   nix.settings.max-jobs = 1;
+  nixpkgs.config.allowUnfree = true;
   swapDevices = [
     {
       device = "/swapfile";
