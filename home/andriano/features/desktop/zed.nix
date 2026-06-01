@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     nil
     alejandra
@@ -242,6 +243,8 @@
           program = "${pkgs.fish}/bin/fish";
         };
       };
+
+      project_panel.dock = "left";
 
       show_edit_predictions = false;
       features = {
