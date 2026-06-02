@@ -9,6 +9,7 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-25.url = "github:nixos/nixpkgs/nixos-25.11";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -43,6 +44,12 @@
         system = "x86_64-linux";
         config.allowUnfree = true;
       };
+
+      pkgs-old = import inputs.nixpkgs-25 {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+
       # This is a function that generates an attribute by calling a function you
       # pass to it, with each system as an argument
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -70,7 +77,7 @@
         # Personal Laptop
         freedompc = nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs pkgs-unstable;
+            inherit inputs pkgs-unstable pkgs-old;
             outputs = self.outputs;
           };
           modules = [
@@ -80,7 +87,7 @@
 
         homepc = nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs pkgs-unstable;
+            inherit inputs pkgs-unstable pkgs-old;
             outputs = self.outputs;
           };
           modules = [
@@ -90,7 +97,7 @@
 
         mdr018 = nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs pkgs-unstable;
+            inherit inputs pkgs-unstable pkgs-old;
             outputs = self.outputs;
           };
           modules = [
