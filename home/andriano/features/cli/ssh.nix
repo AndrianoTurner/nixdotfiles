@@ -3,7 +3,7 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "gitea-internal" = {
         host = "10.0.0.53";
         user = "git";
