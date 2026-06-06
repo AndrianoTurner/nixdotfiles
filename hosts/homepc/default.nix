@@ -44,6 +44,9 @@
   networking = {
     networkmanager.enable = true;
     hostName = "homepc";
+    extraHosts = ''
+      127.0.0.1 example.com 
+    '';
   };
 
   environment.systemPackages = with pkgs; [
