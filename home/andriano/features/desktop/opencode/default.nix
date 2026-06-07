@@ -28,8 +28,11 @@
           npm = "@ai-sdk/openai-compatible";
           name = "GLM";
           options = {
-            baseURL = "https://open.bigmodel.cn/api/paas/v4";
+            baseURL = "https://api.z.ai/api/coding/paas/v4/";
             apiKey = config.sops.placeholder.glm-api-key;
+          };
+          models = {
+            "glm-5.1".name = "glm-5.1";
           };
         };
       };
