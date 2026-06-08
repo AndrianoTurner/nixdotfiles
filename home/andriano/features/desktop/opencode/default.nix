@@ -33,6 +33,11 @@
           };
           models = {
             "glm-5.1".name = "glm-5.1";
+            "glm-5".name = "glm-5";
+            "glm-5-turbo".name = "glm-5-turbo";
+            "glm-4.7".name = "glm-4.7";
+            "glm-4.6".name = "glm-4.6";
+            "glm-4.5".name = "glm-4.5";
           };
         };
       };
