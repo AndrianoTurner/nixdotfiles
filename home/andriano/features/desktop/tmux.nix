@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    wl-clipboard
+  ];
+
   programs.tmux = {
     enable = true;
 
@@ -8,13 +14,16 @@
     escapeTime = 0;
     keyMode = "vi";
 
+    # If your Home Manager version supports this:
+    terminal = "tmux-256color";
+
     plugins = with pkgs.tmuxPlugins; [
       vim-tmux-navigator
       tmux-which-key
       {
         plugin = gruvbox;
         extraConfig = ''
-          set -g @tmux-gruvbox 'dark' # or 'dark256', 'light', 'light256'
+          set -g @tmux-gruvbox 'dark'
           set -g @tmux-gruvbox-statusbar-alpha 'true'
         '';
       }
@@ -28,15 +37,24 @@
       unbind '"'
       unbind '-'
 
-      # Options not covered by HM native attrs
+      # Correct terminal setup
+      set -g default-terminal "tmux-256color"
+
+      # Truecolor support.
+      # Newer tmux prefers terminal-features; Tc/RGB are direct-color capabilities.
+      set -as terminal-features ",*:RGB"
+      set -as terminal-overrides ",*:Tc"
+
+      # Let tmux interact with the terminal clipboard when possible
+      set -g set-clipboard on
+      set -g copy-command "wl-copy"
+
       set-option -g xterm-keys on
-      set -g default-terminal "$TERM"
-      set-option -ag terminal-overrides ",$TERM:Tc"
       set-option -g status-position top
       setw -g pane-base-index 1
 
-      # Reload config (HM stores it at ~/.config/tmux/tmux.conf)
-      bind r source-file ~/.config/tmux/tmux.conf
+      # Reload config
+      bind r source-file ~/.config/tmux/tmux.conf \; display-message "tmux config reloaded"
 
       # Window/Session navigation
       bind -n C-Tab select-window -n
@@ -69,12 +87,15 @@
       bind-key q kill-pane
       bind-key Q kill-pane
 
-
       # Copy mode navigation
       bind-key -T copy-mode-vi 'C-h' select-pane -L
       bind-key -T copy-mode-vi 'C-j' select-pane -D
       bind-key -T copy-mode-vi 'C-k' select-pane -U
       bind-key -T copy-mode-vi 'C-l' select-pane -R
+
+      # Copy selected text to Wayland clipboard
+      bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"
+      bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "wl-copy"
     '';
   };
 }

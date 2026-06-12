@@ -1,26 +1,28 @@
+{ pkgs, ... }:
 {
-  inputs,
-  pkgs,
-  ...
-}: {
-  imports = [inputs.lazyvim.homeManagerModules.default];
-  programs.lazyvim = {
+  programs.neovim = {
     enable = true;
-    extras = {
-      lang.nix.enable = true;
-      lang.rust.enable = true;
-    };
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+    withRuby = false;
+    withPython3 = false;
 
-    # Additional packages (optional)
     extraPackages = with pkgs; [
-      nixd # Nix LSP
-      alejandra # Nix formatter
-    ];
+      wl-clipboard
+      git
+      ripgrep
+      fd
 
-    # Only needed for languages not covered by LazyVim extras
-    treesitterParsers = with pkgs.vimPlugins.nvim-treesitter-parsers; [
-      wgsl # WebGPU Shading Language
-      templ # Go templ files
+      # LSP servers / formatters
+      rust-analyzer
+      rustfmt
+      lua-language-server
+      nil
+      nixfmt
+      taplo
     ];
   };
+
+  xdg.configFile."nvim/init.lua".source = ./nvim/init.lua;
 }
