@@ -2,14 +2,15 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   imports = [
     ./hardware-configuration.nix
     ../common/global
     ../common/users/andriano
     ../common/optional/pipewire.nix
     ../common/optional/systemd-boot.nix
-    #    ../common/optional/docker.nix
+    ../common/optional/docker.nix
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
     ../common/optional/firewall.nix
@@ -59,13 +60,20 @@
   networking = {
     networkmanager.enable = true;
     hostName = "freedompc";
+
+    extraHosts = ''
+      127.0.0.1 example.com 
+    '';
   };
 
-  environment.systemPackages = with pkgs; [wget vim];
+  environment.systemPackages = with pkgs; [
+    wget
+    vim
+  ];
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = ["usbcore.autosuspend=-1"];
+    kernelParams = [ "usbcore.autosuspend=-1" ];
   };
 
   powerManagement.powertop.enable = true;
