@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     nil
     alejandra
@@ -243,6 +242,7 @@
           program = "${pkgs.fish}/bin/fish";
         };
       };
+      cli_default_open_behavior = "new_window";
 
       project_panel.dock = "left";
 
