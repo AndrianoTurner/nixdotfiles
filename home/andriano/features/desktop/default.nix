@@ -22,6 +22,7 @@
     wf-recorder
     wl-clipboard
     nerd-fonts.jetbrains-mono
+    typst
   ];
 
   xdg.portal = {

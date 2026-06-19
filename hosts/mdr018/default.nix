@@ -38,6 +38,10 @@
   networking = {
     networkmanager.enable = true;
     hostName = "mdr018";
+
+    extraHosts = ''
+      127.0.0.1 example.com 
+    '';
   };
 
   environment.systemPackages = with pkgs; [
