@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs,pkgs-unstable, ... }:
 {
   programs.neovim = {
     enable = true;
@@ -13,6 +13,9 @@
       git
       ripgrep
       fd
+      typst
+      evince
+      websocat
 
       # LSP servers / formatters
       rust-analyzer
@@ -21,7 +24,7 @@
       nil
       nixfmt
       taplo
-    ];
+    ] ++ (with pkgs-unstable; [ tinymist ]);
   };
 
   xdg.configFile."nvim/init.lua".source = ./nvim/init.lua;

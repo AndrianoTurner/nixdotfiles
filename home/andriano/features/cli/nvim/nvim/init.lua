@@ -43,14 +43,28 @@ vim.cmd.filetype("plugin indent on")                 -- Enable filetype detectio
 opt.clipboard = 'unnamedplus'
 
 vim.pack.add({
-    { src = 'https://github.com/echasnovski/mini.nvim',    version = 'main' },
-    { src = 'https://github.com/ellisonleao/gruvbox.nvim', version = 'main' },
-    { src = 'https://github.com/saghen/blink.cmp',         version = vim.version.range('^1') },
+    { src = 'https://github.com/echasnovski/mini.nvim',        version = 'main' },
+    { src = 'https://github.com/ellisonleao/gruvbox.nvim',     version = 'main' },
+    { src = 'https://github.com/saghen/blink.cmp',             version = vim.version.range('^1') },
     { src = 'https://github.com/lewis6991/gitsigns.nvim' },
+    { src = 'https://github.com/chomosuke/typst-preview.nvim', version = vim.version.range("1") },
 }, {
     confirm = false,
     load = true,
 })
+
+require('typst-preview').setup({
+    dependencies_bin = {
+        tinymist = vim.fn.exepath('tinymist'),
+        websocat = vim.fn.exepath('websocat'),
+    },
+
+    open_cmd = 'zen-beta %s',
+
+    host = '127.0.0.1',
+    port = 0,
+})
+
 
 require('gitsigns').setup({ signcolumn = false })
 
@@ -226,6 +240,22 @@ vim.lsp.config('nil_ls', {
     },
 })
 
+-- Typst
+vim.lsp.config("tinymist", {
+
+    cmd = { "tinymist" },
+
+    filetypes = { "typst" },
+
+    settings = {
+--        exportPdf = "onType",
+        lint = {
+            enabled = true,
+        },
+    },
+})
+
+
 -- Lua
 vim.lsp.config('lua_ls', {
     cmd = { 'lua-language-server' },
@@ -256,6 +286,7 @@ vim.lsp.enable({
     'nil_ls',
     'lua_ls',
     'taplo',
+    'tinymist'
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -283,6 +314,22 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
     end,
 })
+
+
+vim.api.nvim_create_user_command("OpenPdf", function()
+
+    local filepath = vim.api.nvim_buf_get_name(0)
+
+    if filepath:match("%.typ$") then
+
+        local pdf_path = filepath:gsub("%.typ$", ".pdf")
+
+        vim.system({ "evince", pdf_path })
+
+    end
+
+end, {})
+
 
 local yank_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 
