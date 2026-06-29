@@ -40,6 +40,17 @@ in
     "wallpapers".source = ./wallpapers;
   };
 
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "zen-beta.desktop";
+      "x-scheme-handler/https" = "zen-beta.desktop";
+      "x-scheme-handler/about" = "zen-beta.desktop";
+      "x-scheme-handler/unknown" = "zen-beta.desktop";
+    };
+  };
+
   home = {
     username = lib.mkDefault "andriano";
     homeDirectory = lib.mkDefault "/home/${config.home.username}";
