@@ -8,6 +8,16 @@
     withRuby = false;
     withPython3 = false;
 
+ plugins = with pkgs.vimPlugins; [
+      gruvbox-nvim
+      mini-nvim
+      mini-pick
+      blink-cmp
+      gitsigns-nvim
+      conform-nvim
+      typst-preview-nvim
+    ];
+
     extraPackages = with pkgs; [
       wl-clipboard
       git
@@ -24,8 +34,13 @@
       nil
       nixfmt
       taplo
+
+
     ] ++ (with pkgs-unstable; [ tinymist ]);
   };
 
-  xdg.configFile."nvim/init.lua".source = ./nvim/init.lua;
+  xdg.configFile."nvim" = { 
+    source =  ./nvim;
+    recursive = true; 
+  };
 }
