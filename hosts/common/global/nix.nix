@@ -2,9 +2,11 @@
   inputs,
   lib,
   ...
-}: let
+}:
+let
   flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-in {
+in
+{
   nix = {
     settings = {
       trusted-users = [
@@ -25,15 +27,16 @@ in {
       ];
       flake-registry = ""; # Disable global flake registry
     };
-    gc = {
+
+    optimise = {
       automatic = true;
-      dates = "daily";
-      # Keep generations from the past week
-      options = "--delete-older-than 7d";
+      persistent = true;
+      randomizedDelaySec = "300";
+      dates = ["12:00"];
     };
 
     # Add each flake input as a registry and nix_path
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+    registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 }

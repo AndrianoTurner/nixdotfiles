@@ -6,9 +6,11 @@
 {
   programs.opencode = {
     enable = true;
+    tui = {
+      theme = "gruvbox";
+    };
     settings = {
       "$schema" = "https://opencode.ai/config.json";
-      theme = "gruvbox";
       provider = {
         ollama = {
           npm = "@ai-sdk/openai-compatible";
