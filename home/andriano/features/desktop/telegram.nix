@@ -1,3 +1,3 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [telegram-desktop];
+{pkgs-unstable, ...}: {
+  home.packages = with pkgs-unstable; [telegram-desktop];
 }
