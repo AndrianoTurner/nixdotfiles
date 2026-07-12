@@ -14,6 +14,7 @@
     ../common/optional/throne.nix
     ../common/optional/l2tp.nix
     ../common/optional/firewall.nix
+    ../common/optional/steam.nix
   ];
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
