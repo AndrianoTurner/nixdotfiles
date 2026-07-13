@@ -49,6 +49,8 @@
       set -g set-clipboard on
       set -g copy-command "wl-copy"
 
+      set-option -g renumber-windows on
+
       set-option -g xterm-keys on
       set-option -g status-position top
       setw -g pane-base-index 1
