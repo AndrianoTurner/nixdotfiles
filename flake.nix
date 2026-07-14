@@ -27,84 +27,84 @@
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    neru.url = "github:y3owk1n/neru"; # Mouseless
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }@inputs:
-    let
-      # Supported systems for your flake packages, shell, etc.
-      systems = [
-        "x86_64-linux"
-      ];
-      pkgs-unstable = import inputs.nixpkgs-unstable {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    neru,
+    ...
+  } @ inputs: let
+    # Supported systems for your flake packages, shell, etc.
+    systems = [
+      "x86_64-linux"
+    ];
+    pkgs-unstable = import inputs.nixpkgs-unstable {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
+    };
+
+    pkgs-old = import inputs.nixpkgs-25 {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
+    };
+
+    # This is a function that generates an attribute by calling a function you
+    # pass to it, with each system as an argument
+    forAllSystems = nixpkgs.lib.genAttrs systems;
+  in {
+    # Your custom packages
+    # Accessible through 'nix build', 'nix shell', etc
+    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+    # Formatter for your nix files, available through 'nix fmt'
+    # Other options beside 'alejandra' include 'nixpkgs-fmt'
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
+    # Your custom packages and modifications, exported as overlays
+    overlays = import ./overlays {inherit inputs;};
+    # Reusable nixos modules you might want to export
+    # These are usually stuff you would upstream into nixpkgs
+    nixosModules = import ./modules/nixos;
+    # Reusable home-manager modules you might want to export
+    # These are usually stuff you would upstream into home-manager
+    homeManagerModules = import ./modules/home-manager;
+
+    # NixOS configuration entrypoint
+    # Available through 'nixos-rebuild --flake .#your-hostname'
+    nixosConfigurations = {
+      # Personal Laptop
+      freedompc = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs pkgs-unstable pkgs-old;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/freedompc
+        ];
       };
 
-      pkgs-old = import inputs.nixpkgs-25 {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
+      homepc = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs pkgs-unstable pkgs-old;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/homepc
+        ];
       };
 
-      # This is a function that generates an attribute by calling a function you
-      # pass to it, with each system as an argument
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-    in
-    {
-      # Your custom packages
-      # Accessible through 'nix build', 'nix shell', etc
-      packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-      # Formatter for your nix files, available through 'nix fmt'
-      # Other options beside 'alejandra' include 'nixpkgs-fmt'
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-
-      # Your custom packages and modifications, exported as overlays
-      overlays = import ./overlays { inherit inputs; };
-      # Reusable nixos modules you might want to export
-      # These are usually stuff you would upstream into nixpkgs
-      nixosModules = import ./modules/nixos;
-      # Reusable home-manager modules you might want to export
-      # These are usually stuff you would upstream into home-manager
-      homeManagerModules = import ./modules/home-manager;
-
-      # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
-      nixosConfigurations = {
-        # Personal Laptop
-        freedompc = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs pkgs-unstable pkgs-old;
-            outputs = self.outputs;
-          };
-          modules = [
-            ./hosts/freedompc
-          ];
+      mdr018 = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs pkgs-unstable pkgs-old;
+          outputs = self.outputs;
         };
-
-        homepc = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs pkgs-unstable pkgs-old;
-            outputs = self.outputs;
-          };
-          modules = [
-            ./hosts/homepc
-          ];
-        };
-
-        mdr018 = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs pkgs-unstable pkgs-old;
-            outputs = self.outputs;
-          };
-          modules = [
-            ./hosts/mdr018
-          ];
-        };
+        modules = [
+          ./hosts/mdr018
+        ];
       };
     };
+  };
 }

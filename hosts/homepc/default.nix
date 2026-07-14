@@ -1,15 +1,18 @@
-{ pkgs, ... }:
 {
+  pkgs,
+  outputs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
-    ../common/global
-    ../common/users/andriano
-    ../common/optional/pipewire.nix
-    ../common/optional/grub-boot.nix
-    ../common/optional/docker.nix
-    ../common/optional/throne.nix
-    ../common/optional/l2tp.nix
-    ../common/optional/firewall.nix
+    outputs.nixosModules.common
+    outputs.nixosModules.users.andriano
+    outputs.nixosModules.pipewire
+    outputs.nixosModules.grub-boot
+    outputs.nixosModules.docker
+    outputs.nixosModules.throne
+    outputs.nixosModules.l2tp
+    outputs.nixosModules.firewall
   ];
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
@@ -45,7 +48,7 @@
     networkmanager.enable = true;
     hostName = "homepc";
     extraHosts = ''
-      127.0.0.1 example.com 
+      127.0.0.1 example.com
     '';
   };
 
@@ -64,7 +67,7 @@
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = [ "usbcore.autosuspend=-1" ];
+    kernelParams = ["usbcore.autosuspend=-1"];
   };
 
   powerManagement.powertop.enable = true;
