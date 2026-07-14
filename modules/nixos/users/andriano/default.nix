@@ -15,6 +15,7 @@ in {
       "docker"
       "git"
       "i2c"
+      "input"
       "libvirtd"
       "wpa_supplicant"
       "plugdev"

@@ -21,4 +21,18 @@
       config.allowUnfree = true;
     };
   };
+
+  neru = final: prev: let
+    upstream = inputs.neru.overlays.default final prev;
+  in
+    upstream
+    // {
+      neru = upstream.neru.overrideAttrs (old: {
+        buildInputs =
+          (old.buildInputs or [])
+          ++ final.lib.optionals final.stdenv.hostPlatform.isLinux [
+            final.libei
+          ];
+      });
+    };
 }
