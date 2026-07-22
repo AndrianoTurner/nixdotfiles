@@ -1,10 +1,10 @@
 {
   description = "Your new nix config";
 
-  # nixConfig = {
-  #   extra-substituters = ["https://noctalia.cachix.org"];
-  #   extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
-  # };
+  nixConfig = {
+    extra-substituters = ["https://noctalia.cachix.org"];
+    extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+  };
 
   inputs = {
     # Nixpkgs
@@ -19,10 +19,10 @@
     home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/legacy-v4";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # The cachix branch follows the newest v5 revision already available in
+    # Noctalia's binary cache. Do not make its nixpkgs input follow ours: that
+    # would change the derivation hash and bypass the cache.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
     sops-nix = {
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

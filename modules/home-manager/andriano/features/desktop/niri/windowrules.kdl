@@ -21,6 +21,15 @@ window-rule {
   open-focused false
 }
 
+// Noctalia v5 runs its settings UI as a regular application window.
+window-rule {
+  match app-id="dev.noctalia.Noctalia"
+
+  open-floating true
+  default-column-width { fixed 1080; }
+  default-window-height { fixed 920; }
+}
+
 window-rule {
   match app-id="smile"
   match app-id="kdenlive"

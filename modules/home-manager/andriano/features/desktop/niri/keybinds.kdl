@@ -3,8 +3,8 @@ binds {
     Mod+Return      { spawn "alacritty"; }
     Mod+R repeat=false { spawn "vicinae" "toggle"; }
     Mod+E           { spawn "dolphin"; }
-    Mod+X { spawn "sh" "-c" "noctalia-shell ipc call notifications toggleHistory"; }
-    Ctrl+Alt+L { spawn "sh" "-c" "noctalia-shell ipc call lockScreen lock"; }
+    Mod+X { spawn "noctalia" "msg" "panel-toggle" "control-center" "notifications"; }
+    Ctrl+Alt+L { spawn "noctalia" "msg" "session" "lock"; }
 
     // ── Window management ─────────────────────────────────────────────────
     Mod+Q           { close-window; }
