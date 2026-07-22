@@ -1,9 +1,10 @@
 {pkgs, ...}: {
-  xdg.configFile = {
-    "niri/config.kdl".source = ./config.kdl;
-    "niri/keybinds.kdl".source = ./keybinds.kdl;
-    "niri/settings.kdl".source = ./settings.kdl;
-    "niri/windowrules.kdl".source = ./windowrules.kdl;
+  programs.niri = {
+    package = pkgs.niri;
+    settings =
+      import ./settings.nix
+      // import ./keybinds.nix
+      // import ./windowrules.nix;
   };
 
   home.packages = with pkgs; [

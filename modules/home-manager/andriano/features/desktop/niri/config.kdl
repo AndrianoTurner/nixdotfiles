@@ -1,4 +1,0 @@
-spawn-at-startup "noctalia"
-include "settings.kdl"
-include "keybinds.kdl"
-include "windowrules.kdl"

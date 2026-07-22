@@ -10,6 +10,7 @@
 
   desktop = {
     imports = [
+      inputs.niri.homeModules.config
       inputs.zen-browser.homeModules.default
       inputs.noctalia.homeModules.default
       ./andriano/features/desktop
