@@ -2,7 +2,6 @@
 {
   inputs,
   outputs,
-  pkgs-unstable,
   pkgs,
   ...
 }: {
@@ -21,7 +20,7 @@
   fonts.packages = [pkgs.nerd-fonts.jetbrains-mono];
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
-    inherit inputs outputs pkgs-unstable;
+    inherit outputs;
   };
 
   nixpkgs = {

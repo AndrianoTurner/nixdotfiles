@@ -27,31 +27,18 @@
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    neru.url = "github:y3owk1n/neru"; # Mouseless
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
-    neru,
     ...
   } @ inputs: let
     # Supported systems for your flake packages, shell, etc.
     systems = [
       "x86_64-linux"
     ];
-    pkgs-unstable = import inputs.nixpkgs-unstable {
-      system = "x86_64-linux";
-      config.allowUnfree = true;
-    };
-
-    pkgs-old = import inputs.nixpkgs-25 {
-      system = "x86_64-linux";
-      config.allowUnfree = true;
-    };
-
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -70,7 +57,7 @@
     nixosModules = import ./modules/nixos;
     # Reusable home-manager modules you might want to export
     # These are usually stuff you would upstream into home-manager
-    homeManagerModules = import ./modules/home-manager;
+    homeManagerModules = import ./modules/home-manager {inherit inputs;};
 
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
@@ -78,7 +65,7 @@
       # Personal Laptop
       freedompc = nixpkgs.lib.nixosSystem {
         specialArgs = {
-          inherit inputs pkgs-unstable pkgs-old;
+          inherit inputs;
           outputs = self.outputs;
         };
         modules = [
@@ -88,7 +75,7 @@
 
       homepc = nixpkgs.lib.nixosSystem {
         specialArgs = {
-          inherit inputs pkgs-unstable pkgs-old;
+          inherit inputs;
           outputs = self.outputs;
         };
         modules = [
@@ -98,7 +85,7 @@
 
       mdr018 = nixpkgs.lib.nixosSystem {
         specialArgs = {
-          inherit inputs pkgs-unstable pkgs-old;
+          inherit inputs;
           outputs = self.outputs;
         };
         modules = [

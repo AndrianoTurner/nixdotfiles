@@ -10,10 +10,9 @@
     ./vicinae.nix
     ./noctalia.nix
     ./zed.nix
-    ./telegram.nix
+    ./ayugram.nix
     ./tmux.nix
     ./opencode
-    ./neru.nix
   ];
 
   xdg.mimeApps.enable = true;

@@ -1,7 +1,7 @@
-{pkgs-unstable, ...}: {
+{pkgs, ...}: {
   programs.vicinae = {
     enable = true;
-    package = pkgs-unstable.vicinae;
+    package = pkgs.unstablePkgs.vicinae;
     systemd.enable = true;
     systemd.autoStart = true;
   };

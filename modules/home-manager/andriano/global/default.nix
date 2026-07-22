@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   pkgs,
   config,
@@ -9,7 +8,6 @@
   cursorSize = 24;
 in {
   imports = [
-    inputs.sops-nix.homeManagerModules.sops
     ./sops.nix
   ];
 
@@ -33,17 +31,6 @@ in {
   xdg.configFile = {
     "face".source = ./face;
     "wallpapers".source = ./wallpapers;
-  };
-
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/html" = "zen-beta.desktop";
-      "x-scheme-handler/http" = "zen-beta.desktop";
-      "x-scheme-handler/https" = "zen-beta.desktop";
-      "x-scheme-handler/about" = "zen-beta.desktop";
-      "x-scheme-handler/unknown" = "zen-beta.desktop";
-    };
   };
 
   home = {

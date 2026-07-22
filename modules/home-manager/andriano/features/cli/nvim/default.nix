@@ -1,8 +1,4 @@
-{
-  pkgs,
-  pkgs-unstable,
-  ...
-}: {
+{pkgs, ...}: {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -39,7 +35,7 @@
         nixfmt
         taplo
       ]
-      ++ (with pkgs-unstable; [tinymist]);
+      ++ [pkgs.unstablePkgs.tinymist];
   };
 
   xdg.configFile."nvim" = {
