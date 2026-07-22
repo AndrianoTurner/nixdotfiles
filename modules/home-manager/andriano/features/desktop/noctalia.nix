@@ -1,4 +1,4 @@
-{
+{config, ...}: {
   programs.noctalia = {
     enable = true;
 
@@ -14,7 +14,7 @@
         date_format = "%a, %b %d";
         telemetry_enabled = false;
         setup_wizard_enabled = false;
-        avatar_path = "/home/andriano/.config/face";
+        avatar_path = "${config.xdg.configHome}/face";
         clipboard_enabled = true;
         clipboard_auto_paste = "off";
 
@@ -54,7 +54,7 @@
 
       wallpaper = {
         enabled = true;
-        directory = "/home/andriano/.config/wallpapers";
+        directory = "${config.xdg.configHome}/wallpapers";
         fill_mode = "crop";
         fill_color = "#000000";
         transition = [

@@ -4,9 +4,7 @@
   ...
 }: {
   imports = [
-    outputs.homeManagerModules.andriano
-    outputs.homeManagerModules.cli
-    outputs.homeManagerModules.desktop
+    outputs.homeManagerModules.profiles.personal
   ];
   home.packages = with pkgs; [docker-compose];
 }

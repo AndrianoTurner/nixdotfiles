@@ -1,4 +1,4 @@
-{...}: {
+{config, ...}: {
   programs.firefox = {
     enable = true;
 
@@ -9,7 +9,7 @@
       DisableTelemetry = true;
       DisablePocket = true;
     };
-    profiles.andriano = {
+    profiles.${config.home.username} = {
       isDefault = true;
       settings = {
         "browser.startup.homepage" = "about:blank";

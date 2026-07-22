@@ -7,27 +7,21 @@
   imports = [
     ./hardware-configuration.nix
     outputs.nixosModules.common
-    outputs.nixosModules.users.andriano
-    outputs.nixosModules.pipewire
+    outputs.nixosModules.primary-user
+    outputs.nixosModules.profiles.workstation
+    outputs.nixosModules.profiles.physical
+    outputs.nixosModules.profiles.personal
     outputs.nixosModules.systemd-boot
     outputs.nixosModules.docker
     outputs.nixosModules.throne
-    outputs.nixosModules.l2tp
-    outputs.nixosModules.firewall
     outputs.nixosModules.steam
   ];
-  hardware.bluetooth.enable = true;
-  services.power-profiles-daemon.enable = true;
-  services.upower.enable = true;
-  services.openssh.enable = true;
 
-  nix.settings.max-jobs = 1;
-  swapDevices = [
-    {
-      device = "/swapfile";
-      size = 8192; # Size in Megabytes (8192 = 8GB)
-    }
-  ];
+  myConfig.primaryUser = {
+    name = "andriano";
+    homeModule = outputs.homeManagerModules.hosts.freedompc;
+  };
+
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -50,35 +44,13 @@
 
   hardware.graphics.enable = true;
 
-  services.xserver.xkb = {
-    layout = "us,ru";
-    variant = ",";
-    options = "grp:alt_shift_toggle"; # Alt+Shift to switch layouts
-  };
-
-  console.keyMap = "us";
-
   networking = {
-    networkmanager.enable = true;
     hostName = "freedompc";
 
     extraHosts = ''
       127.0.0.1 example.com
     '';
   };
-
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-  ];
-
-  boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = ["usbcore.autosuspend=-1"];
-  };
-
-  powerManagement.powertop.enable = true;
-  programs.dconf.enable = true;
 
   system.stateVersion = "22.05";
 }

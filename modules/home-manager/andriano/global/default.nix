@@ -7,10 +7,6 @@
   cursorTheme = "Bibata-Modern-Classic";
   cursorSize = 24;
 in {
-  imports = [
-    ./sops.nix
-  ];
-
   nix = {
     package = lib.mkDefault pkgs.nix;
     settings = {
@@ -34,8 +30,6 @@ in {
   };
 
   home = {
-    username = lib.mkDefault "andriano";
-    homeDirectory = lib.mkDefault "/home/${config.home.username}";
     stateVersion = lib.mkDefault "22.05";
     sessionPath = ["$HOME/.local/bin"];
     packages = with pkgs; [
@@ -52,10 +46,6 @@ in {
       size = cursorSize;
       gtk.enable = true;
       x11.enable = true;
-    };
-
-    shellAliases = {
-      rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
     };
   };
 }

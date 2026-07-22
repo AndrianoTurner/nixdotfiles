@@ -2,30 +2,20 @@
 {
   inputs,
   outputs,
-  pkgs,
   ...
-}:
-{
+}: {
   imports = [
-    inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
     ./fish.nix
     ./locale.nix
     ./nix.nix
-    ./noctalia-greeter.nix
-    ./niri.nix
     ./time.nix
-    ./sops.nix
   ];
-
-  fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
     inherit outputs;
   };
-
-
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
     config = {

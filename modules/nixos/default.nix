@@ -1,9 +1,13 @@
 {
   common = import ./common/global;
 
-  users = {
-    andriano = import ./users/andriano;
+  profiles = {
+    workstation = import ./profiles/workstation.nix;
+    physical = import ./profiles/physical.nix;
+    personal = import ./profiles/personal.nix;
   };
+
+  primary-user = import ./users/andriano;
 
   docker = import ./optional/docker.nix;
   firewall = import ./optional/firewall.nix;

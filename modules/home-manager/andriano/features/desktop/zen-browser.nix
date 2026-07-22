@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -42,7 +43,7 @@ in {
       };
     };
 
-    profiles.andriano = {
+    profiles.${config.home.username} = {
       isDefault = true;
 
       mods = [

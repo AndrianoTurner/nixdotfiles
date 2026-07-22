@@ -1,10 +1,5 @@
 {inputs}: {
-  andriano = {
-    imports = [
-      inputs.sops-nix.homeManagerModules.sops
-      ./andriano/global
-    ];
-  };
+  base = import ./andriano/global;
 
   cli = import ./andriano/features/cli;
 
@@ -17,9 +12,34 @@
     ];
   };
 
+  personal = {
+    imports = [
+      inputs.sops-nix.homeManagerModules.sops
+      ./andriano/personal
+    ];
+  };
+
+  profiles = {
+    public = {outputs, ...}: {
+      imports = [
+        outputs.homeManagerModules.base
+        outputs.homeManagerModules.cli
+        outputs.homeManagerModules.desktop
+      ];
+    };
+
+    personal = {outputs, ...}: {
+      imports = [
+        outputs.homeManagerModules.profiles.public
+        outputs.homeManagerModules.personal
+      ];
+    };
+  };
+
   hosts = {
     freedompc = import ./andriano/freedompc.nix;
     homepc = import ./andriano/homepc.nix;
     mdr018 = import ./andriano/mdr018.nix;
+    demo = import ./andriano/demo.nix;
   };
 }

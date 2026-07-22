@@ -100,6 +100,25 @@
           ./hosts/mdr018
         ];
       };
+
+      # Public, secret-free QEMU demo
+      demo = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/demo
+        ];
+      };
     };
+
+    apps = forAllSystems (_system: {
+      demo = {
+        type = "app";
+        program = "${self.nixosConfigurations.demo.config.system.build.vm}/bin/run-demo-vm";
+        meta.description = "Run the secret-free NixOS desktop demo VM";
+      };
+    });
   };
 }
