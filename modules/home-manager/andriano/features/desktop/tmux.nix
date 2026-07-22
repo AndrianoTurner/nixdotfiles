@@ -43,13 +43,18 @@
       set -as terminal-features ",*:RGB"
       set -as terminal-overrides ",*:Tc"
 
+        set -g extended-keys on
+        set -g extended-keys-format csi-u
+        set -as terminal-features ",xterm-ghostty:extkeys"
+        set -as terminal-features ",alacritty*:extkeys"
+      set-option -g xterm-keys on
+
       # Let tmux interact with the terminal clipboard when possible
       set -g set-clipboard on
       set -g copy-command "wl-copy"
 
       set-option -g renumber-windows on
 
-      set-option -g xterm-keys on
       set-option -g status-position top
       setw -g pane-base-index 1
 
