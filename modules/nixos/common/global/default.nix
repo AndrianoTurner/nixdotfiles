@@ -11,7 +11,7 @@
     ./fish.nix
     ./locale.nix
     ./nix.nix
-    ./display-manager.nix
+    ./noctalia-greeter.nix
     ./niri.nix
     ./time.nix
     ./sops.nix

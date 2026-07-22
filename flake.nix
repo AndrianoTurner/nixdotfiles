@@ -27,6 +27,10 @@
     # Noctalia's binary cache. Do not make its nixpkgs input follow ours: that
     # would change the derivation hash and bypass the cache.
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
