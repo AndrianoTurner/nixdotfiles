@@ -16,6 +16,10 @@
         path = "${pkgs.bibata-cursors}/share/icons";
       };
 
+      appearance = {
+        hide_logo = true;
+      };
+
       keyboard = {
         layout = "us,ru";
         variant = ",";

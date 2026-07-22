@@ -99,7 +99,8 @@
 
       lockscreen = {
         enabled = true;
-        blurred_desktop = true;
+        blurred_desktop = false;
+        wallpaper = "";
         blur_intensity = 0.2;
         tint_intensity = 0.0;
       };
@@ -157,7 +158,7 @@
             action = "lock";
           };
           "lock-and-suspend" = {
-            enabled = true;
+            enabled = false;
             timeout = 1800;
             action = "lock_and_suspend";
           };
@@ -183,10 +184,10 @@
           "cpu"
           "temp"
           "ram"
-          "media"
         ];
         center = ["workspaces"];
         end = [
+          "media"
           "tray"
           "notifications"
           "battery"
