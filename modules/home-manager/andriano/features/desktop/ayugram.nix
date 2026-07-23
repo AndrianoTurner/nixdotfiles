@@ -1,3 +1,3 @@
 {pkgs, ...}: {
-  home.packages = [pkgs.ayugram-desktop];
+  home.packages = [pkgs.telegram-desktop];
 }
