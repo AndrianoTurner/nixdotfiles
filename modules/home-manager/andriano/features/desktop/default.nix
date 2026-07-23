@@ -21,8 +21,17 @@
     wf-recorder
     wl-clipboard
     nerd-fonts.jetbrains-mono
+    nerd-fonts._0xproto
+    nerd-fonts._3270
+    nerd-fonts.fira-mono
+    nerd-fonts.fira-code
+    nerd-fonts.bigblue-terminal
+    nerd-fonts.hack
+    nerd-fonts.departure-mono
     typst
   ];
+
+  fonts.fontconfig.enable = true;
 
   xdg.portal = {
     xdgOpenUsePortal = true;
