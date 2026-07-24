@@ -4,7 +4,8 @@
   outputs,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
@@ -17,11 +18,13 @@
     ./sops.nix
   ];
 
-  fonts.packages = [pkgs.nerd-fonts.jetbrains-mono];
+  fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
+
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
     inherit outputs;
   };
+
 
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
