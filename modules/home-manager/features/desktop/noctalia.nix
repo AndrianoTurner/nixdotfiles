@@ -178,6 +178,7 @@
         reserve_space = true;
         capsule = true;
         capsule_opacity = 0.62;
+        margin_ends = 0;
 
         start = [
           "clock"
