@@ -5,28 +5,16 @@
 }: let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
 in {
-  imports = [
-    ./sops.nix
-    ../../optional/l2tp.nix
-  ];
-
   users.mutableUsers = true;
-  users.users.andriano = {
+  users.users.demo = {
     isNormalUser = true;
+    initialPassword = "demo";
     shell = pkgs.fish;
     extraGroups = ifTheyExist [
       "audio"
-      "docker"
-      "git"
-      "i2c"
       "input"
-      "libvirtd"
-      "wpa_supplicant"
-      "plugdev"
-      "podman"
       "video"
       "wheel"
-      "wireshark"
       "networkmanager"
       "render"
     ];

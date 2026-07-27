@@ -1,5 +1,5 @@
 {
-  description = "Your new nix config";
+  description = "Andriano's NixOS configurations";
 
   nixConfig = {
     extra-substituters = ["https://noctalia.cachix.org"];
@@ -40,7 +40,6 @@
   outputs = {
     self,
     nixpkgs,
-    home-manager,
     ...
   } @ inputs: let
     # Supported systems for your flake packages, shell, etc.
@@ -60,13 +59,6 @@
 
     # Your custom packages and modifications, exported as overlays
     overlays = import ./overlays {inherit inputs;};
-    # Reusable nixos modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
-    nixosModules = import ./modules/nixos;
-    # Reusable home-manager modules you might want to export
-    # These are usually stuff you would upstream into home-manager
-    homeManagerModules = import ./modules/home-manager {inherit inputs;};
-
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
@@ -100,6 +92,25 @@
           ./hosts/mdr018
         ];
       };
+
+      # Public, secret-free QEMU demo
+      demo = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          outputs = self.outputs;
+        };
+        modules = [
+          ./hosts/demo
+        ];
+      };
     };
+
+    apps = forAllSystems (_system: {
+      demo = {
+        type = "app";
+        program = "${self.nixosConfigurations.demo.config.system.build.vm}/bin/run-demo-vm";
+        meta.description = "Run the secret-free NixOS desktop demo VM";
+      };
+    });
   };
 }
