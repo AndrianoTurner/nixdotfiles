@@ -1,6 +1,10 @@
-{
+{inputs, ...}: {
   imports = [
-    ../global/sops.nix
+    inputs.sops-nix.homeManagerModules.sops
+    ../../shared
+    ../../features/cli
+    ../../features/desktop
+    ./sops.nix
     ./git.nix
     ./jj.nix
     ./opencode.nix

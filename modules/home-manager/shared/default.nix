@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   ...
 }: let
   cursorTheme = "Bibata-Modern-Classic";

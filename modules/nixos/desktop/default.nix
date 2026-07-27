@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   imports = [
-    ../common/global/noctalia-greeter.nix
-    ../common/global/niri.nix
+    ./noctalia-greeter.nix
+    ./niri.nix
     ../optional/firewall.nix
     ../optional/pipewire.nix
   ];

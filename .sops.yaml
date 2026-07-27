@@ -2,12 +2,12 @@ keys:
   - &master age138vmfg3gctc896jw06u2zmwzd4tjusfs6xl3xt90yszalkgj5gjqm0ghpf
   - &home age1s3nd5rqg7kcp49u4slda79fefv4q9k7egxgmxgq8cj23yzzrualq22j4kc
 creation_rules:
-  - path_regex: hosts/common/secrets.ya?ml$
+  - path_regex: modules/nixos/users/andriano/secrets.ya?ml$
     key_groups:
     - age:
       - *master
 
-  - path_regex: home/andriano/secrets.ya?ml$
+  - path_regex: modules/home-manager/users/andriano/secrets.ya?ml$
     key_groups:
     - age:
       - *master

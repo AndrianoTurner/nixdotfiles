@@ -1,24 +1,16 @@
-{
-  pkgs,
-  outputs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
-    outputs.nixosModules.common
-    outputs.nixosModules.primary-user
-    outputs.nixosModules.profiles.workstation
-    outputs.nixosModules.profiles.physical
-    outputs.nixosModules.profiles.personal
-    outputs.nixosModules.grub-boot
-    outputs.nixosModules.docker
-    outputs.nixosModules.throne
+    ../../modules/nixos/common
+    ../../modules/nixos/desktop
+    ../../modules/nixos/physical.nix
+    ../../modules/nixos/users/andriano
+    ../../modules/nixos/optional/grub-boot.nix
+    ../../modules/nixos/optional/docker.nix
+    ../../modules/nixos/optional/throne.nix
   ];
 
-  myConfig.primaryUser = {
-    name = "andriano";
-    homeModule = outputs.homeManagerModules.hosts.homepc;
-  };
+  home-manager.users.andriano = import ./home.nix;
 
   hardware.graphics = {
     enable = true;

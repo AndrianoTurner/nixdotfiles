@@ -1,20 +1,11 @@
-{
-  options,
-  outputs,
-  ...
-}: {
+{options, ...}: {
   imports = [
-    outputs.nixosModules.common
-    outputs.nixosModules.primary-user
-    outputs.nixosModules.profiles.workstation
+    ../../modules/nixos/common
+    ../../modules/nixos/desktop
+    ../../modules/nixos/users/demo
   ];
 
-  myConfig.primaryUser = {
-    name = "demo";
-    homeModule = outputs.homeManagerModules.hosts.demo;
-  };
-
-  users.users.demo.initialPassword = "demo";
+  home-manager.users.demo = import ./home.nix;
 
   # The VM shares the host's Nix store read-only, so Home Manager cannot build
   # a mutable per-user profile during activation. Put the home packages in the

@@ -1,4 +1,4 @@
-# This file (and the global directory) holds config that i use on all hosts
+# Secret-free configuration shared by every host.
 {
   inputs,
   outputs,
@@ -14,8 +14,9 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
-    inherit outputs;
+    inherit inputs;
   };
+
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
     config = {

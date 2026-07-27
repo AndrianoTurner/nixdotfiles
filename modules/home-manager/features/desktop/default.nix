@@ -1,5 +1,12 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
+    inputs.niri.homeModules.config
+    inputs.zen-browser.homeModules.default
+    inputs.noctalia.homeModules.default
     ./font.nix
     ./pavucontrol.nix
     ./playerctl.nix
@@ -10,7 +17,7 @@
     ./vicinae.nix
     ./noctalia.nix
     ./zed.nix
-    ./ayugram.nix
+    ./telegram.nix
     ./tmux.nix
     ./opencode
   ];
@@ -20,18 +27,8 @@
   home.packages = with pkgs; [
     wf-recorder
     wl-clipboard
-    nerd-fonts.jetbrains-mono
-    nerd-fonts._0xproto
-    nerd-fonts._3270
-    nerd-fonts.fira-mono
-    nerd-fonts.fira-code
-    nerd-fonts.bigblue-terminal
-    nerd-fonts.hack
-    nerd-fonts.departure-mono
     typst
   ];
-
-  fonts.fontconfig.enable = true;
 
   xdg.portal = {
     xdgOpenUsePortal = true;
