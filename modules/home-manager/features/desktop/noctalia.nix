@@ -105,6 +105,133 @@
         tint_intensity = 0.0;
       };
 
+      lockscreen_widgets = {
+        enabled = true;
+        schema_version = 2;
+        widget_order = [
+          "lockscreen-login-box@DP-1"
+          "lockscreen-login-box@HDMI-A-1"
+          "lockscreen-widget-0000000000000001"
+          "lockscreen-widget-0000000000000003"
+          "lockscreen-widget-0000000000000005"
+          "lockscreen-widget-0000000000000006"
+        ];
+
+        grid = {
+          cell_size = 16;
+          major_interval = 4;
+          visible = true;
+        };
+
+        widget = {
+          "lockscreen-login-box@DP-1" = {
+            box_height = 70.0;
+            box_width = 400.0;
+            cx = 960.0;
+            cy = 961.0;
+            output = "DP-1";
+            rotation = 0.0;
+            type = "login_box";
+
+            settings = {
+              background_color = "surface_variant";
+              background_opacity = 0.88;
+              background_radius = 12.0;
+              center_password_text = false;
+              input_opacity = 1.0;
+              input_radius = 6.0;
+              show_caps_lock = true;
+              show_keyboard_layout = true;
+              show_login_button = true;
+              show_password_hint = true;
+            };
+          };
+
+          "lockscreen-login-box@HDMI-A-1" = {
+            box_height = 70.0;
+            box_width = 400.0;
+            cx = 960.0;
+            cy = 956.0;
+            output = "HDMI-A-1";
+            rotation = 0.0;
+            type = "login_box";
+
+            settings = {
+              background_color = "surface_variant";
+              background_opacity = 0.88;
+              background_radius = 12.0;
+              center_password_text = false;
+              input_opacity = 1.0;
+              input_radius = 6.0;
+              show_caps_lock = true;
+              show_keyboard_layout = true;
+              show_login_button = true;
+              show_password_hint = true;
+            };
+          };
+
+          lockscreen-widget-0000000000000001 = {
+            box_height = 0.0;
+            box_width = 0.0;
+            cx = 960.0;
+            cy = 279.0;
+            output = "HDMI-A-1";
+            rotation = 0.0;
+            type = "clock";
+          };
+
+          lockscreen-widget-0000000000000003 = {
+            box_height = 224.0;
+            box_width = 240.0;
+            cx = 960.0;
+            cy = 780.0;
+            output = "HDMI-A-1";
+            rotation = 0.0;
+            type = "fancy_audio_visualizer";
+
+            settings = {
+              background = false;
+              visualization_mode = "all";
+            };
+          };
+
+          lockscreen-widget-0000000000000005 = {
+            box_height = 0.0;
+            box_width = 0.0;
+            cx = 960.0;
+            cy = 592.5;
+            output = "HDMI-A-1";
+            rotation = 0.0;
+            type = "sysmon";
+
+            settings = {
+              background_opacity = 0.0;
+              background_padding = 16;
+              background_radius = 14;
+              display = "graph";
+              stat = "cpu_usage";
+              stat2 = "cpu_temp";
+            };
+          };
+
+          lockscreen-widget-0000000000000006 = {
+            box_height = 0.0;
+            box_width = 0.0;
+            cx = 960.0;
+            cy = 428.0;
+            output = "HDMI-A-1";
+            rotation = 0.0;
+            type = "weather";
+
+            settings = {
+              background_opacity = 0.87;
+              forecast_days = 3;
+              show_forecast = true;
+            };
+          };
+        };
+      };
+
       system.monitor = {
         enabled = true;
         cpu_usage_activity_threshold = 80;
