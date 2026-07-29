@@ -242,6 +242,7 @@
         "noctalia": "noctalia",
         "noctalia-greeter": "noctalia-greeter",
         "sops-nix": "sops-nix",
+        "wallpaper-bank": "wallpaper-bank",
         "zen-browser": "zen-browser"
       }
     },
@@ -262,6 +263,22 @@
       "original": {
         "owner": "mic92",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "wallpaper-bank": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766348179,
+        "narHash": "sha256-hwxAgokCpCZwx/wnS2oWZNEQr76SWjzsi/Y+48sszE0=",
+        "owner": "JaKooLit",
+        "repo": "Wallpaper-Bank",
+        "rev": "c5e1780c29adca428dc4ca2d970bd1a6a09f18f3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JaKooLit",
+        "repo": "Wallpaper-Bank",
         "type": "github"
       }
     },

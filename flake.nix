@@ -2,8 +2,10 @@
   description = "Andriano's NixOS configurations";
 
   nixConfig = {
-    extra-substituters = ["https://noctalia.cachix.org"];
-    extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+    extra-substituters = [ "https://noctalia.cachix.org" ];
+    extra-trusted-public-keys = [
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    ];
   };
 
   inputs = {
@@ -35,82 +37,90 @@
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
 
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  } @ inputs: let
-    # Supported systems for your flake packages, shell, etc.
-    systems = [
-      "x86_64-linux"
-    ];
-    # This is a function that generates an attribute by calling a function you
-    # pass to it, with each system as an argument
-    forAllSystems = nixpkgs.lib.genAttrs systems;
-  in {
-    # Your custom packages
-    # Accessible through 'nix build', 'nix shell', etc
-    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-    # Formatter for your nix files, available through 'nix fmt'
-    # Other options beside 'alejandra' include 'nixpkgs-fmt'
-    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-
-    # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs;};
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      # Personal Laptop
-      freedompc = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
-        modules = [
-          ./hosts/freedompc
-        ];
-      };
-
-      homepc = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
-        modules = [
-          ./hosts/homepc
-        ];
-      };
-
-      mdr018 = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
-        modules = [
-          ./hosts/mdr018
-        ];
-      };
-
-      # Public, secret-free QEMU demo
-      demo = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
-        modules = [
-          ./hosts/demo
-        ];
-      };
+    wallpaper-bank = {
+      url = "github:JaKooLit/Wallpaper-Bank";
+      flake = false;
     };
-
-    apps = forAllSystems (_system: {
-      demo = {
-        type = "app";
-        program = "${self.nixosConfigurations.demo.config.system.build.vm}/bin/run-demo-vm";
-        meta.description = "Run the secret-free NixOS desktop demo VM";
-      };
-    });
   };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      ...
+    }@inputs:
+    let
+      # Supported systems for your flake packages, shell, etc.
+      systems = [
+        "x86_64-linux"
+      ];
+      # This is a function that generates an attribute by calling a function you
+      # pass to it, with each system as an argument
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+    in
+    {
+      # Your custom packages
+      # Accessible through 'nix build', 'nix shell', etc
+      packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+      # Formatter for your nix files, available through 'nix fmt'
+      # Other options beside 'alejandra' include 'nixpkgs-fmt'
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
+      # Your custom packages and modifications, exported as overlays
+      overlays = import ./overlays { inherit inputs; };
+      # NixOS configuration entrypoint
+      # Available through 'nixos-rebuild --flake .#your-hostname'
+      nixosConfigurations = {
+        # Personal Laptop
+        freedompc = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            outputs = self.outputs;
+          };
+          modules = [
+            ./hosts/freedompc
+          ];
+        };
+
+        homepc = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            outputs = self.outputs;
+          };
+          modules = [
+            ./hosts/homepc
+          ];
+        };
+
+        mdr018 = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            outputs = self.outputs;
+          };
+          modules = [
+            ./hosts/mdr018
+          ];
+        };
+
+        # Public, secret-free QEMU demo
+        demo = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            outputs = self.outputs;
+          };
+          modules = [
+            ./hosts/demo
+          ];
+        };
+      };
+
+      apps = forAllSystems (_system: {
+        demo = {
+          type = "app";
+          program = "${self.nixosConfigurations.demo.config.system.build.vm}/bin/run-demo-vm";
+          meta.description = "Run the secret-free NixOS desktop demo VM";
+        };
+      });
+    };
 }

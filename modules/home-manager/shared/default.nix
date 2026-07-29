@@ -1,11 +1,22 @@
 {
+  inputs,
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cursorTheme = "Bibata-Modern-Classic";
   cursorSize = 24;
-in {
+
+  mergedWallpapers = pkgs.symlinkJoin {
+    name = "merged-wallpapers";
+    paths = [
+      ./wallpapers
+      "${inputs.wallpaper-bank}/wallpapers"
+    ];
+  };
+in
+{
   nix = {
     package = lib.mkDefault pkgs.nix;
     settings = {
@@ -25,12 +36,12 @@ in {
 
   xdg.configFile = {
     "face".source = ./face;
-    "wallpapers".source = ./wallpapers;
+    "wallpapers".source = mergedWallpapers;
   };
 
   home = {
     stateVersion = lib.mkDefault "22.05";
-    sessionPath = ["$HOME/.local/bin"];
+    sessionPath = [ "$HOME/.local/bin" ];
     packages = with pkgs; [
       bibata-cursors
       libreoffice-fresh
