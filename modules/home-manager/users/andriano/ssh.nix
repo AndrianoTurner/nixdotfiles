@@ -5,6 +5,7 @@
       user = "git";
       port = 222;
       identityFile = config.sops.secrets."ssh/github".path;
+      identitiesOnly = "yes";
     };
 
     "proxmox" = {
@@ -12,16 +13,19 @@
       user = "root";
       port = 22;
       identityFile = config.sops.secrets."ssh/proxmox".path;
+      identitiesOnly = "yes";
     };
 
     "gitlab.internal.madrigal.ru" = {
       user = "git";
       identityFile = config.sops.secrets."ssh/gitlab-work".path;
+      identitiesOnly = "yes";
     };
 
     "github.com" = {
       user = "git";
       identityFile = config.sops.secrets."ssh/github".path;
+      identitiesOnly = "yes";
     };
   };
 
