@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ inputs, pkgs, ... }: {
   imports = [
     inputs.sops-nix.homeManagerModules.sops
     ../../shared
@@ -10,6 +10,8 @@
     ./opencode.nix
     ./ssh.nix
   ];
+
+  home.packages = with pkgs; [ waypipe ];
 
   home.shellAliases.rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
 }
