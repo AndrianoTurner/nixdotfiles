@@ -20,6 +20,7 @@
     ./telegram.nix
     ./tmux.nix
     ./opencode
+    ./pi.nix
   ];
 
   xdg.mimeApps.enable = true;

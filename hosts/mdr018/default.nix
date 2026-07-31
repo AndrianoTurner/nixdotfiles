@@ -8,6 +8,7 @@
     ../../modules/nixos/optional/systemd-boot.nix
     ../../modules/nixos/optional/docker.nix
     ../../modules/nixos/optional/throne.nix
+    ../../modules/nixos/optional/searxng.nix
   ];
 
   home-manager.users.andriano = import ./home.nix;
