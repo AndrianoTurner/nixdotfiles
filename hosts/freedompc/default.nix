@@ -5,6 +5,7 @@
     ../../modules/nixos/desktop
     ../../modules/nixos/physical.nix
     ../../modules/nixos/users/andriano
+    ../../modules/nixos/users/demo
     ../../modules/nixos/optional/systemd-boot.nix
     ../../modules/nixos/optional/docker.nix
     ../../modules/nixos/optional/throne.nix
@@ -12,6 +13,8 @@
   ];
 
   home-manager.users.andriano = import ./home.nix;
+
+  home-manager.users.demo = import ../../modules/home-manager/users/demo;
 
   hardware.nvidia = {
     modesetting.enable = true;

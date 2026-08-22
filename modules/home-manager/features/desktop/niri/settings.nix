@@ -33,7 +33,7 @@
       numlock = true;
     };
 
-    touchpad.enable = false;
+    touchpad.enable = true;
     warp-mouse-to-focus.enable = true;
     focus-follows-mouse = {
       enable = true;
