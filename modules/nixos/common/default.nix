@@ -12,6 +12,11 @@
     ./time.nix
   ];
 
+   nix.settings.substituters = [
+    "https://mirror.yandex.ru/nixos/"
+    "https://cache.nixos.org/"
+  ];
+
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
     inherit inputs;

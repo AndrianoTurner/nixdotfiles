@@ -11,7 +11,7 @@
     ./ssh.nix
   ];
 
-  home.packages = with pkgs; [ waypipe ];
+  home.packages = with pkgs; [ waypipe qbittorrent ];
 
   home.shellAliases.rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
 }
