@@ -25,10 +25,12 @@
 
   xdg.mimeApps.enable = true;
   xdg.mime.enable = true;
+
   home.packages = with pkgs; [
     wf-recorder
     wl-clipboard
     typst
+    xpipe
   ];
 
   xdg.portal = {
