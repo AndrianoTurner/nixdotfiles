@@ -1,6 +1,14 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [age sops];
   sops = {
-    defaultSopsFile = ./secrets.yaml;
-    age.sshKeyPaths = ["${config.home.homeDirectory}/.ssh/andriano"];
+    defaultSopsFile = ../../../../secrets/users/andriano.yaml;
+    age = {
+      keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+      generateKey = true;
+    };
   };
 }

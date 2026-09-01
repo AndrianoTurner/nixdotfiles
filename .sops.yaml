@@ -1,14 +1,18 @@
 keys:
-  - &master age138vmfg3gctc896jw06u2zmwzd4tjusfs6xl3xt90yszalkgj5gjqm0ghpf
-  - &home age1s3nd5rqg7kcp49u4slda79fefv4q9k7egxgmxgq8cj23yzzrualq22j4kc
-creation_rules:
-  - path_regex: modules/nixos/users/andriano/secrets.ya?ml$
-    key_groups:
-    - age:
-      - *master
+  - &recovery age1s7p4ntry5aulhvcyzr20k0sw2j70a7rw2luawxtd2tm5jp3wsalq8ntl38
 
-  - path_regex: modules/home-manager/users/andriano/secrets.ya?ml$
+  - &system_mdr018 age1k5rn4u2qd20km0p3zxm3ckn7el0du8utta8acafsvczpqnys64fqfz7zah
+  - &user_mdr018 age13l20ymll8l66fmkf6adrwdetrvc6mwlmerha7k5z9zt6fjyav95qxm2r0m
+
+creation_rules:
+  - path_regex: secrets/system/shared\.yaml$
     key_groups:
-    - age:
-      - *master
-      - *home
+      - age:
+          - *recovery
+          - *system_mdr018
+
+  - path_regex: secrets/users/andriano\.yaml$
+    key_groups:
+      - age:
+          - *recovery
+          - *user_mdr018

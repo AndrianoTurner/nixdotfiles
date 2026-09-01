@@ -44,9 +44,8 @@ username: demo
 password: demo
 ```
 
-
 The writable state is stored in `demo.qcow2` in the launch directory; delete
 that file to reset the guest.
 
 The demo shares the desktop, applications, themes, and wallpapers with the
-personal hosts. 
+personal hosts.

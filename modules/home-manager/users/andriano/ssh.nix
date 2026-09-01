@@ -4,7 +4,7 @@
       host = "10.0.0.53";
       user = "git";
       port = 222;
-      identityFile = config.sops.secrets."ssh/github".path;
+      identityFile = config.sops.secrets."ssh/gitea".path;
       identitiesOnly = "yes";
     };
 
@@ -32,7 +32,7 @@
   sops.secrets = {
     "ssh/gitea".mode = "0400";
     "ssh/proxmox".mode = "0400";
-    "ssh/github".mode = "0400";
     "ssh/gitlab-work".mode = "0400";
+    "ssh/github".mode = "0400";
   };
 }
