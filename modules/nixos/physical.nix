@@ -7,7 +7,6 @@
     upower.enable = true;
   };
 
-  nix.settings.max-jobs = 1;
 
   swapDevices = [
     {
