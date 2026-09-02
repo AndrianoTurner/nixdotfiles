@@ -3,9 +3,11 @@ keys:
 
   - &system_mdr018 age1k5rn4u2qd20km0p3zxm3ckn7el0du8utta8acafsvczpqnys64fqfz7zah
   - &system_homepc age1mxwv49gvcj8kgx03fgdwq9lus8t0d3w4tlxam9eqe4srfutyjqsq3mv809
+  - &system_freedompc age1meq7y3jv6tz3jauugaae8y6qp0d0d5pmucapmxah5xmecqzmcshsw9xnh5
 
   - &user_mdr018 age13l20ymll8l66fmkf6adrwdetrvc6mwlmerha7k5z9zt6fjyav95qxm2r0m
   - &user_homepc age1xstjwmh7qd8fjx8rtphw2zafkd5ep5pkernhtnte6xsvapj04d9s83dms3
+  - &user_freedompc age16z7ylr4hhwezw990gs0jmd5an2ak0psvyzza0ceh7dn427h50q4svhzhuy
   
 
 creation_rules:
@@ -15,6 +17,7 @@ creation_rules:
           - *recovery
           - *system_mdr018
           - *system_homepc
+          - *system_freedompc
 
   - path_regex: secrets/users/andriano\.yaml$
     key_groups:
@@ -22,3 +25,4 @@ creation_rules:
           - *recovery
           - *user_mdr018
           - *user_homepc
+          - *user_freedompc
