@@ -3,8 +3,8 @@
     enable = true;
 
     # config.toml is the declarative baseline. Noctalia keeps changes made in
-    # its settings UI in a separate settings.toml override, so rebuilds do not
-    # discard runtime customization.
+    # its settings UI in $XDG_STATE_HOME/noctalia/settings.toml, so rebuilds do
+    # not discard runtime customization.
     settings = {
       accessibility.ui_scale = 1.0;
 
@@ -23,6 +23,8 @@
           speed = 1.0;
         };
 
+        greeter_sync.auto_sync = true;
+
         shadow = {
           direction = "down_right";
           alpha = 0.55;
@@ -32,11 +34,14 @@
           transparency_mode = "soft";
           borders = true;
           shadow = true;
-          launcher_placement = "centered";
-          clipboard_placement = "centered";
+          launcher_placement = "floating";
+          launcher_position = "center";
+          clipboard_placement = "floating";
+          clipboard_position = "center";
           control_center_placement = "attached";
           wallpaper_placement = "attached";
-          session_placement = "centered";
+          session_placement = "floating";
+          session_position = "center";
           open_near_click_control_center = true;
         };
 
@@ -68,9 +73,25 @@
         edge_smoothness = 0.05;
         transition_on_startup = true;
 
+        default.path = "${config.xdg.configHome}/wallpapers/Anime-Girl-Rain.png";
+        last.path = "${config.xdg.configHome}/wallpapers/Anime-Girl-Rain.png";
+
+        monitors = {
+          "DP-1".path = "${config.xdg.configHome}/wallpapers/Anime-Girl-Rain.png";
+          "HDMI-A-1".path = "${config.xdg.configHome}/wallpapers/Fog-Forest-Everforest.png";
+          "HDMI-A-3".path = "${config.xdg.configHome}/wallpapers/Anime-Girl-Rain.png";
+        };
+
+        favorite = [
+          {
+            path = "${config.xdg.configHome}/wallpapers/Night_City.png";
+            theme_mode = "auto";
+          }
+        ];
+
         automation = {
           enabled = true;
-          interval_minutes = 2;
+          interval_seconds = 120;
           order = "random";
           recursive = true;
         };
@@ -79,6 +100,7 @@
       theme = {
         mode = "dark";
         source = "wallpaper";
+        builtin = "Noctalia";
         wallpaper_scheme = "m3-tonal-spot";
       };
 
@@ -109,6 +131,7 @@
         enabled = true;
         schema_version = 2;
         widget_order = [
+          "lockscreen-login-box@HDMI-A-3"
           "lockscreen-login-box@DP-1"
           "lockscreen-login-box@HDMI-A-1"
           "lockscreen-widget-0000000000000001"
@@ -125,11 +148,13 @@
 
         widget = {
           "lockscreen-login-box@DP-1" = {
-            box_height = 70.0;
-            box_width = 400.0;
+            box_height = 196.0;
+            box_width = 720.0;
             cx = 960.0;
             cy = 961.0;
             output = "DP-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "login_box";
 
@@ -140,19 +165,25 @@
               center_password_text = false;
               input_opacity = 1.0;
               input_radius = 6.0;
+              layout = "regular";
               show_caps_lock = true;
               show_keyboard_layout = true;
               show_login_button = true;
-              show_password_hint = true;
+              show_media = true;
+              show_session_buttons = true;
+              show_unlock_hint = true;
+              show_weather = true;
             };
           };
 
           "lockscreen-login-box@HDMI-A-1" = {
-            box_height = 70.0;
-            box_width = 400.0;
+            box_height = 196.0;
+            box_width = 720.0;
             cx = 960.0;
             cy = 956.0;
             output = "HDMI-A-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "login_box";
 
@@ -163,10 +194,43 @@
               center_password_text = false;
               input_opacity = 1.0;
               input_radius = 6.0;
+              layout = "regular";
               show_caps_lock = true;
               show_keyboard_layout = true;
               show_login_button = true;
-              show_password_hint = true;
+              show_media = true;
+              show_session_buttons = true;
+              show_unlock_hint = true;
+              show_weather = true;
+            };
+          };
+
+          "lockscreen-login-box@HDMI-A-3" = {
+            box_height = 196.0;
+            box_width = 810.0;
+            cx = 960.0;
+            cy = 898.0;
+            output = "HDMI-A-3";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
+            rotation = 0.0;
+            type = "login_box";
+
+            settings = {
+              background_color = "surface_variant";
+              background_opacity = 0.88;
+              background_radius = 12.0;
+              center_password_text = false;
+              input_opacity = 1.0;
+              input_radius = 6.0;
+              layout = "regular";
+              show_caps_lock = true;
+              show_keyboard_layout = true;
+              show_login_button = true;
+              show_media = true;
+              show_session_buttons = true;
+              show_unlock_hint = true;
+              show_weather = true;
             };
           };
 
@@ -176,6 +240,8 @@
             cx = 960.0;
             cy = 279.0;
             output = "HDMI-A-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "clock";
           };
@@ -186,6 +252,8 @@
             cx = 960.0;
             cy = 780.0;
             output = "HDMI-A-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "fancy_audio_visualizer";
 
@@ -201,6 +269,8 @@
             cx = 960.0;
             cy = 592.5;
             output = "HDMI-A-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "sysmon";
 
@@ -220,6 +290,8 @@
             cx = 960.0;
             cy = 428.0;
             output = "HDMI-A-1";
+            placement_height = 1080.0;
+            placement_width = 1920.0;
             rotation = 0.0;
             type = "weather";
 
@@ -242,8 +314,8 @@
         gpu_temp_critical_threshold = 90;
         ram_pct_activity_threshold = 80;
         ram_pct_critical_threshold = 90;
-        disk_pct_activity_threshold = 80;
-        disk_pct_critical_threshold = 90;
+        disk_used_pct_activity_threshold = 80;
+        disk_used_pct_critical_threshold = 90;
       };
 
       weather = {
@@ -253,7 +325,7 @@
       };
 
       location = {
-        auto_locate = false;
+        auto_locate = true;
         address = "Rostov-on-Don";
       };
 
@@ -261,6 +333,8 @@
         enable_overdrive = false;
         enable_sounds = false;
       };
+
+      battery.warning_threshold = 20;
 
       brightness.enable_ddcutil = false;
 
@@ -297,8 +371,6 @@
         thickness = 34;
         background_opacity = 0.93;
         radius = 12;
-        margin_h = 4;
-        margin_v = 4;
         padding = 8;
         widget_spacing = 6;
         shadow = true;
@@ -336,8 +408,6 @@
         {type = "power_profile";}
         {type = "caffeine";}
       ];
-
-      hooks.battery_low_percent_threshold = 20;
 
       widget = {
         clock = {
