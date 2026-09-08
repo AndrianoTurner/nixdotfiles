@@ -8,6 +8,7 @@
   programs.noctalia-greeter = {
     enable = true;
     greeter-args = "--session niri";
+    passwordless-sync-users = ["andriano"];
 
     settings = {
       cursor = {

@@ -11,7 +11,7 @@
     ./pavucontrol.nix
     ./playerctl.nix
     ./alacritty.nix
-    ./niri
+   ./niri
     ./zen-browser.nix
     ./firefox.nix
     ./vicinae.nix
@@ -30,7 +30,6 @@
     wf-recorder
     wl-clipboard
     typst
-    xpipe
   ];
 
   xdg.portal = {
