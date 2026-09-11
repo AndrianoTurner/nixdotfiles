@@ -9,6 +9,7 @@
     ../../modules/nixos/optional/docker.nix
     ../../modules/nixos/optional/throne.nix
     ../../modules/nixos/optional/searxng.nix
+    ../../modules/nixos/optional/qemu.nix
   ];
 
   home-manager.users.andriano = import ./home.nix;
