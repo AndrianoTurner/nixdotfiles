@@ -4,5 +4,12 @@
     package = pkgs.unstablePkgs.vicinae;
     systemd.enable = true;
     systemd.autoStart = true;
+    settings = {
+      theme = {
+        dark = {
+          name = "gruvbox-dark";
+        };
+      };
+    };
   };
 }
