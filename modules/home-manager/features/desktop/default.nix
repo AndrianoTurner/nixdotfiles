@@ -11,12 +11,12 @@
     ./pavucontrol.nix
     ./playerctl.nix
     ./alacritty.nix
-   ./niri
+    ./niri
     ./zen-browser.nix
     ./firefox.nix
     ./vicinae.nix
     ./noctalia.nix
-    ./zed.nix
+    ./zed-editor
     ./telegram.nix
     ./tmux.nix
     ./opencode
