@@ -61,6 +61,11 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
+
+    specialArgs = {
+      inherit inputs;
+      outputs = self.outputs;
+    };
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -76,30 +81,21 @@
     nixosConfigurations = {
       # Personal Laptop
       freedompc = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
+        inherit specialArgs;
         modules = [
           ./hosts/freedompc
         ];
       };
 
       homepc = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
+        inherit specialArgs;
         modules = [
           ./hosts/homepc
         ];
       };
 
       mdr018 = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
+        inherit specialArgs;
         modules = [
           ./hosts/mdr018
         ];
@@ -107,10 +103,7 @@
 
       # Public, secret-free QEMU demo
       demo = nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          outputs = self.outputs;
-        };
+        inherit specialArgs;
         modules = [
           ./hosts/demo
         ];
