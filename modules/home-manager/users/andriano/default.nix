@@ -1,4 +1,8 @@
-{ inputs, pkgs, ... }: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.sops-nix.homeManagerModules.sops
     ../../shared
@@ -8,10 +12,11 @@
     ./git.nix
     ./jj.nix
     ./opencode.nix
+    ./pi.nix
     ./ssh.nix
   ];
 
-  home.packages = with pkgs; [ waypipe qbittorrent ];
+  home.packages = with pkgs; [waypipe qbittorrent];
 
   home.shellAliases.rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
 }

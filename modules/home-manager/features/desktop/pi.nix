@@ -22,25 +22,14 @@
       };
 
       models = [
-        {id = "qwen3.6:35b";}
-        {id = "qwen3.6:27b";}
         {
-          id = "qwen3.7-35b-fast:latest";
-          name = "Qwen 3.7 35B Fast";
-          reasoning = false;
-          contextWindow = 131072;
-          maxTokens = 32768;
-        }
-        {id = "aratan/qwen3.7-abliterated-35b-q4:latest";}
-        {
-          id = "qwen3.5:122b";
-          name = "Qwen 3.5 122B";
+          id = "qwen3.8:27b-q8_0";
+          name = "Qwen 3.8 27B Q8";
           reasoning = true;
+          input = ["text" "image"];
           contextWindow = 131072;
           maxTokens = 32768;
         }
-        {id = "OxW/Qwen3-8b-ru-i1:latest";}
-        {id = "qwen3:8b";}
       ];
     };
   });
@@ -49,11 +38,10 @@ in {
 
   programs.pi.coding-agent = {
     enable = true;
-    models = models;
 
     settings = {
       defaultProvider = "ollama";
-      defaultModel = "qwen3.7-35b-fast:latest";
+      defaultModel = "qwen3.8:27b-q8_0";
       defaultThinkingLevel = "off";
 
       defaultProjectTrust = "ask";
@@ -62,13 +50,9 @@ in {
       quietStartup = false;
 
       enabledModels = [
-        "ollama/qwen3.6:35b"
-        "ollama/qwen3.6:27b"
-        "ollama/qwen3.7-35b-fast:latest"
-        "ollama/aratan/qwen3.7-abliterated-35b-q4:latest"
-        "ollama/qwen3.5:122b"
-        "ollama/OxW/Qwen3-8b-ru-i1:latest"
-        "ollama/qwen3:8b"
+        "ollama/qwen3.8:27b-q8_0"
+        "openai-codex/gpt-5.6-luna"
+        "openai-codex/gpt-5.6-sol"
       ];
 
       packages = [
@@ -105,6 +89,13 @@ in {
       PI_SKIP_VERSION_CHECK.value = "1";
       PI_TELEMETRY.value = "0";
     };
+  };
+
+  # Keep the model registry declarative. programs.pi.coding-agent.models only
+  # installs models.json once, so later Nix changes would otherwise be ignored.
+  home.file.".pi/agent/models.json" = {
+    source = models;
+    force = true;
   };
 
   home.file.".pi/agent/web-search.json".text = builtins.toJSON {
