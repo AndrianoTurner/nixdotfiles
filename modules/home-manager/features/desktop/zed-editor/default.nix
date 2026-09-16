@@ -23,6 +23,7 @@
       "nix"
       "docker-compose"
       "gruvbox"
+      "typst"
     ];
   };
 }
