@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cursorTheme = "Bibata-Modern-Classic";
   cursorSize = 24;
 
@@ -15,8 +14,7 @@ let
       "${inputs.wallpaper-bank}/wallpapers"
     ];
   };
-in
-{
+in {
   nix = {
     package = lib.mkDefault pkgs.nix;
     settings = {
@@ -32,6 +30,7 @@ in
   programs = {
     home-manager.enable = true;
     git.enable = true;
+    nh.enable = true;
   };
 
   xdg.configFile = {
@@ -41,7 +40,7 @@ in
 
   home = {
     stateVersion = lib.mkDefault "22.05";
-    sessionPath = [ "$HOME/.local/bin" ];
+    sessionPath = ["$HOME/.local/bin"];
     packages = with pkgs; [
       bibata-cursors
       libreoffice-fresh

@@ -39,7 +39,7 @@
     };
 
     wallpaper-bank = {
-      url = "github:JaKooLit/Wallpaper-Bank";
+      url = "github:makccr/wallpapers?shallow=1";
       flake = false;
     };
 

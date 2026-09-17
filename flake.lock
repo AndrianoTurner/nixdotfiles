@@ -395,16 +395,16 @@
     "wallpaper-bank": {
       "flake": false,
       "locked": {
-        "lastModified": 1766348179,
-        "narHash": "sha256-hwxAgokCpCZwx/wnS2oWZNEQr76SWjzsi/Y+48sszE0=",
-        "owner": "JaKooLit",
-        "repo": "Wallpaper-Bank",
-        "rev": "c5e1780c29adca428dc4ca2d970bd1a6a09f18f3",
+        "lastModified": 1788756593,
+        "narHash": "sha256-9xtDlKPE0BuQRJlCbf6zX8lS91t4JfA2ATSep99rWAE=",
+        "owner": "makccr",
+        "repo": "wallpapers",
+        "rev": "3f10f990939bc51b174936e2e92a20fc247e5b25",
         "type": "github"
       },
       "original": {
-        "owner": "JaKooLit",
-        "repo": "Wallpaper-Bank",
+        "owner": "makccr",
+        "repo": "wallpapers",
         "type": "github"
       }
     },
