@@ -1,9 +1,10 @@
-{pkgs,...}: {
+{pkgs, ...}: {
   imports = [
     ./bindings.nix
     ./settings/appearance.nix
     ./settings/languages.nix
     ./settings/lsp.nix
+    ./settings/llm.nix
   ];
   home.packages = [pkgs.nil];
 

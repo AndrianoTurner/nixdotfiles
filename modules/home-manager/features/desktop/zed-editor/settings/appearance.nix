@@ -25,12 +25,12 @@
       edit_prediction_provider = "none";
     };
 
-    # no ai
+    # slop
     agent = {
-      enabled = false;
-      button = false;
+      enabled = true;
+      button = true;
     };
-    disable_ai = true;
+    disable_ai = false;
 
     diagnostics = {
       inline = {
