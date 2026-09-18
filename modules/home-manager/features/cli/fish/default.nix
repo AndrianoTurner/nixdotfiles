@@ -41,7 +41,6 @@
       gds = "git diff --staged";
       gdh = "git diff HEAD";
       gsh = "git show";
-      rebuild = "nixos-rebuild switch --flake ~/nixos#$(hostname) --sudo";
     };
 
     functions = {
