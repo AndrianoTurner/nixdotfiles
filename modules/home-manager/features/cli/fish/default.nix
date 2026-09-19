@@ -12,35 +12,18 @@
   programs.fish = {
     enable = true;
 
-    shellAliases = {
-      # eza
-      ls = "eza --classify=auto --color --group-directories-first --sort=extension -A";
-      la = "eza --classify=auto --color --group-directories-first --sort=extension -a -l --octal-permissions --no-permissions";
+    plugins = [
+      {
+        name = "plugin-git";
+        src = pkgs.fishPlugins.plugin-git.src;
+      }
+    ];
 
-      # git
-      ga = "git add";
-      gam = "git add -A && git commit -m";
-      gap = "git add -p";
-      gs = "git status";
-      gcm = "git commit -m";
-      gca = "git commit --amend --no-edit";
-      gco = "git checkout";
-      gcob = "git checkout -b";
-      gb = "git branch";
-      gba = "git branch -a";
-      gbd = "git branch -d";
-      gbD = "git branch -D";
-      gp = "git push";
-      gpo = "git push origin HEAD";
-      gl = "git pull";
-      glo = "git pull origin";
-      glg = ''git log --graph --pretty=format:"%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(green)%an%C(reset)%C(auto)%d %C(reset)%s" --date=short'';
-      gls = "git log --oneline -10";
-      glof = "git log --oneline --first-parent";
-      gd = "git diff";
-      gds = "git diff --staged";
-      gdh = "git diff HEAD";
-      gsh = "git show";
+    shellAliases = {
+      l = "lsd -l";
+      la = "lsd -a";
+      lla = "lsd -la";
+      lt = "lsd --tree";
     };
 
     functions = {
@@ -121,6 +104,5 @@
     '';
   };
 
-  # Ensure eza is available (if not already in global packages)
-  home.packages = with pkgs; [eza];
+  home.packages = with pkgs; [lsd];
 }
