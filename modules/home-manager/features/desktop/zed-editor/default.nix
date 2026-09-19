@@ -6,7 +6,7 @@
     ./settings/lsp.nix
     ./settings/llm.nix
   ];
-  home.packages = [pkgs.nil];
+  home.packages = [pkgs.nil pkgs.tinymist];
 
   programs.zed-editor = {
     enable = true;
