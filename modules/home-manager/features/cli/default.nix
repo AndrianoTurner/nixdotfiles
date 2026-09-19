@@ -9,7 +9,6 @@
     ./ssh.nix
     ./nvim
     ./yazi.nix
-    ./jj.nix
     ./nushell.nix
   ];
 }

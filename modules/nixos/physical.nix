@@ -1,12 +1,12 @@
 {pkgs, ...}: {
   hardware.bluetooth.enable = true;
+  hardware.enableRedistributableFirmware = true;
 
   services = {
     openssh.enable = true;
     power-profiles-daemon.enable = true;
     upower.enable = true;
   };
-
 
   swapDevices = [
     {

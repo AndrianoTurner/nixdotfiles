@@ -28,7 +28,4 @@
       };
     };
   };
-
-  # Used by Noctalia Shell when syncing its wallpaper and palette to the greeter.
-  security.polkit.enable = true;
 }

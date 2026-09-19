@@ -1,4 +1,4 @@
-{ config, ... }: {
+{config, ...}: {
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/common

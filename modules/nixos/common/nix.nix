@@ -23,6 +23,12 @@ in {
         "big-parallel"
         "nixos-test"
       ];
+
+      substituters = [
+        "https://mirror.yandex.ru/nixos/"
+        "https://cache.nixos.org/"
+      ];
+
       flake-registry = ""; # Disable global flake registry
     };
 

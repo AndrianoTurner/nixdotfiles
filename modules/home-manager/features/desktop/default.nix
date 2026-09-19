@@ -13,7 +13,6 @@
     ./alacritty.nix
     ./niri
     ./zen-browser.nix
-    ./firefox.nix
     ./vicinae.nix
     ./noctalia.nix
     ./zed-editor
@@ -23,7 +22,17 @@
     ./pi.nix
   ];
 
-  xdg.mimeApps.enable = true;
+  xdg.mimeApps = {
+    enable = true;
+
+    defaultApplications = {
+      "inode/directory" = ["yazi.desktop"];
+    };
+
+    associations.added = {
+      "inode/directory" = ["yazi.desktop"];
+    };
+  };
   xdg.mime.enable = true;
 
   home.packages = with pkgs; [

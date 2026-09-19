@@ -1,6 +1,6 @@
-{ ... }: {
+{...}: {
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 2080 ];
+    allowedTCPPorts = [2080];
   };
 }

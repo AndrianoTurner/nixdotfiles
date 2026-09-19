@@ -8,10 +8,9 @@
     };
 
     Nix = {
-      language_servers = [
-        "nil"
-        "!nixd"
-      ];
+      formatter = "language_server";
+      format_on_save = "on";
+      language_servers = ["nil"];
     };
   };
 }

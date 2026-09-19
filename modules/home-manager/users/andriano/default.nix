@@ -10,7 +10,6 @@
     ../../features/desktop
     ./sops.nix
     ./git.nix
-    ./jj.nix
     ./opencode.nix
     ./pi.nix
     ./ssh.nix
