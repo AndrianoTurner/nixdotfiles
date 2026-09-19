@@ -22,39 +22,51 @@
     ./pi.nix
   ];
 
-  xdg.mimeApps = {
-    enable = true;
+  xdg = {
+    mimeApps = {
+      enable = true;
 
-    defaultApplications = {
-      "inode/directory" = ["yazi.desktop"];
+      defaultApplications = {
+        "inode/directory" = ["yazi.desktop"];
+      };
+
+      associations.added = {
+        "inode/directory" = ["yazi.desktop"];
+      };
+    };
+    mime.enable = true;
+
+    terminal-exec = {
+      enable = true;
+
+      settings = {
+        default = [
+          "alacritty.desktop"
+        ];
+      };
     };
 
-    associations.added = {
-      "inode/directory" = ["yazi.desktop"];
+    portal = {
+      xdgOpenUsePortal = true;
+      enable = true;
+      extraPortals = [pkgs.xdg-desktop-portal-gnome]; # or whatever you use
+      config = {
+        niri = {
+          default = [
+            "gnome"
+            "gtk"
+          ];
+        };
+        common = {
+          default = ["gtk"];
+        };
+      };
     };
   };
-  xdg.mime.enable = true;
 
   home.packages = with pkgs; [
     wf-recorder
     wl-clipboard
     typst
   ];
-
-  xdg.portal = {
-    xdgOpenUsePortal = true;
-    enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gnome]; # or whatever you use
-    config = {
-      niri = {
-        default = [
-          "gnome"
-          "gtk"
-        ];
-      };
-      common = {
-        default = ["gtk"];
-      };
-    };
-  };
 }
