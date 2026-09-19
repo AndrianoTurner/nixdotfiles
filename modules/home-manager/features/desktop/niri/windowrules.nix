@@ -42,5 +42,9 @@
       };
       clip-to-geometry = true;
     }
+    {
+      matches = [{title = "Zen Browser";}];
+      open-maximized = true;
+    }
   ];
 }
