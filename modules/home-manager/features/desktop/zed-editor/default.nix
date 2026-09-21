@@ -25,6 +25,7 @@
       "docker-compose"
       "gruvbox"
       "typst"
+      "git-firefly"
     ];
   };
 }
