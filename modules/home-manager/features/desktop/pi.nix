@@ -80,6 +80,7 @@ in {
           "npm:@narumitw/pi-lsp"
           "npm:@gotgenes/pi-permission-system"
           "npm:@dietrichgebert/ponytail"
+          "npm:pi-cliproxyapi-provider"
         ];
 
         compaction = {
