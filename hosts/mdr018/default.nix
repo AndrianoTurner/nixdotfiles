@@ -19,6 +19,21 @@
   hardware.graphics.enable = true;
 
   networking = {
+    useDHCP = false;
+    interfaces = {
+      enp2s0 = {
+        useDHCP = false;
+        ipv4.addresses = [
+          {
+            address = "172.16.20.2";
+            prefixLength = 20;
+          }
+        ];
+      };
+    };
+
+    defaultGateway = "172.16.16.1";
+    nameservers = ["172.16.0.101"];
     hostName = "mdr018";
 
     extraHosts = ''
