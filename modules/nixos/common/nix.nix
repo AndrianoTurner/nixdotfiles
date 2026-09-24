@@ -25,6 +25,7 @@ in {
       ];
 
       substituters = [
+        "http://mirror.yandex.ru/nixos/"
         "https://mirror.yandex.ru/nixos/"
         "https://cache.nixos.org/"
       ];
