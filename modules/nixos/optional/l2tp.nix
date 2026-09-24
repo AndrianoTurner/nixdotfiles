@@ -2,17 +2,25 @@
   pkgs,
   config,
   ...
-}: {
+}: let
+  # Strongswan dropped default support in 6.1
+  strongswanIKEv1 = pkgs.strongswan.overrideAttrs (old: {
+    configureFlags =
+      (old.configureFlags or [])
+      ++ ["--enable-ikev1"];
+  });
+in {
   environment.systemPackages = with pkgs; [
     networkmanagerapplet
   ];
 
-  services.strongswan.enable = true;
   networking.firewall.checkReversePath = "loose";
   networking.firewall.allowedUDPPorts = [500 4500 1701];
-  networking.networkmanager.plugins = with pkgs; [
-    networkmanager-l2tp
-    networkmanager-strongswan
+  networking.networkmanager.plugins = [
+    (pkgs.networkmanager-l2tp.override {
+      strongswan = strongswanIKEv1;
+    })
+    pkgs.networkmanager-strongswan
   ];
   environment.etc."strongswan.conf" = {
     text = '''';
