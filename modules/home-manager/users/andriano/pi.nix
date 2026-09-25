@@ -1,85 +1,20 @@
 {config, ...}: let
   localModel = config.my.pi.qwenModel;
 
-  readOnlyPermissions = ''
-    permission:
-      "*": ask
-
-      read: allow
-      grep: allow
-      find: allow
-      ls: allow
-
-      edit: deny
-      write: deny
-
-      bash:
-        "*": ask
-
-        "git status*": allow
-        "git diff*": allow
-        "git log*": allow
-        "git show*": allow
-        "git rev-parse*": allow
-
-      external_directory:
-        "*": deny
-  '';
-
-  writerPermissions = ''
-    permission:
-      "*": ask
-
-      read: allow
-      grep: allow
-      find: allow
-      ls: allow
-
-      edit: allow
-      write: allow
-
-      bash:
-        "*": ask
-
-        # Repository inspection.
-        "git status*": allow
-        "git diff*": allow
-        "git log*": allow
-        "git show*": allow
-        "git rev-parse*": allow
-
-        # Common Rust checks.
-        "cargo check*": allow
-        "cargo test*": allow
-        "cargo nextest*": allow
-        "cargo clippy*": allow
-        "cargo fmt*": allow
-
-        # Common Nix checks.
-        "nix flake check*": allow
-        "nix develop*": allow
-
-      external_directory:
-        "*": deny
-  '';
-
   #
   # LOCAL AGENTS
   #
 
   worker = ''
     ---
+    name: qwen-worker
     description: Implement scoped coding tasks with local Qwen
     model: ${localModel}
-    tools: read, grep, find, ls, edit, write, bash
-    extensions: pi-permission-system
-    skills: false
     thinking: high
-    max_turns: 50
-    run_in_background: true
-    prompt_mode: append
-
-    ${writerPermissions}
+    tools: read, grep, find, ls, edit, write, bash
+    systemPromptMode: append
+    inheritProjectContext: true
+    async: true
     ---
 
     You are the sole implementation worker.
@@ -115,17 +50,14 @@
 
   scout = ''
     ---
+    name: qwen-scout
     description: Analyze code and implementation risks with local Qwen
     model: ${localModel}
-    tools: read, grep, find, ls, bash
-    extensions: pi-permission-system
-    skills: false
     thinking: medium
-    max_turns: 20
-    run_in_background: true
-    prompt_mode: append
-
-    ${readOnlyPermissions}
+    tools: read, grep, find, ls, bash
+    systemPromptMode: append
+    inheritProjectContext: true
+    async: true
     ---
 
     You are a read-only engineering scout.
@@ -153,16 +85,14 @@
 
   checker = ''
     ---
+    name: gpt-checker
     description: Run final project checks with GPT-5.6 Luna
-    tools: read, grep, find, ls, bash
-    extensions: pi-permission-system
-    skills: false
+    model: openai-codex/gpt-5.6-luna
     thinking: minimal
-    max_turns: 20
-    run_in_background: true
-    prompt_mode: append
-
-    ${readOnlyPermissions}
+    tools: read, grep, find, ls, bash
+    systemPromptMode: append
+    inheritProjectContext: true
+    async: true
     ---
 
     You are the final verification agent.
@@ -184,16 +114,14 @@
 
   reviewer = ''
     ---
+    name: gpt-reviewer
     description: Perform final code review with GPT-5.6 Sol
-    tools: read, grep, find, ls, bash
-    extensions: pi-permission-system
-    skills: false
+    model: openai-codex/gpt-5.6-sol
     thinking: xhigh
-    max_turns: 30
-    run_in_background: true
-    prompt_mode: append
-
-    ${readOnlyPermissions}
+    tools: read, grep, find, ls, bash
+    systemPromptMode: append
+    inheritProjectContext: true
+    async: true
     ---
 
     You are the final code-review agent.
@@ -237,6 +165,11 @@ in {
 
     All scouts, reviewers, and checkers are strictly read-only.
 
+    Do not use worktree/parallel-writer modes; `qwen-worker` runs in the main
+    working tree.
+    Never pass `worktree: true` or `isolation: "worktree"`, and never launch
+    writers through `runs.all`/`runs.lanes`.
+
     ## 1. Analyze and delegate
 
     Inspect enough context to understand the task and construct a precise work
@@ -251,13 +184,15 @@ in {
 
     ## 2. Implementation
 
-    Spawn exactly one `qwen-worker` for implementation.
+    Spawn exactly one `qwen-worker` for implementation with the `subagent`
+    tool.
+    If `subagent` is not active yet, call `subagents_enable({})` first.
 
     Use the explicit model parameter:
 
       `${localModel}`
 
-    Run it in background.
+    Runs are async (background) by default; do not pass `async: false`.
 
     Give the worker a self-contained work order containing:
     - the requested outcome;
@@ -289,24 +224,28 @@ in {
     Do not immediately call a blocking wait operation merely because a background
     agent was spawned.
 
-    Poll only when its result is actually needed for the next dependent step.
+    Async runs notify the parent on completion. Inspect or poll only when the
+    result is actually needed for the next dependent step, using
+    `subagent({ action: "status", id })`.
 
-    A synchronization barrier is allowed when no independent coordinator work
-    remains.
+    A synchronization barrier (`bg_wait({ id })`) is allowed when no independent
+    coordinator work remains.
 
     ## 4. Inspect implementation
 
     Once `qwen-worker` finishes, inspect its result and the working-tree diff.
 
     If implementation changes are required before final review, resume the same
-    writer when possible instead of creating a second writer.
+    writer with `subagent({ action: "resume", id, message })` when possible
+    instead of creating a second writer.
 
     Do not run expensive final GPT gates against a diff that is still actively
     changing.
 
     ## 5. Final parallel gate
 
-    Once the implementation diff is stable, start BOTH agents in background:
+    Once the implementation diff is stable, start BOTH agents as two separate
+    async `subagent` calls in the same turn:
 
     - `gpt-checker`
       model: `openai-codex/gpt-5.6-luna`
@@ -329,7 +268,7 @@ in {
     If required checks fail, or the reviewer returns actionable correctness,
     security, regression, or test-coverage findings:
 
-    - send the consolidated findings to `qwen-worker`;
+    - send the consolidated findings to `qwen-worker` (resume the same run when possible);
     - allow only that writer to modify the working tree;
     - inspect the resulting diff.
 
@@ -382,15 +321,14 @@ in {
     ".pi/agent/agents/gpt-checker.md".text = checker;
     ".pi/agent/agents/gpt-reviewer.md".text = reviewer;
 
-    ".pi/agent/subagents.json".text = builtins.toJSON {
-      # Coordinator + worker/scout + two GPT gates.
-      #
-      # During final validation the two GPT agents can therefore execute
-      # concurrently without occupying the local inference backend.
-      maxConcurrent = 4;
+    # pi-subagents config (see its docs/configuration.md).
+    # Coordinator + worker/scout + two GPT gates.
+    ".pi/agent/extensions/subagent/config.json".text = builtins.toJSON {
+      maxActiveAsyncRunsPerSession = 4;
 
-      defaultJoinMode = "group";
-      scopeModels = true;
+      # Local Qwen is slow; the default 30-minute run deadline is too tight.
+      timeoutMs = 3600000;
+
       toolDescriptionMode = "compact";
     };
   };

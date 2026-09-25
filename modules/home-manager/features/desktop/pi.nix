@@ -74,10 +74,9 @@ in {
         packages = [
           "npm:pi-web-access"
           "npm:context-mode"
-          "npm:@tintinweb/pi-subagents"
-          "npm:@tintinweb/pi-tasks"
+          "npm:pi-subagents"
           "npm:@narumitw/pi-plan-mode"
-          "npm:@narumitw/pi-lsp"
+          "npm:pi-lens"
           "npm:@gotgenes/pi-permission-system"
           "npm:@dietrichgebert/ponytail"
           "npm:pi-cliproxyapi-provider"
