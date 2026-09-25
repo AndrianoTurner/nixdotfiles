@@ -5,7 +5,6 @@
   lib,
   ...
 }: let
-  cfg = config.my.pi;
   agentDir = "${config.home.homeDirectory}/.pi/agent";
 
   models = pkgs.writeText "pi-models.json" (builtins.toJSON {
@@ -38,26 +37,13 @@
 in {
   imports = [inputs.pi.homeModules.default];
 
-  options.my.pi = {
-    qwenModelId = lib.mkOption {
-      type = lib.types.str;
-      default = "qwen3.8:27b-q8_0";
-    };
-
-    qwenModel = lib.mkOption {
-      type = lib.types.str;
-      readOnly = true;
-      default = "ollama/${cfg.qwenModelId}";
-    };
-  };
-
   config = {
     programs.pi.coding-agent = {
       enable = true;
 
       settings = {
-        defaultProvider = "ollama";
-        defaultModel = "qwen3.8:27b-q8_0";
+        # ponytail: no defaultProvider/defaultModel; the settings wrapper merges
+        # into the mutable settings.json, so pi's last-selected model persists.
         defaultThinkingLevel = "off";
 
         defaultProjectTrust = "ask";
