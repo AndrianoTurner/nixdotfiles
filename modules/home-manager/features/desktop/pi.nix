@@ -2,38 +2,9 @@
   config,
   inputs,
   pkgs,
-  lib,
   ...
 }: let
   agentDir = "${config.home.homeDirectory}/.pi/agent";
-
-  models = pkgs.writeText "pi-models.json" (builtins.toJSON {
-    providers.ollama = {
-      baseUrl = "http://172.16.20.9:11434/v1";
-      api = "openai-completions";
-
-      # Pi needs a non-empty provider marker before custom models become
-      # selectable. Ollama ignores it, and authHeader=false prevents sending it.
-      apiKey = "ollama";
-      authHeader = false;
-
-      compat = {
-        supportsDeveloperRole = false;
-        supportsReasoningEffort = false;
-      };
-
-      models = [
-        {
-          id = "qwen3.8:27b-q8_0";
-          name = "Qwen 3.8 27B Q8";
-          reasoning = true;
-          input = ["text" "image"];
-          contextWindow = 131072;
-          maxTokens = 32768;
-        }
-      ];
-    };
-  });
 in {
   imports = [inputs.pi.homeModules.default];
 
@@ -42,20 +13,10 @@ in {
       enable = true;
 
       settings = {
-        # ponytail: no defaultProvider/defaultModel; the settings wrapper merges
-        # into the mutable settings.json, so pi's last-selected model persists.
-        defaultThinkingLevel = "off";
-
         defaultProjectTrust = "ask";
         enableInstallTelemetry = false;
         enableAnalytics = false;
         quietStartup = false;
-
-        enabledModels = [
-          "ollama/qwen3.8:27b-q8_0"
-          "openai-codex/gpt-5.6-luna"
-          "openai-codex/gpt-5.6-sol"
-        ];
 
         packages = [
           "npm:pi-web-access"
@@ -97,13 +58,6 @@ in {
       };
     };
 
-    # Keep the model registry declarative. programs.pi.coding-agent.models only
-    # installs models.json once, so later Nix changes would otherwise be ignored.
-    home.file.".pi/agent/models.json" = {
-      source = models;
-      force = true;
-    };
-
     home.file.".pi/agent/web-search.json".text = builtins.toJSON {
       searchProvider = "searxng";
       searxngBaseUrl = "http://127.0.0.1:8888";
@@ -132,7 +86,6 @@ in {
       ffmpeg
       yt-dlp
       chromium
-      unstablePkgs.agent-browser
     ];
   };
 }

@@ -2,7 +2,6 @@
   #
   # AGENTS
   #
-
   worker = ''
     ---
     name: worker
