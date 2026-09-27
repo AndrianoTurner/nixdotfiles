@@ -18,6 +18,7 @@
     "discordapp.net"
     "discordcdn.com"
     "discord.media"
+    "rutracker.org"
   ];
 in {
   imports = [
@@ -74,11 +75,25 @@ in {
         priority = 200;
         hosts.include = targetedHosts;
         parameters = [
+          "--filter-l3=ipv4"
           "--filter-tcp=443"
           "--filter-l7=tls"
           "--payload=tls_client_hello"
-          "--lua-desync=fake:blob=fake_default_tls:tcp_md5:tcp_seq=-10000"
-          "--lua-desync=multidisorder:pos=1,midsld"
+          "--lua-desync=fake:blob=fake_default_tls:ip_autottl=-1,3-20:repeats=1"
+        ];
+      };
+
+      # The empty ACK is sent before SNI is visible, so this phase-zero part
+      # cannot be restricted with a hostlist. Keeping it after the targeted
+      # TLS profile ensures ClientHello packets still use that profile first.
+      tls-empty-ack = {
+        priority = 250;
+        parameters = [
+          "--filter-l3=ipv4"
+          "--filter-tcp=443"
+          "--payload=empty"
+          "--out-range=s1<d1"
+          "--lua-desync=pktmod:ip_ttl=1"
         ];
       };
 

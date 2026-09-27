@@ -9,7 +9,6 @@
     ../../modules/nixos/optional/docker.nix
     ../../modules/nixos/optional/throne.nix
     ../../modules/nixos/optional/steam.nix
-    ../../modules/nixos/optional/zapret2.nix
   ];
 
   home-manager.users.andriano = import ./home.nix;

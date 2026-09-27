@@ -11,7 +11,6 @@
     ./pavucontrol.nix
     ./playerctl.nix
     ./alacritty.nix
-    ./yazi-file-chooser.nix
     ./niri
     ./zen-browser.nix
     ./vicinae.nix
@@ -44,6 +43,23 @@
         default = [
           "alacritty.desktop"
         ];
+      };
+    };
+
+    portal = {
+      xdgOpenUsePortal = true;
+      enable = true;
+      extraPortals = [pkgs.xdg-desktop-portal-gnome]; # or whatever you use
+      config = {
+        niri = {
+          default = [
+            "gnome"
+            "gtk"
+          ];
+        };
+        common = {
+          default = ["gtk"];
+        };
       };
     };
   };

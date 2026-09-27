@@ -26,7 +26,6 @@ in {
       defaultPref("media.ffmpeg.vaapi.enabled", true);
       defaultPref("gfx.webrender.all", true);
       defaultPref("widget.wayland.fractional-scale.enabled", true);
-      defaultPref("widget.use-xdg-desktop-portal.file-picker", 1);
     '';
 
     policies = {
