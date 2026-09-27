@@ -59,6 +59,9 @@ in {
 
         packages = [
           "npm:pi-web-access"
+          "npm:pi-agent-browser-native@0.8.2"
+          "npm:@juicesharp/rpiv-todo"
+          "npm:@juicesharp/rpiv-ask-user-question"
           "npm:context-mode"
           "npm:pi-subagents"
           "npm:@narumitw/pi-plan-mode"
@@ -90,6 +93,7 @@ in {
         PI_CODING_AGENT_DIR.value = agentDir;
         PI_SKIP_VERSION_CHECK.value = "1";
         PI_TELEMETRY.value = "0";
+        AGENT_BROWSER_EXECUTABLE_PATH.value = "${pkgs.chromium}/bin/chromium";
       };
     };
 
@@ -127,6 +131,8 @@ in {
       python3
       ffmpeg
       yt-dlp
+      chromium
+      unstablePkgs.agent-browser
     ];
   };
 }

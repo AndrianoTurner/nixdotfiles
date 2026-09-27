@@ -11,7 +11,7 @@
 
   home-manager.users.demo = import ./home.nix;
 
-  programs.noctalia-greeter.passwordless-sync-users = lib.mkForce ["demo"];
+  services.displayManager.noctalia-greeter.passwordless-sync-users = lib.mkForce ["demo"];
 
   # The VM shares the host's Nix store read-only, so Home Manager cannot build
   # a mutable per-user profile during activation. Put the home packages in the
