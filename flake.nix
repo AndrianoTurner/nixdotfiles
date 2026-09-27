@@ -74,6 +74,18 @@
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
+    checks = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      format =
+        pkgs.runCommand "format-check" {
+          nativeBuildInputs = [pkgs.alejandra];
+        } ''
+          alejandra --check ${self}
+          touch $out
+        '';
+    });
+
     # Your custom packages and modifications, exported as overlays
     overlays = import ./overlays {inherit inputs;};
     # NixOS configuration entrypoint
