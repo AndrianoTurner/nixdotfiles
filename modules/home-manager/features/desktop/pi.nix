@@ -50,6 +50,12 @@ in {
         };
       };
 
+      # Vendored from github.com/JuliusBrussee/caveman @ 2fd153c
+      # (skills/caveman/SKILL.md, MIT). Terse-prose mode, pairs with ponytail.
+      skills = [
+        ./pi-skills/caveman
+      ];
+
       environment = {
         PI_CODING_AGENT_DIR.value = agentDir;
         PI_SKIP_VERSION_CHECK.value = "1";
