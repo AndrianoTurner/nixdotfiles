@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   hardware.bluetooth.enable = true;
   hardware.enableRedistributableFirmware = true;
 
@@ -13,7 +17,7 @@
     };
   };
 
-  swapDevices = [
+  swapDevices = lib.mkDefault [
     {
       device = "/swapfile";
       size = 8192;
