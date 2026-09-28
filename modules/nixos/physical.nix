@@ -3,18 +3,15 @@
   lib,
   ...
 }: {
-  hardware.bluetooth.enable = true;
-  hardware.enableRedistributableFirmware = true;
+  hardware = {
+    bluetooth.enable = true;
+    enableRedistributableFirmware = true;
+  };
 
   services = {
     openssh.enable = true;
     power-profiles-daemon.enable = true;
     upower.enable = true;
-    # Scheduler
-    scx = {
-      enable = true;
-      scheduler = "scx_lavd";
-    };
   };
 
   swapDevices = lib.mkDefault [
@@ -26,7 +23,6 @@
 
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
-    kernelParams = ["usbcore.autosuspend=-1"];
     # Compressed RAM cache.
     zswap = {
       enable = true;

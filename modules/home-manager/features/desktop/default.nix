@@ -18,7 +18,6 @@
     ./zed-editor
     ./telegram.nix
     ./tmux.nix
-    ./opencode
     ./pi.nix
   ];
 
