@@ -50,109 +50,165 @@ that file to reset the guest.
 The demo shares the desktop, applications, themes, and wallpapers with the
 personal hosts.
 
-## Install `chodum`
+## Install a host with `nixos-anywhere`
 
-`chodum` targets the AMD-integrated-graphics Maibenben M557 variant. It uses
-one NVMe disk with a 1 GiB EFI partition and a single LUKS2 container. The
-container holds an LVM volume group with a 24 GiB swap LV for hibernation and a
-btrfs root LV with `/`, `/home`, and `/nix` subvolumes.
+Use this procedure for any host registered in `nixosConfigurations` that
+imports a disko configuration. Replace the placeholders below with the host,
+user, target address, and disk for that machine.
 
-This layout erases the selected disk. It does not preserve existing partitions
-or support dual boot. Confirm the disk carefully before continuing.
+`nixos-anywhere` connects to the target over SSH, boots a temporary NixOS
+installer with kexec, lets disko partition and format the target, installs the
+flake configuration, and reboots. The disko step is destructive: it erases the
+configured disk and does not preserve existing partitions or dual-boot data.
+Verify the target and disk before running it.
 
-### Prepare the installer
+### Prerequisites
 
-1. Boot a current NixOS installer USB in UEFI mode.
-2. Connect to the network. Ethernet is simplest; use `nmtui` for Wi-Fi.
-3. Clone this repository and enter it:
+- A source machine with Nix flakes enabled and this repository checked out.
+- An x86_64 Linux target reachable over wired networking and SSH. The target
+  needs root SSH access or a user with passwordless `sudo`; nixos-anywhere does
+  not configure Wi-Fi for the temporary installer.
+- The target host is registered in `flake.nix`, imports its disko module, and
+  has SSH access configured for the first boot.
+- If hardware configuration is generated during installation, the host module
+  must import `./hardware-configuration.nix` before running the command.
 
-   ```console
-   git clone https://github.com/AndrianoTurner/nixdotfiles.git ~/nixos
-   cd ~/nixos
-   ```
+For a target booted from a NixOS installer USB, enable SSH in the installer and
+use its address. Otherwise nixos-anywhere normally uses kexec to boot its
+installer. See the [upstream documentation](https://github.com/nix-community/nixos-anywhere)
+for targets that need a custom installer image.
 
-4. Identify the internal NVMe disk. Do not assume it is `nvme0n1`:
+### Prepare the host and disk
 
-   ```console
-   lsblk -o NAME,SIZE,MODEL,TYPE,MOUNTPOINTS
-   ```
+Clone the repository on the source machine, set these values for the target,
+and inspect its disks:
 
-### Provision SOPS before the first activation
+```console
+git clone https://github.com/AndrianoTurner/nixdotfiles.git ~/nixos
+cd ~/nixos
+host=replace-me
+target=replace-me
+user=replace-me
+ssh "root@$target" lsblk -o NAME,SIZE,MODEL,TYPE,MOUNTPOINTS
+```
 
-This host reuses the `andriano` system and Home Manager configuration, so its
-system and user age keys must be available before the first activation.
-Generate two new key files on a trusted machine, keep them private, and never
-commit or print them:
+Set the `device` in `hosts/<host>/disko.nix` to the verified target disk.
+Prefer a stable `/dev/disk/by-id/...` path when available. `nixos-anywhere`
+uses the disko device from the flake; it does not infer a disk or provide a
+separate disk override. Commit the host-specific storage choice only if it is
+meant to be part of that host configuration.
+
+If the host needs a generated hardware file, make sure its module imports the
+file, then include this flag in the install command:
+
+```console
+--generate-hardware-config nixos-generate-config "hosts/$host/hardware-configuration.nix"
+```
+
+The generated file excludes filesystem declarations because disko owns the
+filesystems. Omit this flag when the host already has a suitable hardware
+configuration.
+
+### Install without extra secrets
+
+Run this from the repository root. The command builds the selected
+`nixosConfigurations.<host>`, formats the configured disk, installs it, and
+reboots the target:
+
+```console
+nix run github:nix-community/nixos-anywhere -- \
+  --flake ".#$host" \
+  --target-host "root@$target"
+```
+
+Use `--build-on remote` if the source machine cannot build the target's system
+architecture. To test the flake and disko layout without touching a target,
+use `--vm-test` instead.
+
+### Install a host using SOPS
+
+Do this on a trusted machine. You can reuse an existing system age identity
+instead of generating one: it only needs to be copied to
+`/var/lib/sops-nix/key.txt` on the target. Add its public recipient to
+`.sops.yaml` if it is not already present.
+
+You can also derive the user age identity from an existing SSH private key.
+This is technically supported, but separate SSH and SOPS keys are safer because
+compromising one key would otherwise grant both SSH access and secret access.
+The SSH private key must be available outside SOPS; a key encrypted inside the
+user SOPS file cannot decrypt that same file initially.
 
 ```console
 umask 077
-age-keygen -o chodum-system.age
-age-keygen -o chodum-user.age
+system_key=/secure/path/system.age
+ssh_key=/secure/path/id_ed25519
+age-keygen -y "$system_key"              # public recipient
+nix shell nixpkgs#ssh-to-age --command \
+  ssh-to-age -i "$ssh_key" -private-key -o user.age
+age-keygen -y user.age                     # public recipient
 ```
 
-Add the public recipients from those files to `.sops.yaml` under new
-`system_chodum` and `user_chodum` entries, then re-encrypt both existing files
-using the repository's normal SOPS workflow:
+Add those public recipients to `.sops.yaml`, then re-encrypt the encrypted
+files used by that host. Never commit, print, or paste private keys:
 
 ```console
 sops updatekeys secrets/system/shared.yaml
-sops updatekeys secrets/users/andriano.yaml
+sops updatekeys "secrets/users/$user.yaml"
 ```
 
-The private system key must become
-`/var/lib/sops-nix/key.txt`; the private user key must become
-`~/.config/sops/age/keys.txt` for `andriano`. After disko mounts the target,
-copy the files before running `nixos-install` (adjust the user/group IDs if
-they differ from the default `1000:100`):
+Stage the keys outside the repository. Use the numeric UID and GID declared by
+the host's user configuration:
 
 ```console
-sudo install -D -m600 chodum-system.age /mnt/var/lib/sops-nix/key.txt
-sudo install -D -m600 chodum-user.age /mnt/home/andriano/.config/sops/age/keys.txt
-sudo chown -R 1000:100 /mnt/home/andriano/.config/sops
+uid=1000
+gid=100
+stage=$(mktemp -d)
+trap 'rm -rf "$stage"' EXIT
+install -D -m600 "$system_key" "$stage/var/lib/sops-nix/key.txt"
+install -D -m600 user.age "$stage/home/$user/.config/sops/age/keys.txt"
 ```
 
-Do not put either private key in the repository or paste it into a terminal
-transcript.
+Pass that directory to nixos-anywhere. `--extra-files` copies it into `/mnt`
+before installation; `--chown` fixes ownership of the user key in the new
+system. Omit the user key and its `--chown` flag when the host has no user SOPS
+configuration.
 
-### Partition, install, and encrypt
-
-Replace `/dev/nvme0n1` below with the disk identified by `lsblk`. The command
-is destructive and prompts for the LUKS passphrase:
+The keys do not need to survive in the live installer. nixos-anywhere reads
+them from the source machine, runs disko, copies the staged files into the
+mounted target filesystem, and then runs `nixos-install`. The live environment
+is discarded on reboot, but `/mnt/var/lib/sops-nix/key.txt` and
+`/mnt/home/$user/.config/sops/age/keys.txt` become files in the installed
+system. `--disk-encryption-keys` is different: it is for temporary installer
+keys used to unlock disks, not for persistent SOPS keys.
 
 ```console
-sudo nix run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount \
-  hosts/chodum/disko.nix
+nix run github:nix-community/nixos-anywhere -- \
+  --flake ".#$host" \
+  --target-host "root@$target" \
+  --extra-files "$stage" \
+  --chown "/home/$user/.config/sops" "$uid:$gid" \
+  --generate-hardware-config nixos-generate-config "hosts/$host/hardware-configuration.nix"
 ```
 
-If the disk is not `/dev/nvme0n1`, make a temporary copy of
-`hosts/chodum/disko.nix`, replace only its `device` value with the verified
-path, and pass that copy to the command. Do not commit a machine-specific disk
-path.
+The generated hardware flag and SOPS options are independent: omit either when
+that host already has hardware configuration or does not use SOPS. Remove any
+temporary key files after the installation completes.
 
-After disko finishes, verify that the filesystems are mounted under `/mnt`,
-securely provision the two SOPS key files under `/mnt`, then install the
-configuration:
+### After installation
+
+Log in with an account enabled by the new configuration. If the machine was
+reinstalled, remove its old SSH host key before reconnecting:
 
 ```console
-mount | grep /mnt
-sudo nixos-install --root /mnt --flake .#chodum
+ssh-keygen -R "$target"
+ssh "$user@$target"
 ```
 
-Reboot, remove the installer USB, and enter the same LUKS passphrase at the
-initrd prompt. The system resumes hibernation from the encrypted 24 GiB swap
-LV. A 16 GiB swap target is the practical minimum for 16 GiB RAM; 24 GiB
-leaves useful headroom for normal swap use as well.
+Future changes can be deployed remotely from the repository with:
 
-The swap LV is a raw block device and cannot use btrfs filesystem compression.
-Runtime swap pressure is already handled by `zswap` in
-`modules/nixos/physical.nix`, which compresses pages in RAM before they are
-written to disk. It is not the hibernation resume device.
+```console
+nixos-rebuild switch --flake ".#$host" --target-host "$user@$target"
+```
 
-### Reinstall or recover
-
-Boot the installer again, clone the repository, verify the target with `lsblk`,
-and repeat the disko and `nixos-install` commands. This recreates the same
-partition, LUKS, LVM, btrfs, and hibernation layout; restore or re-provision
-SOPS keys before activation. Never run the destructive disko command against a
-disk containing data you want to keep.
+To reinstall, verify the disk again and rerun the command. Never run the
+destructive installation against a disk containing data you want to keep.
