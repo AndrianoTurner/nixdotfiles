@@ -2,8 +2,16 @@
   boot = {
     initrd.availableKernelModules = ["nvme" "xhci_pci" "usbhid" "usb_storage" "sd_mod"];
     initrd.kernelModules = ["amdgpu"];
-    kernelModules = ["kvm-amd"];
+    kernelModules = ["kvm-amd" "amd_pstate"];
     resumeDevice = "/dev/pool/swap";
+    kernelParams = [
+      "amd_pstate=active"
+    ];
+  };
+
+  services = {
+    xserver.videoDrivers = ["amdgpu"];
+    power-profiles-daemon.enable = true;
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -21,6 +29,4 @@
     enable = true;
     enable32Bit = true;
   };
-
-  services.xserver.videoDrivers = ["amdgpu"];
 }

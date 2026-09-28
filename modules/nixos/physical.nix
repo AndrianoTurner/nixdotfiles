@@ -10,7 +10,6 @@
 
   services = {
     openssh.enable = true;
-    power-profiles-daemon.enable = true;
     upower.enable = true;
   };
 
@@ -25,14 +24,16 @@
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
     # Compressed RAM cache.
     zswap = {
-      enable = true;
+      enable = false;
       compressor = "zstd";
       maxPoolPercent = 20;
       shrinkerEnabled = true;
     };
   };
 
-  zramSwap.enable = false;
-
-  powerManagement.powertop.enable = true;
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+    algorithm = "zstd";
+  };
 }

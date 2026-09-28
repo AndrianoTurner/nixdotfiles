@@ -37,10 +37,13 @@
     };
   };
 
-  services.xserver.videoDrivers = [
-    "amdgpu"
-    "nvidia"
-  ];
+  services = {
+    power-profiles-daemon.enable = true;
+    xserver.videoDrivers = [
+      "amdgpu"
+      "nvidia"
+    ];
+  };
 
   networking = {
     hostName = "freedompc";
