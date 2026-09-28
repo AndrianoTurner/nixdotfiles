@@ -25,9 +25,8 @@ in {
           "npm:@juicesharp/rpiv-ask-user-question"
           "npm:context-mode"
           "npm:pi-subagents"
-          "npm:@narumitw/pi-plan-mode"
+          "npm:@plannotator/pi-extension"
           "npm:pi-lens"
-          "npm:@gotgenes/pi-permission-system"
           "npm:@dietrichgebert/ponytail"
           "npm:pi-cliproxyapi-provider"
         ];
