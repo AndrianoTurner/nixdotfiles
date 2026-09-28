@@ -37,6 +37,10 @@
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     wallpaper-bank = {
       url = "github:makccr/wallpapers?shallow=1";
@@ -110,6 +114,13 @@
         inherit specialArgs;
         modules = [
           ./hosts/mdr018
+        ];
+      };
+
+      chodum = nixpkgs.lib.nixosSystem {
+        inherit specialArgs;
+        modules = [
+          ./hosts/chodum
         ];
       };
 
