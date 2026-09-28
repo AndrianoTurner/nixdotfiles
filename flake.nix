@@ -1,13 +1,6 @@
 {
   description = "Andriano's NixOS configurations";
 
-  # nixConfig = {
-  #   extra-substituters = ["https://noctalia.cachix.org" "https://mirror.yandex.ru/nixos"];
-  #   extra-trusted-public-keys = [
-  #     "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-  #   ];
-  # };
-
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
@@ -25,13 +18,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    # The cachix branch follows the newest v5 revision already available in
-    # Noctalia's binary cache. Do not make its nixpkgs input follow ours: that
-    # would change the derivation hash and bypass the cache.
-    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia/cachix";
+    };
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
       url = "github:mic92/sops-nix";

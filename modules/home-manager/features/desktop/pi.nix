@@ -77,6 +77,7 @@ in {
     };
 
     home.packages = with pkgs; [
+      # unstablePkgs.agent-browser
       git
       gh
       ripgrep
