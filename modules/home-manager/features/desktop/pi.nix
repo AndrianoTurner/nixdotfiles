@@ -24,6 +24,8 @@ in {
           "npm:@juicesharp/rpiv-todo"
           "npm:@juicesharp/rpiv-ask-user-question"
           "npm:context-mode"
+          "npm:pi-mcp-adapter"
+          "npm:@narumitw/pi-btw"
           "npm:pi-subagents"
           "npm:@plannotator/pi-extension"
           "npm:pi-lens"
@@ -76,7 +78,10 @@ in {
     };
 
     home.packages = with pkgs; [
-      # unstablePkgs.agent-browser
+      nodejs_24
+      python3
+      gnumake
+      stdenv.cc
       git
       gh
       ripgrep
@@ -86,9 +91,6 @@ in {
       wget
       patch
       diffutils
-      gnumake
-      nodejs_24
-      python3
       ffmpeg
       yt-dlp
       chromium
