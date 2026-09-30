@@ -2,10 +2,6 @@
 ---
 local keymap = vim.keymap.set
 
-keymap('n', '<leader>ps', function()
-    vim.pack.update()
-end, { desc = 'Update plugins' })
-
 keymap('n', '<leader>f', '<cmd>Pick files<cr>', { desc = 'Find files' })
 keymap('n', '<leader>g', '<cmd>Pick grep_live<cr>', { desc = 'Live grep' })
 keymap('n', '<leader>e', '<cmd>lua MiniFiles.open()<cr>', { desc = 'File explorer' })
@@ -27,20 +23,26 @@ keymap('n', '<Leader>te', '<cmd>tabnew<CR>', { silent = true, desc = 'New tab' }
 keymap('n', '<Leader>_', '<cmd>vsplit<CR>', { silent = true, desc = 'Vertical split' })
 keymap('n', '<Leader>-', '<cmd>split<CR>', { silent = true, desc = 'Horizontal split' })
 keymap('n', '<Leader>lf', function()
-    vim.lsp.buf.format()
+    require('conform').format({ lsp_format = 'fallback' })
 end, { silent = true, desc = 'Format buffer' })
 keymap('v', '<Leader>p', '"_dP', { desc = 'Paste without yanking' })
 keymap('x', 'y', [["+y]], { silent = true, desc = 'Yank to clipboard' })
 keymap('t', '<Esc>', '<C-\\><C-N>', { desc = 'Exit terminal mode' })
 -- Change directory to the current file's directory
 keymap('n', '<leader>cd', function()
-    vim.fn.chdir(vim.fn.expand('%:p:h'))
+    local directory = vim.fn.expand('%:p:h')
+    if directory ~= '' then
+        vim.cmd('lcd ' .. vim.fn.fnameescape(directory))
+    end
 end, { desc = 'CD to file directory' })
 
 
 --- KEYMAP
 
+local lsp_group = vim.api.nvim_create_augroup('LspKeymaps', { clear = true })
+
 vim.api.nvim_create_autocmd('LspAttach', {
+    group = lsp_group,
     callback = function(ev)
         local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
         local buf = ev.buf
@@ -56,7 +58,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
         map('n', '<leader>rn', vim.lsp.buf.rename, 'Rename')
         map({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, 'Code action')
         map('n', '<leader>lf', function()
-            vim.lsp.buf.format({ bufnr = buf, timeout_ms = 1000 })
+            require('conform').format({
+                bufnr = buf,
+                timeout_ms = 1000,
+                lsp_format = 'fallback',
+            })
         end, 'Format')
 
 

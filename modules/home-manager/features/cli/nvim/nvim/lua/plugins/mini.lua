@@ -39,7 +39,6 @@ miniclue.setup({
         -- are picked up automatically from their `desc`.
         { mode = 'n', keys = '<Leader>c', desc = '+code/cd' },
         { mode = 'n', keys = '<Leader>l', desc = '+lsp' },
-        { mode = 'n', keys = '<Leader>p', desc = '+plugins' },
         { mode = 'n', keys = '<Leader>q', desc = '+quit' },
         { mode = 'n', keys = '<Leader>t', desc = '+tabs' },
         { mode = 'n', keys = '<Leader>x', desc = '+diagnostics' },
