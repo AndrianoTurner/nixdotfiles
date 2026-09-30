@@ -1,4 +1,16 @@
 {
+  programs.lazygit.enable = true;
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+
+    options = {
+      navigate = true;
+      line-numbers = true;
+      side-by-side = false;
+      dark = true;
+    };
+  };
   programs.git = {
     enable = true;
 
@@ -7,9 +19,7 @@
 
       core = {
         editor = "nvim";
-        whitespace = "error";
         autocrlf = "input";
-        compression = 9;
       };
 
       advice = {
@@ -17,6 +27,7 @@
         pushNonFastForward = false;
         statusHints = false;
       };
+      interactive.singleKey = true;
 
       blame = {
         coloring = "highlightRecent";
@@ -24,10 +35,14 @@
       };
 
       diff = {
-        context = 3;
-        renames = "copies";
-        interHunkContext = 10;
+        algorithm = "histogram";
+        renames = true;
+        colorMoved = "default";
+        # Keep unrelated edits as separate hunks.
+        interHunkContext = 0;
       };
+
+      merge.conflictStyle = "zdiff3";
 
       log = {
         abbrevCommit = true;
@@ -41,6 +56,8 @@
         showUntrackedFiles = "all";
       };
 
+      fetch.prune = true;
+
       push = {
         autoSetupRemote = true;
         default = "current";
@@ -48,14 +65,23 @@
       };
 
       pull.rebase = true;
+      rebase = {
+        autoStash = true;
+        autoSquash = true;
+        updateRefs = true;
+        missingCommitsCheck = "warn";
+      };
 
       submodule.fetchJobs = 16;
 
-      rebase.autoStash = true;
-
       rerere.enabled = true;
 
-      gpg.format = "ssh";
+      commit.verbose = true;
+
+      column.ui = "auto";
+
+      branch.sort = "-committerdate";
+      tag.sort = "version:refname";
     };
   };
 }
