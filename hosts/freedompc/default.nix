@@ -1,6 +1,12 @@
-{config, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   imports = [
-    ./hardware-configuration.nix
+    inputs.disko.nixosModules.disko
+    #    ./disko.nix
+    ./hardware.nix
     ../../modules/nixos/common
     ../../modules/nixos/desktop
     ../../modules/nixos/physical.nix
