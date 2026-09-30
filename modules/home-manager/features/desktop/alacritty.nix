@@ -1,38 +1,45 @@
 {
   programs.alacritty = {
     enable = true;
+
     settings = {
       window = {
+        padding = {
+          x = 8;
+          y = 8;
+        };
         dynamic_padding = true;
-        opacity = 0.8;
+        opacity = 0.92;
+        decorations = "None";
       };
-      scrolling = {
-        history = 15000;
-      };
+
+      scrolling.history = 50000;
+
       font = {
         size = 12;
-        normal = {
-          family = "JetBrainsMono Nerd Font";
-          style = "Regular";
-        };
+        normal.family = "JetBrainsMono Nerd Font";
+        builtin_box_drawing = true;
       };
+
       cursor = {
         style = {
           shape = "Beam";
-          blinking = "Always";
+          blinking = "On";
         };
+
+        vi_mode_style = {
+          shape = "Block";
+          blinking = "Off";
+        };
+
         blink_timeout = 0;
         blink_interval = 500;
+        unfocused_hollow = true;
+        thickness = 0.15;
       };
-      mouse = {
-        hide_when_typing = true;
-        bindings = [
-          {
-            mouse = "Right";
-            action = "Paste";
-          }
-        ];
-      };
+
+      selection.save_to_clipboard = true;
+      mouse.hide_when_typing = true;
     };
   };
 }
