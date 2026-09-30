@@ -57,5 +57,14 @@
         "space u w" = "editor::ToggleSoftWrap";
       };
     }
+
+    # The project panel takes focus when it opens, so keep its toggle binding
+    # available while the panel itself is focused.
+    {
+      context = "ProjectPanel && not_editing";
+      bindings = {
+        "space e" = "project_panel::Toggle";
+      };
+    }
   ];
 }
