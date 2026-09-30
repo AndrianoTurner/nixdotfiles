@@ -29,6 +29,7 @@
     agent = {
       enabled = true;
       button = true;
+      dock = "right";
     };
     disable_ai = false;
 
