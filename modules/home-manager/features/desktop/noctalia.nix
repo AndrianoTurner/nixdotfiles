@@ -116,7 +116,7 @@
       osd = {
         enabled = true;
         position = "top_right";
-        background_opacity = 1.0;
+        background_opacity = 0.70;
       };
 
       lockscreen = {
