@@ -369,14 +369,14 @@
       bar.main = {
         position = "top";
         thickness = 34;
-        background_opacity = 0.93;
+        background_opacity = 0.60;
         radius = 12;
         padding = 8;
         widget_spacing = 6;
         shadow = true;
         reserve_space = true;
         capsule = true;
-        capsule_opacity = 0.62;
+        capsule_opacity = 0.50;
         margin_ends = 0;
 
         start = [
