@@ -20,7 +20,6 @@
     initrd.kernelModules = [];
     kernelModules = ["kvm-amd"];
     kernelParams = ["usbcore.autosuspend=-1"];
-    resumeDevice = lib.mkIf config.disko.enableConfig "/dev/pool/swap";
   };
 
   fileSystems."/" = lib.mkDefault {
