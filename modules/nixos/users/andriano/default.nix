@@ -7,7 +7,6 @@
 in {
   imports = [
     ./sops.nix
-    ../../optional/l2tp.nix
   ];
 
   users.mutableUsers = true;

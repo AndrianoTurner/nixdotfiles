@@ -10,5 +10,7 @@
     ./nvim
     ./yazi.nix
     ./nushell.nix
+    ./pi.nix
+    ./tmux.nix
   ];
 }

@@ -1,13 +1,14 @@
-{pkgs, ...}: {
+{pkgs, repoRoot, ...}: {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nixos/common
-    ../../modules/nixos/desktop
-    ../../modules/nixos/physical.nix
-    ../../modules/nixos/users/andriano
-    ../../modules/nixos/optional/grub-boot.nix
-    ../../modules/nixos/optional/docker.nix
-    ../../modules/nixos/optional/throne.nix
+    "${repoRoot}/modules/nixos/common"
+    "${repoRoot}/modules/nixos/desktop"
+    "${repoRoot}/modules/nixos/physical.nix"
+    "${repoRoot}/modules/nixos/users/andriano"
+    "${repoRoot}/modules/nixos/optional/l2tp.nix"
+    "${repoRoot}/modules/nixos/optional/grub-boot.nix"
+    "${repoRoot}/modules/nixos/optional/docker.nix"
+    "${repoRoot}/modules/nixos/optional/throne.nix"
   ];
 
   home-manager.users.andriano = import ./home.nix;

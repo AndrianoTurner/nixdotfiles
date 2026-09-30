@@ -49,6 +49,8 @@
     nixpkgs,
     ...
   } @ inputs: let
+    repoRoot = ./.;
+
     # Supported systems for your flake packages, shell, etc.
     systems = [
       "x86_64-linux"
@@ -59,6 +61,7 @@
 
     specialArgs = {
       inherit inputs;
+      inherit repoRoot;
       outputs = self.outputs;
     };
   in {

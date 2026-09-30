@@ -1,6 +1,7 @@
 # Secret-free configuration shared by every host.
 {
   inputs,
+  repoRoot,
   outputs,
   lib,
   ...
@@ -24,7 +25,7 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = {
-    inherit inputs;
+    inherit inputs repoRoot;
   };
 
   nixpkgs = {

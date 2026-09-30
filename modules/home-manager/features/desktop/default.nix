@@ -17,8 +17,6 @@
     ./noctalia.nix
     ./zed-editor
     ./telegram.nix
-    ./tmux.nix
-    ./pi.nix
   ];
 
   xdg = {

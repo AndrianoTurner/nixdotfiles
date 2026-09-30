@@ -27,8 +27,9 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 ## Layout
 
 - `flake.nix` — inputs; `nixosConfigurations` registry (add new hosts here);
-  `specialArgs` pass `inputs` and `self.outputs` to every module; `formatter`
-  is alejandra; `checks.format` runs the format gate; `apps.demo` runs the VM.
+  NixOS `specialArgs` pass `inputs`, `repoRoot`, and `self.outputs`, while
+  Home Manager receives `inputs` and `repoRoot`; `formatter` is alejandra;
+  `checks.format` runs the format gate; `apps.demo` runs the VM.
 - `hosts/<host>/` — `default.nix` composes modules, hardware, network, GPU and
   `home-manager.users.<user> = import ./home.nix`; `home.nix` imports the
   Home Manager user module; `hardware-configuration.nix` per machine.
@@ -63,7 +64,9 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 ## No auto-discovery
 
-Every directory is wired by explicit relative imports:
+Every directory is wired by explicit imports. Host-level imports use the
+`repoRoot` path passed through `specialArgs`; imports within a module subtree
+remain relative:
 
 - A new file in `modules/home-manager/features/cli/` must be added to
   `features/cli/default.nix`; desktop similarly to `features/desktop/default.nix`.

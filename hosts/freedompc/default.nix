@@ -1,20 +1,22 @@
 {
   config,
   inputs,
+  repoRoot,
   ...
 }: {
   imports = [
     inputs.disko.nixosModules.disko
     #    ./disko.nix
     ./hardware.nix
-    ../../modules/nixos/common
-    ../../modules/nixos/desktop
-    ../../modules/nixos/physical.nix
-    ../../modules/nixos/users/andriano
-    ../../modules/nixos/optional/systemd-boot.nix
-    ../../modules/nixos/optional/docker.nix
-    ../../modules/nixos/optional/throne.nix
-    ../../modules/nixos/optional/steam.nix
+    "${repoRoot}/modules/nixos/common"
+    "${repoRoot}/modules/nixos/desktop"
+    "${repoRoot}/modules/nixos/physical.nix"
+    "${repoRoot}/modules/nixos/users/andriano"
+    "${repoRoot}/modules/nixos/optional/l2tp.nix"
+    "${repoRoot}/modules/nixos/optional/systemd-boot.nix"
+    "${repoRoot}/modules/nixos/optional/docker.nix"
+    "${repoRoot}/modules/nixos/optional/throne.nix"
+    "${repoRoot}/modules/nixos/optional/steam.nix"
   ];
 
   home-manager.users.andriano = import ./home.nix;

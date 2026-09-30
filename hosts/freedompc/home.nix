@@ -1,3 +1,3 @@
-{
-  imports = [../../modules/home-manager/users/andriano];
+{repoRoot, ...}: {
+  imports = ["${repoRoot}/modules/home-manager/users/andriano"];
 }

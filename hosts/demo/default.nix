@@ -1,12 +1,13 @@
 {
   lib,
   options,
+  repoRoot,
   ...
 }: {
   imports = [
-    ../../modules/nixos/common
-    ../../modules/nixos/desktop
-    ../../modules/nixos/users/demo
+    "${repoRoot}/modules/nixos/common"
+    "${repoRoot}/modules/nixos/desktop"
+    "${repoRoot}/modules/nixos/users/demo"
   ];
 
   home-manager.users.demo = import ./home.nix;

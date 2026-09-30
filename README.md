@@ -11,7 +11,8 @@ a `home.nix` that selects a concrete Home Manager user configuration.
 
 The files under `modules/nixos/common`, `modules/nixos/desktop`,
 `modules/nixos/optional`, and `modules/home-manager/features` are ordinary Nix
-modules. Hosts and users import them by relative path.
+modules. Host-level imports use the `repoRoot` path passed by the flake;
+imports within a module subtree stay relative.
 
 Concrete user configuration lives under both `modules/nixos/users` and
 `modules/home-manager/users`.
