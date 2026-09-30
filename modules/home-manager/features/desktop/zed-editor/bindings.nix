@@ -14,7 +14,7 @@
 
     # LazyVim-style leader bindings (Space is the Vim leader key).
     {
-      context = "vim_mode == normal && !menu";
+      context = "Editor && vim_mode == normal && !menu";
       bindings = {
         "space space" = "file_finder::Toggle";
         "space e" = "project_panel::Toggle";
@@ -55,43 +55,6 @@
         "space u i" = "editor::ToggleInlayHints";
         "space u b" = "editor::ToggleGitBlameInline";
         "space u w" = "editor::ToggleSoftWrap";
-      };
-    }
-
-    # The project panel takes focus when it opens, so the normal-mode context
-    # above no longer matches when the same binding is pressed again.
-    {
-      context = "ProjectPanel && not_editing";
-      bindings = {
-        "space e" = "project_panel::Toggle";
-      };
-    }
-    {
-      context = "AgentPanel";
-      bindings = {
-        "space a a" = "agent::Toggle";
-      };
-    }
-
-    # These panels also take focus when opened, so keep their toggle bindings
-    # available while the panel itself is focused.
-    {
-      context = "Terminal";
-      bindings = {
-        "space f t" = "terminal_panel::Toggle";
-      };
-    }
-    {
-      context = "GitPanel";
-      bindings = {
-        "space g g" = "git_panel::Toggle";
-        "space g t" = "git_panel::ToggleTreeView";
-      };
-    }
-    {
-      context = "OutlinePanel && not_editing";
-      bindings = {
-        "space c s" = "outline_panel::Toggle";
       };
     }
   ];
