@@ -3,7 +3,7 @@ keys:
 
   - &system_mdr018 age1k5rn4u2qd20km0p3zxm3ckn7el0du8utta8acafsvczpqnys64fqfz7zah
   - &system_homepc age1mxwv49gvcj8kgx03fgdwq9lus8t0d3w4tlxam9eqe4srfutyjqsq3mv809
-  - &system_freedompc age1meq7y3jv6tz3jauugaae8y6qp0d0d5pmucapmxah5xmecqzmcshsw9xnh5
+  - &system_freedompc age18j94z6aga583yn99xzcwj8hcwg24waq8sp2f8vwe2399rewykp7stkllhy
   - &system_chodum age1582tqexjvqrx8x9hlpnxjq9xcl3t88lupxk0f6xazfjz7n9p85fqadq04w
 
   - &user_mdr018 age13l20ymll8l66fmkf6adrwdetrvc6mwlmerha7k5z9zt6fjyav95qxm2r0m
