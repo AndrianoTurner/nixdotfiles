@@ -6,7 +6,7 @@
 }: {
   imports = [
     inputs.disko.nixosModules.disko
-    #    ./disko.nix
+    ./disko.nix
     ./hardware.nix
     "${repoRoot}/modules/nixos/common"
     "${repoRoot}/modules/nixos/desktop"
