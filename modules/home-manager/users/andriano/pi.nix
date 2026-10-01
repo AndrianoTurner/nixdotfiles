@@ -1,4 +1,59 @@
 {...}: let
+  plannotatorHandoff = ''
+    import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+    const PLANNOTATOR_PLAN_APPROVED_CHANNEL = "plannotator:plan-approved";
+    type PlannotatorPlanApprovedEvent = {
+      cwd: string;
+      planFilePath: string;
+      planContent: string;
+      feedback?: string;
+    };
+
+    export default function (pi: ExtensionAPI) {
+      let pending: PlannotatorPlanApprovedEvent | undefined;
+
+      pi.events.on(PLANNOTATOR_PLAN_APPROVED_CHANNEL, (event) => {
+        pending = event as PlannotatorPlanApprovedEvent;
+        pi.sendUserMessage("/plannotator-new-session", { expandPromptTemplates: true });
+      });
+
+      pi.registerCommand("plannotator-new-session", {
+        description: "Execute an approved Plannotator plan in a clean session",
+        handler: async (_args, ctx) => {
+          const handoff = pending;
+          pending = undefined;
+
+          if (!handoff) return;
+          if (ctx.mode !== "tui") {
+            ctx.ui.notify("Plannotator handoff requires interactive mode.", "error");
+            return;
+          }
+
+          const prompt = [
+            "You are in a clean session. Execute the approved plan below.",
+            "Working directory: " + handoff.cwd,
+            "Plan file: " + handoff.planFilePath,
+            "Read the plan file first, then implement every unchecked step and run its verification.",
+            handoff.feedback ? "Reviewer notes:\n" + handoff.feedback : "",
+            "Approved plan:\n\n" + handoff.planContent,
+          ]
+            .filter(Boolean)
+            .join("\n\n");
+
+          const result = await ctx.newSession({
+            parentSession: ctx.sessionManager.getSessionFile(),
+            withSession: async (replacementCtx) => {
+              replacementCtx.ui.notify("Executing the approved plan in a clean session.", "info");
+              await replacementCtx.sendUserMessage(prompt, { expandPromptTemplates: false });
+            },
+          });
+
+          if (result.cancelled) ctx.ui.notify("Plannotator handoff cancelled.", "info");
+        },
+      });
+    }
+  '';
+
   appendSystem = ''
     Delegation-first execution:
     - For a large task, first identify independent seams and delegate bounded,
@@ -169,6 +224,10 @@
 in {
   home.file = {
     ".pi/agent/APPEND_SYSTEM.md".text = appendSystem;
+    ".pi/agent/plannotator.json".text = builtins.toJSON {
+      executionMode = "external";
+    };
+    ".pi/agent/extensions/plannotator-new-session.ts".text = plannotatorHandoff;
     ".pi/agent/agents/worker.md".text = worker;
     ".pi/agent/agents/scout.md".text = scout;
 
