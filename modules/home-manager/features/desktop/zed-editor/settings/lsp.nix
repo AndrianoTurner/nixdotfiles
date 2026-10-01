@@ -11,6 +11,11 @@
         };
       };
     };
+    "csharp-ls" = {
+      binary = {
+        path = "${pkgs.csharp-ls}/bin/csharp-ls";
+      };
+    };
     "rust-analyzer" = {
       initialization_options = {
         check = {

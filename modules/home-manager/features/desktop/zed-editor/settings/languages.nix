@@ -7,6 +7,11 @@
       ];
     };
 
+    "C#" = {
+      language_servers = ["csharp-ls"];
+      format_on_save = "on";
+    };
+
     Nix = {
       formatter = "language_server";
       format_on_save = "on";
