@@ -11,6 +11,7 @@ in {
 
   users.mutableUsers = true;
   users.users.andriano = {
+    initialPassword = "changeme";
     isNormalUser = true;
     shell = pkgs.fish;
     extraGroups = ifTheyExist [
