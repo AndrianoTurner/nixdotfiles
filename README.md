@@ -211,5 +211,14 @@ Future changes can be deployed remotely from the repository with:
 nixos-rebuild switch --flake ".#$host" --target-host "$user@$target"
 ```
 
+For a rebuild that includes the Noctalia binary cache, add it only to that
+command:
+
+```console
+nixos-rebuild switch --flake ".#$host" --target-host "$user@$target" \
+  --option extra-substituters https://noctalia.cachix.org \
+  --option extra-trusted-public-keys noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=
+```
+
 To reinstall, verify the disk again and rerun the command. Never run the
 destructive installation against a disk containing data you want to keep.

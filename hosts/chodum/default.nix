@@ -1,4 +1,8 @@
-{inputs, repoRoot, ...}: {
+{
+  inputs,
+  repoRoot,
+  ...
+}: {
   imports = [
     inputs.disko.nixosModules.disko
     ./disko.nix

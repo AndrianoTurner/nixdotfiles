@@ -1,4 +1,8 @@
-{inputs, repoRoot, ...}: {
+{
+  inputs,
+  repoRoot,
+  ...
+}: {
   imports = [inputs.sops-nix.nixosModules.sops];
 
   sops = {

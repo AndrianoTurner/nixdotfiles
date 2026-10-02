@@ -1,4 +1,8 @@
-{pkgs, repoRoot, ...}: {
+{
+  pkgs,
+  repoRoot,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     "${repoRoot}/modules/nixos/common"
