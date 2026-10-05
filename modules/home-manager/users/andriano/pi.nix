@@ -58,7 +58,7 @@
           const result = await ctx.newSession({
             parentSession: ctx.sessionManager.getSessionFile(),
             withSession: async (replacementCtx) => {
-              pi.setThinkingLevel(thinkingLevel);
+              replacementCtx.setThinkingLevel(thinkingLevel);
               replacementCtx.ui.notify("Executing the approved plan in a clean session.", "info");
               await replacementCtx.sendUserMessage(prompt, { expandPromptTemplates: false });
             },
