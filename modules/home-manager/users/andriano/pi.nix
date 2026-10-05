@@ -1,7 +1,10 @@
 {...}: let
   plannotatorHandoff = ''
     import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+    import type { ThinkingLevel } from "@earendil-works/pi-agent-core";
+
     const PLANNOTATOR_PLAN_APPROVED_CHANNEL = "plannotator:plan-approved";
+    const THINKING_LEVELS: ThinkingLevel[] = ["off", "minimal", "low", "medium", "high", "xhigh", "max"];
     type PlannotatorPlanApprovedEvent = {
       cwd: string;
       planFilePath: string;
@@ -29,6 +32,18 @@
             return;
           }
 
+          const currentThinkingLevel = pi.getThinkingLevel();
+          const inherit = `Inherit current (''${currentThinkingLevel})`;
+          const choice = await ctx.ui.select("Thinking level for the replacement session", [
+            inherit,
+            ...THINKING_LEVELS,
+          ]);
+          if (!choice) {
+            ctx.ui.notify("Plannotator handoff cancelled.", "info");
+            return;
+          }
+          const thinkingLevel = choice === inherit ? currentThinkingLevel : choice as ThinkingLevel;
+
           const prompt = [
             "You are in a clean session. Execute the approved plan below.",
             "Working directory: " + handoff.cwd,
@@ -43,6 +58,7 @@
           const result = await ctx.newSession({
             parentSession: ctx.sessionManager.getSessionFile(),
             withSession: async (replacementCtx) => {
+              pi.setThinkingLevel(thinkingLevel);
               replacementCtx.ui.notify("Executing the approved plan in a clean session.", "info");
               await replacementCtx.sendUserMessage(prompt, { expandPromptTemplates: false });
             },
