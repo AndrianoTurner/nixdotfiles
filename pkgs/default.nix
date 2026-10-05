@@ -3,4 +3,5 @@
 pkgs: {
   # example = pkgs.callPackage ./example { };
   ilspy = pkgs.callPackage ./ilspy {};
+  agent-office = pkgs.callPackage ./agent-office {};
 }
