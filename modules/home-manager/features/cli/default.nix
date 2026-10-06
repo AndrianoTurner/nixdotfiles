@@ -12,5 +12,6 @@
     ./nushell.nix
     ./pi.nix
     ./tmux.nix
+    ./carapace.nix
   ];
 }
