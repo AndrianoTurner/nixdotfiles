@@ -10,7 +10,7 @@
     ../../features/desktop
     ./sops.nix
     ./git.nix
-    ./pi.nix
+    ./pi
     ./ssh.nix
   ];
 
