@@ -2,19 +2,14 @@
   pkgs,
   lib,
   ...
-}: let
-  codex-acp = pkgs.unstablePkgs.codex-acp;
-in {
+}: {
   programs.zed-editor.userSettings = {
     agent_servers = {
-      codex = {
+      pi = {
         type = "custom";
-        command = lib.getExe codex-acp;
+        command = lib.getExe pkgs.pi-acp;
         args = [];
-
-        env = {
-          INITIAL_AGENT_MODE = "agent";
-        };
+        env = {};
       };
     };
     language_models = {
