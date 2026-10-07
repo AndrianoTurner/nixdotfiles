@@ -43,7 +43,7 @@
       clip-to-geometry = true;
     }
     {
-      matches = [{title = "Zen Browser";}];
+      matches = [{title = "Zen Browser";} {title = "Throne";}];
       open-maximized = true;
     }
   ];

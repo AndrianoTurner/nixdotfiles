@@ -46,7 +46,7 @@
   layout = {
     gaps = 8;
     center-focused-column = "never";
-    always-center-single-column = true;
+    always-center-single-column = false;
     preset-column-widths = [
       {proportion = 0.33333;}
       {proportion = 0.5;}
