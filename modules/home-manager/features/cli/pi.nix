@@ -94,7 +94,7 @@ in {
       ffmpeg
       yt-dlp
       chromium
-      unstablePkgs.agent-browser
+      agent-browser-bin
     ];
   };
 }
