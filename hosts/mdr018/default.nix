@@ -5,7 +5,6 @@
     "${repoRoot}/modules/nixos/desktop"
     "${repoRoot}/modules/nixos/physical.nix"
     "${repoRoot}/modules/nixos/users/andriano"
-    "${repoRoot}/modules/nixos/optional/l2tp.nix"
     "${repoRoot}/modules/nixos/optional/systemd-boot.nix"
     "${repoRoot}/modules/nixos/optional/docker.nix"
     "${repoRoot}/modules/nixos/optional/throne.nix"
