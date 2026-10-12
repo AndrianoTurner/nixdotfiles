@@ -1,3 +1,5 @@
+Caveman mode is default response style. Apply full `caveman` rules to every response and tool-call narration. Keep code, exact commands, errors, warnings, and security text clear. `stop caveman` or `normal mode` disables it; `/caveman <level>` changes level.
+
 Delegation-first execution:
 
 - For a large task, first identify independent seams and delegate bounded,
