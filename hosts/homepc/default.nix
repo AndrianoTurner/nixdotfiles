@@ -9,10 +9,10 @@
     "${repoRoot}/modules/nixos/desktop"
     "${repoRoot}/modules/nixos/physical.nix"
     "${repoRoot}/modules/nixos/users/andriano"
-    "${repoRoot}/modules/nixos/optional/l2tp.nix"
     "${repoRoot}/modules/nixos/optional/grub-boot.nix"
     "${repoRoot}/modules/nixos/optional/docker.nix"
     "${repoRoot}/modules/nixos/optional/throne.nix"
+    "${repoRoot}/modules/nixos/optional/l2tp.nix"
   ];
 
   home-manager.users.andriano = import ./home.nix;
