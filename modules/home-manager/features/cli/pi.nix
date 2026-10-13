@@ -41,8 +41,9 @@ in {
 
         retry = {
           enabled = true;
-          maxRetries = 3;
+          maxRetries = 8;
           baseDelayMs = 2000;
+          maxAgentDelayMs = 30000;
           provider = {
             timeoutMs = 3600000;
             maxRetries = 0;
