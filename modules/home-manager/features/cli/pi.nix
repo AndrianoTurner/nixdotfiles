@@ -19,14 +19,14 @@ in {
         quietStartup = false;
 
         packages = [
-          "npm:pi-web-access@0.39.0"
-          "npm:pi-agent-browser-native@0.8.2"
-          "npm:@juicesharp/rpiv-todo@2.13.5"
-          "npm:@juicesharp/rpiv-ask-user-question@2.13.5"
+          "npm:pi-web-access@0.40.0"
+          "npm:pi-agent-browser-native@0.9.5"
+          "npm:@juicesharp/rpiv-todo@2.13.8"
+          "npm:@juicesharp/rpiv-ask-user-question@2.13.8"
           "npm:context-mode"
           "npm:pi-mcp-adapter"
           "npm:@narumitw/pi-btw"
-          "npm:pi-subagents@0.77.0"
+          "npm:pi-subagents@0.78.0"
           "npm:@plannotator/pi-extension"
           "npm:pi-lens"
           "npm:@dietrichgebert/ponytail"
