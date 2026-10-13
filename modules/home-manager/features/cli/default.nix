@@ -6,6 +6,7 @@
     ./fish
     ./fzf.nix
     ./git.nix
+    ./herdr.nix
     ./ssh.nix
     ./nvim
     ./yazi.nix
