@@ -63,6 +63,8 @@ in {
         PI_SKIP_VERSION_CHECK.value = "1";
         PI_TELEMETRY.value = "0";
         AGENT_BROWSER_EXECUTABLE_PATH.value = "${pkgs.chromium}/bin/chromium";
+        JAVA_HOME.value = "${pkgs.jdk21}/lib/openjdk";
+        REA_JADX_MCP_JAR.value = "${config.home.homeDirectory}/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar";
       };
     };
 
@@ -80,6 +82,7 @@ in {
 
     home.packages = with pkgs; [
       nodejs_24
+      jdk21
       python3
       gnumake
       stdenv.cc
