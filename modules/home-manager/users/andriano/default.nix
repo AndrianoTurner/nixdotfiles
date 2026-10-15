@@ -14,5 +14,7 @@
     ./ssh.nix
   ];
 
+  home.sessionVariables.JAVA_HOME = "${pkgs.jdk21}/lib/openjdk";
+
   home.packages = with pkgs; [waypipe qbittorrent];
 }
