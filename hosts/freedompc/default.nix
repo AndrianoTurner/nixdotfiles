@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   inputs,
   repoRoot,
   ...
@@ -20,14 +21,43 @@
   ];
 
   home-manager.users.andriano = import ./home.nix;
-  hardware = {
-    graphics.enable = true;
-    nvidia = {
+
+  system.nixos.tags = ["portable"];
+
+  hardware.graphics.enable = true;
+
+  services = {
+    power-profiles-daemon.enable = true;
+    xserver.videoDrivers = ["amdgpu"];
+    udev.extraRules = ''
+      # RTX 4050: enable PCI runtime power management, target is D3Cold
+      ACTION=="add", SUBSYSTEM=="pci", KERNEL=="0000:01:00.0", ATTR{vendor}=="0x10de", ATTR{device}=="0x28e1", ATTR{power/control}="auto"
+    '';
+  };
+
+  # Prevent open-source NVIDIA drivers from binding to the dGPU.
+  boot.blacklistedKernelModules = [
+    "nouveau"
+    "nova_core"
+  ];
+
+  # Optional AMD + NVIDIA PRIME Offload
+  specialisation.gpu.configuration = {
+    system.nixos.tags = lib.mkForce ["GPU"];
+    services.xserver.videoDrivers =
+      lib.mkForce ["amdgpu" "nvidia"];
+
+    hardware.nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false;
-      powerManagement.finegrained = false;
+
+      powerManagement = {
+        enable = false;
+        finegrained = true;
+      };
+
       open = true;
       nvidiaSettings = true;
+
       package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
         version = "595.99.02";
         sha256_64bit = "sha256-6HR3lYv3YwcFSTJL1a1slI66btIQ5EAFs+/4SUD24ew=";
@@ -38,19 +68,15 @@
       };
 
       prime = {
-        offload.enable = true;
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+
         nvidiaBusId = "PCI:1@0:0:0";
-        amdgpuBusId = "PCI:65@0:0:0"; # If you have an AMD iGPU
+        amdgpuBusId = "PCI:65@0:0:0";
       };
     };
-  };
-
-  services = {
-    power-profiles-daemon.enable = true;
-    xserver.videoDrivers = [
-      "amdgpu"
-      "nvidia"
-    ];
   };
 
   networking = {
