@@ -19,14 +19,16 @@ in {
         quietStartup = false;
 
         packages = [
-          "npm:pi-web-access@0.40.0"
-          "npm:pi-agent-browser-native@0.9.5"
-          "npm:@juicesharp/rpiv-todo@2.13.8"
-          "npm:@juicesharp/rpiv-ask-user-question@2.13.8"
-          "npm:context-mode"
+          "npm:pi-web-access@0.42.0"
+          "npm:pi-agent-browser-native@0.9.6"
+          "npm:@juicesharp/rpiv-todo@2.13.9"
+          "npm:@juicesharp/rpiv-ask-user-question@2.13.9"
+          "npm:billion-context"
+          "npm:pi-powerline-footer"
+          "npm:@narumitw/pi-usage"
           "npm:pi-mcp-adapter"
           "npm:@narumitw/pi-btw"
-          "npm:pi-subagents@0.78.0"
+          "npm:pi-subagents@0.79.1"
           "npm:@plannotator/pi-extension"
           "npm:pi-lens"
           "npm:@dietrichgebert/ponytail"
@@ -66,6 +68,14 @@ in {
         JAVA_HOME.value = "${pkgs.jdk21}/lib/openjdk";
         REA_JADX_MCP_JAR.value = "${config.home.homeDirectory}/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar";
       };
+    };
+
+    xdg.configFile."billion-context/billion-context.json".text = builtins.toJSON {
+      host = "127.0.0.1";
+      # Keep package updates under Pi's package manager and retain pi-subagents.
+      autoUpdate = false;
+      advisoryCheck = false;
+      pi.subagents = false;
     };
 
     home.file.".pi/agent/web-search.json".text = builtins.toJSON {
