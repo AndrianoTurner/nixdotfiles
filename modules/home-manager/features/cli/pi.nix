@@ -76,6 +76,11 @@ in {
       autoUpdate = false;
       advisoryCheck = false;
       pi.subagents = false;
+      # Model egress must ride Throne (localhost:2080): chatgpt.com answers a
+      # geo-block 403 HTML page otherwise, which bili reports as
+      # "Responses exchange ended without a terminal event". bili strips
+      # http(s)_proxy from its own proxy child, so name it here explicitly.
+      upstreamProxy = "http://127.0.0.1:2080";
     };
 
     home.file.".pi/agent/web-search.json".text = builtins.toJSON {
