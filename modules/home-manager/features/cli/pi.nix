@@ -92,6 +92,7 @@ in {
       # drops the connection (bili "proxy-reset" -> pi 502 acp-proxy failure).
       # Empty proxy = explicitly direct for this host only.
       providers."http://172.16.20.91:8317".proxy = "";
+      providers."https://claude-n-codex.com:8443".proxy = "";
     };
 
     home.file.".pi/agent/web-search.json".text = builtins.toJSON {
