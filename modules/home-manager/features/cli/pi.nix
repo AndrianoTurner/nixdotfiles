@@ -67,6 +67,13 @@ in {
         AGENT_BROWSER_EXECUTABLE_PATH.value = "${pkgs.chromium}/bin/chromium";
         JAVA_HOME.value = "${pkgs.jdk21}/lib/openjdk";
         REA_JADX_MCP_JAR.value = "${config.home.homeDirectory}/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar";
+        # Extensions calling bare globalThis.fetch (pi-usage's chatgpt.com
+        # wham/usage) bypass bili's patch; undici ignores http(s)_proxy unless
+        # the flag is set, and chatgpt.com direct answers a geo-block 403.
+        NODE_USE_ENV_PROXY.value = "1";
+        HTTPS_PROXY.value = "http://127.0.0.1:2080";
+        HTTP_PROXY.value = "http://127.0.0.1:2080";
+        NO_PROXY.value = "localhost,127.0.0.1,::1,172.16.20.91";
       };
     };
 
