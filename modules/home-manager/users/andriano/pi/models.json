@@ -2,16 +2,17 @@
   "$schema": "https://pi.dev/schemas/models.schema.json",
   "providers": {
     "claude-n-codex": {
-      "baseUrl": "https://claude-n-codex.com:8443",
-      "api": "anthropic-messages",
+      "baseUrl": "https://claude-n-codex.com:8443/v1",
+      "api": "openai-responses",
       "apiKey": "${CLAUDE_N_CODEX_API_KEY}",
       "models": [
         {
           "id": "claude-sonnet-5",
           "name": "Claude Sonnet 5 (claude-n-codex)",
           "reasoning": true,
+          "thinkingLevelMap": {"xhigh": "xhigh"},
           "input": ["text", "image"],
-          "contextWindow": 200000,
+          "contextWindow": 1000000,
           "maxTokens": 64000
         },
         {

@@ -11,6 +11,11 @@
     toolDescriptionMode = "compact";
   };
 in {
+  programs.pi.coding-agent.settings = {
+    modelThinkingLevels."claude-n-codex/claude-sonnet-5" = "xhigh";
+    compaction.modelOverrides."claude-n-codex/claude-sonnet-5".reserveTokens = 100000;
+  };
+
   home.file = {
     ".pi/agent/models.json".source = ./models.json;
 
