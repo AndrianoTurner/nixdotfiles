@@ -12,6 +12,8 @@
   };
 in {
   home.file = {
+    ".pi/agent/models.json".source = ./models.json;
+
     ".pi/agent/APPEND_SYSTEM.md".source =
       ./APPEND_SYSTEM.md;
 

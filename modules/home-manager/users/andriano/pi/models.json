@@ -1,0 +1,100 @@
+{
+  "$schema": "https://pi.dev/schemas/models.schema.json",
+  "providers": {
+    "claude-n-codex": {
+      "baseUrl": "https://claude-n-codex.com:8443",
+      "api": "anthropic-messages",
+      "apiKey": "${CLAUDE_N_CODEX_API_KEY}",
+      "models": [
+        {
+          "id": "claude-sonnet-5",
+          "name": "Claude Sonnet 5 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-sonnet-4-6",
+          "name": "Claude Sonnet 4.6 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-opus-5.5",
+          "name": "Claude Opus 5.5 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-opus-4-6",
+          "name": "Claude Opus 4.6 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-opus-4-7",
+          "name": "Claude Opus 4.7 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-opus-4-8",
+          "name": "Claude Opus 4.8 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-opus-5",
+          "name": "Claude Opus 5 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-fable-5",
+          "name": "Claude Fable 5 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-fable-5[1m]",
+          "name": "Claude Fable 5 1M (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-fable-5.1",
+          "name": "Claude Fable 5.1 (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 200000,
+          "maxTokens": 64000
+        },
+        {
+          "id": "claude-fable-5.1[1m]",
+          "name": "Claude Fable 5.1 1M (claude-n-codex)",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1000000,
+          "maxTokens": 64000
+        }
+      ]
+    }
+  }
+}
