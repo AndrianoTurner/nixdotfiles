@@ -3,7 +3,7 @@
     disk.main = {
       type = "disk";
       # disko-install replaces this with the device passed to --disk main.
-      device = "/dev/sda";
+      device = "/dev/disk/by-id/ata-SSD_240GB_YS202208309797HP";
       content = {
         type = "gpt";
         partitions = {
