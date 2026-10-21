@@ -1,10 +1,13 @@
 {
   pkgs,
+  inputs,
   repoRoot,
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
+    inputs.disko.nixosModules.disko
+    ./disko.nix
+    ./hardware.nix
     "${repoRoot}/modules/nixos/common"
     "${repoRoot}/modules/nixos/desktop"
     "${repoRoot}/modules/nixos/physical.nix"
