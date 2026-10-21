@@ -24,6 +24,15 @@
 
   networking.useDHCP = lib.mkDefault true;
 
+  # disko derives swapDevices from the disk layout, and this layout has no swap
+  # partition, so its empty list would override physical.nix's /swapfile default.
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 8192;
+    }
+  ];
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
