@@ -11,9 +11,6 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 ## Hard rules
 
-- The demo configuration must stay secret-free. Both `hosts/demo/default.nix`
-  and `modules/home-manager/users/demo/default.nix` assert that sops is not
-  imported. Never add sops, personal accounts, or private keys to demo.
 - Never print, diff, or commit decrypted secrets. Secrets are sops-encrypted
   YAML; only edit them through `sops`.
 - `hosts/*/hardware-configuration.nix` is machine-generated. Regenerate with
@@ -29,7 +26,7 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 - `flake.nix` — inputs; `nixosConfigurations` registry (add new hosts here);
   NixOS `specialArgs` pass `inputs`, `repoRoot`, and `self.outputs`, while
   Home Manager receives `inputs` and `repoRoot`; `formatter` is alejandra;
-  `checks.format` runs the format gate; `apps.demo` runs the VM.
+  `checks.format` runs the format gate.
 - `hosts/<host>/` — `default.nix` composes modules, hardware, network, GPU and
   `home-manager.users.<user> = import ./home.nix`; `home.nix` imports the
   Home Manager user module; `hardware-configuration.nix` per machine.
@@ -60,7 +57,6 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 | `freedompc` | Current machine. Nvidia PRIME (amdgpu + nvidia), systemd-boot, docker, steam, throne, l2tp |
 | `homepc` | AMD ROCm/OpenCL, grub-boot, docker, throne |
 | `mdr018` | Static IP 172.16.20.2, systemd-boot, docker, throne, searxng, qemu |
-| `demo` | QEMU VM, user `demo`/`demo`, no sops, shares the andriano desktop features |
 
 ## No auto-discovery
 
@@ -104,7 +100,6 @@ remain relative:
   - `sops.templates."<path>".content` for generated files.
 - New host or key rotation: add the age recipient to `.sops.yaml` under the
   right creation rule, then `sops updatekeys <file>` for every affected file.
-- `demo` never imports sops; the assertions enforce this.
 
 ## Conventions
 

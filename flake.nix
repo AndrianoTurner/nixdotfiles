@@ -117,22 +117,6 @@
           ./hosts/chodum
         ];
       };
-
-      # Public, secret-free QEMU demo
-      demo = nixpkgs.lib.nixosSystem {
-        inherit specialArgs;
-        modules = [
-          ./hosts/demo
-        ];
-      };
     };
-
-    apps = forAllSystems (_system: {
-      demo = {
-        type = "app";
-        program = "${self.nixosConfigurations.demo.config.system.build.vm}/bin/run-demo-vm";
-        meta.description = "Run the secret-free NixOS desktop demo VM";
-      };
-    });
   };
 }

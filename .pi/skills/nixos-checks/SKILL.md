@@ -1,6 +1,6 @@
 ---
 name: nixos-checks
-description: Canonical read-only checks for this NixOS flake (format gate, eval gate, per-host builds, demo VM, secrets validation). Use before reporting any change as done, when asked to verify changes, or as the checker/final gate.
+description: Canonical read-only checks for this NixOS flake (format gate, eval gate, per-host builds, secrets validation). Use before reporting any change as done, when asked to verify changes, or as the checker/final gate.
 ---
 
 # Checking changes in this repo
@@ -53,15 +53,6 @@ Full gate — format check plus builds of all four host toplevels:
 nix flake check
 ```
 
-Demo gate:
-
-```console
-nix build .#nixosConfigurations.demo.config.system.build.vm --no-link
-```
-
-Manual smoke test only (interactive GTK window, login `demo`/`demo`):
-`nix run .#demo`.
-
 Secrets gate:
 
 ```console
@@ -74,8 +65,7 @@ sudo sops -d secrets/system/shared.yaml > /dev/null
 | Change | Minimum | Preferred |
 | --- | --- | --- |
 | One host file or host-specific setting | eval that host | build that host |
-| Shared NixOS module (`common`, `desktop`, `optional`), HM feature/shared module | `nix flake check --no-build` | build `freedompc` + `demo` |
-| `demo` host | eval demo | demo VM build |
+| Shared NixOS module (`common`, `desktop`, `optional`), HM feature/shared module | `nix flake check --no-build` | build `freedompc` |
 | `overlays/`, `pkgs/`, `flake.nix`, `flake.lock` | `nix flake check --no-build` | full `nix flake check` |
 | Secrets | `sops -d <file>` | `sops -d` + build the affected host |
 | Documentation / skills only | format gate | format gate |
@@ -93,7 +83,7 @@ sudo sops -d secrets/system/shared.yaml > /dev/null
   the user explicitly asks.
 - First build of a host can take 10–30+ minutes and many GB of downloads;
   subsequent builds are incremental. `freedompc` is cheap on this machine,
-  `homepc`/`mdr018`/`demo` are not necessarily.
+  `homepc`/`mdr018` are not necessarily.
 - `nix flake check` builds all four hosts. Reserve it for cross-cutting changes.
 
 ## Reporting results
