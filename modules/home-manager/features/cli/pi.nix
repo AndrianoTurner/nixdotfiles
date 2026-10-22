@@ -3,10 +3,12 @@
   inputs,
   pkgs,
   ...
-}: let
+}:
+let
   agentDir = "${config.home.homeDirectory}/.pi/agent";
-in {
-  imports = [inputs.pi.homeModules.default];
+in
+{
+  imports = [ inputs.pi.homeModules.default ];
 
   config = {
     programs.pi.coding-agent = {
@@ -93,6 +95,7 @@ in {
       # Empty proxy = explicitly direct for this host only.
       providers."http://172.16.20.91:8317".proxy = "";
       providers."https://claude-n-codex.com:8443".proxy = "";
+      providers."https://api.deepseek.com".proxy = "";
     };
 
     home.file.".pi/agent/web-search.json".text = builtins.toJSON {
