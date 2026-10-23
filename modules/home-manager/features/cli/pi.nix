@@ -3,12 +3,10 @@
   inputs,
   pkgs,
   ...
-}:
-let
+}: let
   agentDir = "${config.home.homeDirectory}/.pi/agent";
-in
-{
-  imports = [ inputs.pi.homeModules.default ];
+in {
+  imports = [inputs.pi.homeModules.default];
 
   config = {
     programs.pi.coding-agent = {
@@ -21,16 +19,16 @@ in
         quietStartup = false;
 
         packages = [
-          "npm:pi-web-access@0.42.0"
+          "npm:pi-web-access@0.44.0"
           "npm:pi-agent-browser-native@0.9.6"
-          "npm:@juicesharp/rpiv-todo@2.13.9"
-          "npm:@juicesharp/rpiv-ask-user-question@2.13.9"
+          "npm:@juicesharp/rpiv-todo@2.14.0"
+          "npm:@juicesharp/rpiv-ask-user-question@2.14.0"
           "npm:billion-context"
           "npm:pi-powerline-footer"
           "npm:@narumitw/pi-usage"
           "npm:pi-mcp-adapter"
           "npm:@narumitw/pi-btw"
-          "npm:pi-subagents@0.79.1"
+          "npm:pi-subagents@0.81.0"
           "npm:@plannotator/pi-extension"
           "npm:pi-lens"
           "npm:@dietrichgebert/ponytail"
@@ -94,7 +92,7 @@ in
       # drops the connection (bili "proxy-reset" -> pi 502 acp-proxy failure).
       # Empty proxy = explicitly direct for this host only.
       providers."http://172.16.20.91:8317".proxy = "";
-      providers."https://claude-n-codex.com:8443".proxy = "";
+      providers."https://claude-n-codex.com:8443".proxy = "http://127.0.0.1:2080";
       providers."https://api.deepseek.com".proxy = "";
     };
 
