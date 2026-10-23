@@ -24,42 +24,23 @@
               name = "crypted";
               settings.allowDiscards = true;
               content = {
-                type = "lvm_pv";
-                vg = "pool";
-              };
-            };
-          };
-        };
-      };
-    };
-
-    lvm_vg.pool = {
-      type = "lvm_vg";
-      lvs = {
-        swap = {
-          size = "8G";
-          content = {
-            type = "swap";
-            resumeDevice = true;
-          };
-        };
-        root = {
-          size = "100%FREE";
-          content = {
-            type = "btrfs";
-            extraArgs = ["-f"];
-            subvolumes = {
-              "/root" = {
-                mountpoint = "/";
-                mountOptions = ["compress=zstd" "noatime"];
-              };
-              "/home" = {
-                mountpoint = "/home";
-                mountOptions = ["compress=zstd" "noatime"];
-              };
-              "/nix" = {
-                mountpoint = "/nix";
-                mountOptions = ["compress=zstd" "noatime"];
+                type = "btrfs";
+                extraArgs = ["-f"];
+                # The swapfile lives inside the encrypted root filesystem.
+                subvolumes = {
+                  "/root" = {
+                    mountpoint = "/";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                  "/home" = {
+                    mountpoint = "/home";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                  "/nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = ["compress=zstd" "noatime"];
+                  };
+                };
               };
             };
           };
