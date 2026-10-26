@@ -31,6 +31,8 @@
       "gruvbox"
       "typst"
       "git-firefly"
+      "sql"
+      "latex"
     ];
   };
 }
