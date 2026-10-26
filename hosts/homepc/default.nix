@@ -41,8 +41,6 @@
     rocmPackages.rocm-smi
     rocmPackages.rocminfo
     rocmPackages.clr
-    rocmPackages.rocsolver
-    rocmPackages.rocblas
     clinfo
     cifs-utils
   ];
