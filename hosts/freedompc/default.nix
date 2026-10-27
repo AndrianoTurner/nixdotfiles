@@ -18,6 +18,8 @@
     "${repoRoot}/modules/nixos/optional/docker.nix"
     "${repoRoot}/modules/nixos/optional/throne.nix"
     "${repoRoot}/modules/nixos/optional/steam.nix"
+    "${repoRoot}/modules/nixos/optional/mihomo.nix"
+    "${repoRoot}/modules/nixos/optional/yggdrasil.nix"
   ];
 
   home-manager.users.andriano = import ./home.nix;

@@ -21,6 +21,15 @@ creation_rules:
           - *system_freedompc
           - *system_chodum
 
+  - path_regex: secrets/system/mihomo\.yaml$
+    key_groups:
+      - age:
+          - *recovery
+          - *system_mdr018
+          - *system_homepc
+          - *system_freedompc
+          - *system_chodum
+
   - path_regex: secrets/users/andriano\.yaml$
     key_groups:
       - age:

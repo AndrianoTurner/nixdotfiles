@@ -16,6 +16,8 @@
     "${repoRoot}/modules/nixos/optional/throne.nix"
     "${repoRoot}/modules/nixos/optional/searxng.nix"
     "${repoRoot}/modules/nixos/optional/qemu.nix"
+    "${repoRoot}/modules/nixos/optional/mihomo.nix"
+    "${repoRoot}/modules/nixos/optional/yggdrasil.nix"
   ];
 
   home-manager.users.andriano = import ./home.nix;
