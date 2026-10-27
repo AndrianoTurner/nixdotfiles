@@ -87,12 +87,12 @@ in {
       # geo-block 403 HTML page otherwise, which bili reports as
       # "Responses exchange ended without a terminal event". bili strips
       # http(s)_proxy from its own proxy child, so name it here explicitly.
-      upstreamProxy = "http://127.0.0.1:2080";
+      upstreamProxy = "http://127.0.0.1:7890";
       # The cpa (cliproxyapi) is on the private mesh; Throne cannot reach it and
       # drops the connection (bili "proxy-reset" -> pi 502 acp-proxy failure).
       # Empty proxy = explicitly direct for this host only.
       providers."http://172.16.20.91:8317".proxy = "";
-      providers."https://claude-n-codex.com:8443".proxy = "http://127.0.0.1:2080";
+      providers."https://claude-n-codex.com:8443".proxy = "";
       providers."https://api.deepseek.com".proxy = "";
     };
 
