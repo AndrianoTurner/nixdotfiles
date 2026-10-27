@@ -18,10 +18,8 @@ in
       IfName = "ygg0";
       NodeInfoPrivacy = true;
       Peers = [
-        "tls://ygg-msk-1.averyan.ru:8362"
-        "tls://yggno.de:18227"
-        "sockstls://localhost:7890/ygg-msk-1.averyan.ru:8362"
-        "sockstls://localhost:7890/yggno.de:18227"
+        "quic://novosibirsk.mie.foundation:9952"
+        "tls://mskaeza.i113d.ru:12632"
       ];
     };
   };
