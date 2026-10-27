@@ -20,7 +20,8 @@ in
       Peers = [
         "tls://ygg-msk-1.averyan.ru:8362"
         "tls://yggno.de:18227"
-        "tls://ru2.cert.dev:7041"
+        "sockstls://localhost:7890/ygg-msk-1.averyan.ru:8362"
+        "sockstls://localhost:7890/yggno.de:18227"
       ];
     };
   };

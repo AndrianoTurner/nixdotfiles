@@ -32,8 +32,7 @@ in {
     ];
 
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM9ll2Ym9q6DWj+1g2M4StjNznQZnozPDsOfyJCb8Hmj andriano@freedompc"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFODhQX7odZ3nvZSlE7/pxhWcoVfUVWCBr/sL9UXbBGH andriano@homepc"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMq0Cp/YyGh+S690gzjHYQpAjEpyI3MBBA6nfSbC2xpV andriano@freedompc"
     ];
 
     packages = [pkgs.home-manager];
