@@ -52,11 +52,11 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 ## Hosts
 
-| Host | Notable contents |
-| --- | --- |
+| Host        | Notable contents                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------ |
 | `freedompc` | Current machine. Nvidia PRIME (amdgpu + nvidia), systemd-boot, docker, steam, throne, l2tp |
-| `homepc` | AMD ROCm/OpenCL, grub-boot, docker, throne |
-| `mdr018` | Static IP 172.16.20.2, systemd-boot, docker, throne, searxng, qemu |
+| `homepc`    | AMD ROCm/OpenCL, grub-boot, docker, throne                                                 |
+| `mdr018`    | Static IP 172.16.20.2, systemd-boot, docker, throne, qemu                                  |
 
 ## No auto-discovery
 
@@ -71,18 +71,18 @@ remain relative:
 
 ## Where does a change go?
 
-| Change | Destination |
-| --- | --- |
-| CLI tool for all HM users | `modules/home-manager/features/cli/<tool>.nix` + aggregator import |
-| Desktop app / niri setting | `modules/home-manager/features/desktop/<app>.nix` + aggregator import |
-| andriano-only home config (git, ssh, pi, opencode, sops) | `modules/home-manager/users/andriano/<name>.nix` + import in that user's `default.nix` |
-| User packages | `home.packages` in the owning HM user module; system-wide in `environment.systemPackages` |
-| System service / hardware feature | `modules/nixos/optional/<name>.nix` + host import |
-| Shared system behavior | `modules/nixos/common/` (every host) |
-| Host hardware, network, GPU | `hosts/<host>/default.nix` |
-| Custom package / override | `pkgs/default.nix` or a new overlay in `overlays/default.nix` |
-| New machine | Copy `hosts/<closest>`, set hostname + hardware, point `home.nix` at the right HM user, register in `flake.nix`, extend `.sops.yaml` with the new age keys |
-| New secret | `secrets/users/andriano.yaml` (user) or `secrets/system/shared.yaml` (system), then reference in a module |
+| Change                                                   | Destination                                                                                                                                                |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CLI tool for all HM users                                | `modules/home-manager/features/cli/<tool>.nix` + aggregator import                                                                                         |
+| Desktop app / niri setting                               | `modules/home-manager/features/desktop/<app>.nix` + aggregator import                                                                                      |
+| andriano-only home config (git, ssh, pi, opencode, sops) | `modules/home-manager/users/andriano/<name>.nix` + import in that user's `default.nix`                                                                     |
+| User packages                                            | `home.packages` in the owning HM user module; system-wide in `environment.systemPackages`                                                                  |
+| System service / hardware feature                        | `modules/nixos/optional/<name>.nix` + host import                                                                                                          |
+| Shared system behavior                                   | `modules/nixos/common/` (every host)                                                                                                                       |
+| Host hardware, network, GPU                              | `hosts/<host>/default.nix`                                                                                                                                 |
+| Custom package / override                                | `pkgs/default.nix` or a new overlay in `overlays/default.nix`                                                                                              |
+| New machine                                              | Copy `hosts/<closest>`, set hostname + hardware, point `home.nix` at the right HM user, register in `flake.nix`, extend `.sops.yaml` with the new age keys |
+| New secret                                               | `secrets/users/andriano.yaml` (user) or `secrets/system/shared.yaml` (system), then reference in a module                                                  |
 
 ## Secrets workflow
 

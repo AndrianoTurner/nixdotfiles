@@ -14,7 +14,6 @@
     "${repoRoot}/modules/nixos/optional/systemd-boot.nix"
     "${repoRoot}/modules/nixos/optional/docker.nix"
     "${repoRoot}/modules/nixos/optional/throne.nix"
-    "${repoRoot}/modules/nixos/optional/searxng.nix"
     "${repoRoot}/modules/nixos/optional/qemu.nix"
     "${repoRoot}/modules/nixos/optional/mihomo.nix"
     "${repoRoot}/modules/nixos/optional/yggdrasil.nix"

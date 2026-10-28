@@ -1,5 +1,4 @@
-{ lib, ... }:
-let
+{lib, ...}: let
   # Fill these after first boot: run `sudo yggdrasilctl getSelf` on each
   # device and list its Yggdrasil IPv6 address here. Until populated, SSH
   # over ygg0 stays blocked (secure default).
@@ -9,8 +8,7 @@ let
     # "200:aaaa:bbbb::1234"
     # "200:cccc:dddd::5678"
   ];
-in
-{
+in {
   services.yggdrasil = {
     enable = true;
     persistentKeys = true;
@@ -24,7 +22,7 @@ in
     };
   };
 
-  networking.firewall.extraInputRules = lib.optionalString (sshAllowed != [ ]) ''
+  networking.firewall.extraInputRules = lib.optionalString (sshAllowed != []) ''
     iifname "ygg0" ip6 saddr { ${lib.concatStringsSep ", " sshAllowed} } tcp dport 22 accept
   '';
 }

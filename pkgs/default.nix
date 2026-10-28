@@ -6,4 +6,5 @@ pkgs: {
   agent-office = pkgs.callPackage ./agent-office {};
   pi-acp = pkgs.callPackage ./pi-acp {};
   agent-browser-bin = pkgs.callPackage ./agent-browser-bin {};
+  mihomo-router = pkgs.callPackage ./mihomo-router {};
 }

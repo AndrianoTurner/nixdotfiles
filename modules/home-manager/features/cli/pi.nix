@@ -5,6 +5,7 @@
   ...
 }: let
   agentDir = "${config.home.homeDirectory}/.pi/agent";
+  proxy = "http://localhost:2080";
 in {
   imports = [inputs.pi.homeModules.default];
 
@@ -71,8 +72,8 @@ in {
         # wham/usage) bypass bili's patch; undici ignores http(s)_proxy unless
         # the flag is set, and chatgpt.com direct answers a geo-block 403.
         NODE_USE_ENV_PROXY.value = "1";
-        HTTPS_PROXY.value = "http://127.0.0.1:7890";
-        HTTP_PROXY.value = "http://127.0.0.1:7890";
+        HTTPS_PROXY.value = "${proxy}";
+        HTTP_PROXY.value = "${proxy}";
         NO_PROXY.value = "localhost,127.0.0.1,::1,172.16.20.91";
       };
     };
@@ -87,25 +88,13 @@ in {
       # geo-block 403 HTML page otherwise, which bili reports as
       # "Responses exchange ended without a terminal event". bili strips
       # http(s)_proxy from its own proxy child, so name it here explicitly.
-      upstreamProxy = "http://127.0.0.1:7890";
+      upstreamProxy = "${proxy}";
       # The cpa (cliproxyapi) is on the private mesh; Throne cannot reach it and
       # drops the connection (bili "proxy-reset" -> pi 502 acp-proxy failure).
       # Empty proxy = explicitly direct for this host only.
       providers."http://172.16.20.91:8317".proxy = "";
       providers."https://claude-n-codex.com:8443".proxy = "";
       providers."https://api.deepseek.com".proxy = "";
-    };
-
-    home.file.".pi/agent/web-search.json".text = builtins.toJSON {
-      searchProvider = "searxng";
-      searxngBaseUrl = "http://127.0.0.1:8888";
-      ssrf = {
-        trustEnvProxy = true;
-        allowRanges = [
-          "127.0.0.0/8"
-          "::1/128"
-        ];
-      };
     };
 
     home.packages = with pkgs; [
