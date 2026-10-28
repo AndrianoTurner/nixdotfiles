@@ -7,7 +7,7 @@ mod probe;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use api::{Api, Provider, Proxy};
 use clap::Parser;
@@ -15,6 +15,7 @@ use node::{Cache, Entry};
 use sha2::{Digest, Sha256};
 use tokio::sync::Semaphore;
 use tokio::task::JoinSet;
+use tracing::{debug, error, info, warn};
 
 const OUTBOUND: &str = "FOREIGN-OUT";
 /// First probe listener port; listeners are PROBE_PORT..PROBE_PORT+LANES-1.
@@ -98,13 +99,22 @@ async fn probe_batch(api: &Api, nodes: &[Proxy]) -> Vec<(String, Entry)> {
         let name = proxy.name.clone();
         jobs.spawn(async move {
             let group = format!("PROBE-{lane}");
+            let port = PROBE_PORT + lane as u16;
+            debug!("lane {lane}: {name:?} via {group} on 127.0.0.1:{port}");
+            let started = Instant::now();
             let entry = match api.select(&group, &name).await {
                 Err(e) => rejected(format!("probe selector: {e}")),
-                Ok(()) => probe::verify(PROBE_PORT + lane as u16).await,
+                Ok(()) => probe::verify(port).await,
             };
+            debug!(
+                "lane {lane}: {name:?} measured in {:?}: {} ({})",
+                started.elapsed(),
+                entry.verdict,
+                entry.reason
+            );
             // Never leave a probe lane pinned to a node after measuring it.
             if let Err(e) = api.select(&group, "REJECT").await {
-                eprintln!("warning: could not reset {group}: {e}");
+                warn!("could not reset probe lane {group}: {e}");
             }
             (name, entry)
         });
@@ -113,7 +123,7 @@ async fn probe_batch(api: &Api, nodes: &[Proxy]) -> Vec<(String, Entry)> {
     while let Some(result) = jobs.join_next().await {
         match result {
             Ok(item) => out.push(item),
-            Err(e) => eprintln!("probe worker crashed: {e}"),
+            Err(e) => error!("probe worker crashed: {e}"),
         }
     }
     out
@@ -131,10 +141,11 @@ async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -
     if eligible.is_empty() {
         if api.group(OUTBOUND).await?.now != "REJECT" {
             api.select(OUTBOUND, "REJECT").await?;
-            eprintln!("no eligible node: {OUTBOUND} -> REJECT");
+            warn!("no eligible node: {OUTBOUND} -> REJECT");
         }
         return Ok(());
     }
+    debug!("{} eligible nodes: {:?}", eligible.len(), eligible);
 
     let gate = std::sync::Arc::new(Semaphore::new(8));
     let mut tasks = JoinSet::new();
@@ -158,24 +169,27 @@ async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -
                 // Do not leave a presently unreachable node eligible.
                 cache.entries.insert(name, rejected(format!("latency check: {e}")));
             }
-            Err(e) => eprintln!("latency task failed: {e}"),
+            Err(e) => error!("latency task failed: {e}"),
         }
     }
 
     let selected = api.group(OUTBOUND).await?.now;
+    debug!("latencies: {:?}", delays);
     let Some((best, best_delay)) = delays.iter().min_by_key(|(_, d)| **d) else {
+        warn!("no latency-eligible node: {OUTBOUND} -> REJECT");
         api.select(OUTBOUND, "REJECT").await?;
         return Ok(());
     };
     let next = match delays.get(&selected) {
         Some(&current) if current <= best_delay.saturating_add(LATENCY_TOLERANCE_MS) => {
+            debug!("keeping {selected:?} ({current} ms) over best {best:?} ({best_delay} ms)");
             selected.clone()
         }
         _ => best.clone(),
     };
     if next != selected {
         api.select(OUTBOUND, &next).await?;
-        eprintln!("{OUTBOUND} -> {next} ({best_delay} ms)");
+        info!("{OUTBOUND} -> {next} (best {best_delay} ms)");
     }
     Ok(())
 }
@@ -184,10 +198,17 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
     let provider = api.provider(&args.provider).await?;
     let nodes = candidates(&provider);
     let stamp = revision(&provider);
+    debug!(
+        "provider {} updatedAt={} revision={}",
+        args.provider,
+        provider.updated_at,
+        &stamp[..8]
+    );
     let cache_path = args.state.join("cache.json");
 
     if stamp != cache.revision {
         // Provider refreshed: nothing measured against the old nodes is trusted.
+        warn!("provider refreshed: dropping all verdicts and selecting REJECT");
         api.select(OUTBOUND, "REJECT").await?;
         cache.entries.clear();
         cache.revision = stamp.clone();
@@ -196,11 +217,13 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
 
     // The current selection must still exist in the provider and stay verified.
     let current = api.group(OUTBOUND).await?.now;
+    debug!("{OUTBOUND} currently {current:?}");
     if current != "REJECT"
         && !cache.entries.get(&current).is_some_and(|e| {
             e.eligible(now()) && nodes.iter().any(|p| p.name == current)
         })
     {
+        warn!("dropping selection {current:?}: not verified or no longer in the provider");
         api.select(OUTBOUND, "REJECT").await?;
     }
 
@@ -210,11 +233,17 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
         .filter(|p| !cache.entries.get(&p.name).is_some_and(|e| e.eligible(t)))
         .cloned()
         .collect();
-    eprintln!("{} nodes, {} need exit checks", nodes.len(), stale.len());
+    info!("{} nodes, {} need exit checks", nodes.len(), stale.len());
 
-    for batch in stale.chunks(LANES) {
+    for (n, batch) in stale.chunks(LANES).enumerate() {
+        debug!(
+            "batch {}/{}: {} nodes",
+            n + 1,
+            stale.len().div_ceil(LANES),
+            batch.len()
+        );
         for (name, entry) in probe_batch(api, batch).await {
-            eprintln!("exit check {name:?}: {} ({})", entry.verdict, entry.reason);
+            info!("exit check {name:?}: {} ({})", entry.verdict, entry.reason);
             cache.entries.insert(name, entry);
         }
         node::save(&cache_path, cache)?;
@@ -243,11 +272,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if token.as_deref() == Some("") {
         return Err("empty Mihomo API secret".into());
     }
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("mihomo_router=debug")),
+        )
+        .init();
+    info!(
+        "starting: api={} provider={} state={} interval={}s lanes={} ports={}..{}",
+        args.api,
+        args.provider,
+        args.state.display(),
+        args.interval,
+        LANES,
+        PROBE_PORT,
+        PROBE_PORT + LANES as u16 - 1
+    );
     let api = Api::new(&args.api, token)?;
     let mut cache = node::load(&args.state.join("cache.json"));
     loop {
-        if let Err(e) = pass(&api, &args, &mut cache).await {
-            eprintln!("controller pass failed: {e}");
+        let started = Instant::now();
+        match pass(&api, &args, &mut cache).await {
+            Ok(()) => debug!("pass finished in {:?}", started.elapsed()),
+            Err(e) => error!("controller pass failed after {:?}: {e}", started.elapsed()),
         }
         tokio::time::sleep(Duration::from_secs(args.interval)).await;
     }

@@ -3,6 +3,7 @@ use std::time::Duration;
 
 use reqwest::{Client, Method, Url};
 use serde::Deserialize;
+use tracing::debug;
 
 #[derive(Clone)]
 pub struct Api {
@@ -76,6 +77,7 @@ impl Api {
         body: Option<serde_json::Value>,
     ) -> Result<reqwest::Response, String> {
         let url = self.url(path)?;
+        debug!("{method} {}", url.path());
         let mut request = self.client.request(method, url);
         if let Some(token) = &self.token {
             request = request.bearer_auth(token);
@@ -122,6 +124,7 @@ impl Api {
                 active.now
             ));
         }
+        debug!("{group} now {node:?}");
         Ok(())
     }
 
@@ -147,6 +150,7 @@ impl Api {
         if delay.delay == 0 {
             return Err("zero delay (node unreachable)".into());
         }
+        debug!("healthcheck {node:?}: {} ms", delay.delay);
         Ok(delay.delay)
     }
 }
