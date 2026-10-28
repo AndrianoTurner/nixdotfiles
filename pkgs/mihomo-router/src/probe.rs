@@ -78,9 +78,10 @@ fn valid_country(cc: &str) -> bool {
 }
 
 /// Probe the node currently selected in the listener's probe group.
-/// Both sources must succeed with a public, valid country; any Russian
-/// report fails the node closed.
-pub async fn verify(port: u16) -> Entry {
+/// Both sources must succeed with a public, valid country. A Russian exit is
+/// fatal unless `allow_ru` (the metered fallback tier), which keeps the node
+/// selectable but only behind every verified non-RU node.
+pub async fn verify(port: u16, allow_ru: bool) -> Entry {
     let checked_at = now();
     let mut entry = Entry {
         verdict: "unverified".into(),
@@ -118,8 +119,17 @@ pub async fn verify(port: u16) -> Entry {
             entry.exit_ips = sources.iter().map(|s| s.ip.to_string()).collect();
             entry.countries = sources.iter().map(|s| s.country.to_uppercase()).collect();
             if ru {
-                entry.verdict = "ru".into();
-                entry.reason = format!("exit {} is RU", entry.exit_ips.join(","));
+                if allow_ru {
+                    entry.verdict = "ru_lte".into();
+                    entry.reason = format!(
+                        "exit {} is RU (fallback tier allowed)",
+                        entry.exit_ips.join(",")
+                    );
+                    entry.expires_at = checked_at + SUCCESS_TTL_SECS as f64;
+                } else {
+                    entry.verdict = "ru".into();
+                    entry.reason = format!("exit {} is RU", entry.exit_ips.join(","));
+                }
             } else {
                 entry.verdict = "non_ru".into();
                 entry.reason = format!("exit {} is {}", entry.exit_ips.join(","), entry.countries.join("/"));

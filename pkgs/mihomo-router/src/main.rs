@@ -18,11 +18,16 @@ use tokio::task::JoinSet;
 use tracing::{debug, error, info, warn};
 
 const OUTBOUND: &str = "FOREIGN-OUT";
-/// First probe listener port; listeners are PROBE_PORT..PROBE_PORT+LANES-1.
-const PROBE_PORT: u16 = 17800;
-/// Probe groups PROBE-0..PROBE-{LANES-1} with matching fixed listeners.
-const LANES: usize = 4;
 const LATENCY_TOLERANCE_MS: u32 = 50;
+/// Node names containing this (case-insensitive) are the metered fallback tier:
+/// selectable even with a RU exit, but only when no other verified node works.
+const RU_FALLBACK_MARKER: &str = "lte";
+
+/// 0 = normal node, 1 = metered fallback. Selection tries the lowest tier
+/// that has eligible nodes, so LTE is never used while the static line works.
+fn tier(name: &str) -> u8 {
+    u8::from(name.to_lowercase().contains(RU_FALLBACK_MARKER))
+}
 
 #[derive(Parser)]
 #[command(about = "Mihomo controller that verifies the real exit country")]
@@ -42,6 +47,12 @@ struct Args {
     /// Seconds between reconciliation passes.
     #[arg(long, default_value_t = 60)]
     interval: u64,
+    /// Number of probe lanes; needs matching PROBE-0..N groups and listeners.
+    #[arg(long, default_value_t = 4)]
+    lanes: usize,
+    /// First probe listener port; lane N listens on port + N.
+    #[arg(long, default_value_t = 17800)]
+    probe_port: u16,
 }
 
 pub fn now() -> f64 {
@@ -92,19 +103,19 @@ fn rejected(reason: String) -> Entry {
 /// Probe one batch of nodes, one node per lane. The lane's probe group is
 /// selected explicitly and confirmed before probing, so a verdict always
 /// belongs to the node that was actually measured.
-async fn probe_batch(api: &Api, nodes: &[Proxy]) -> Vec<(String, Entry)> {
+async fn probe_batch(api: &Api, nodes: &[Proxy], probe_port: u16) -> Vec<(String, Entry)> {
     let mut jobs = JoinSet::new();
     for (lane, proxy) in nodes.iter().enumerate() {
         let api = api.clone();
         let name = proxy.name.clone();
         jobs.spawn(async move {
             let group = format!("PROBE-{lane}");
-            let port = PROBE_PORT + lane as u16;
+            let port = probe_port + lane as u16;
             debug!("lane {lane}: {name:?} via {group} on 127.0.0.1:{port}");
             let started = Instant::now();
             let entry = match api.select(&group, &name).await {
                 Err(e) => rejected(format!("probe selector: {e}")),
-                Ok(()) => probe::verify(port).await,
+                Ok(()) => probe::verify(port, tier(&name) > 0).await,
             };
             debug!(
                 "lane {lane}: {name:?} measured in {:?}: {} ({})",
@@ -129,14 +140,14 @@ async fn probe_batch(api: &Api, nodes: &[Proxy]) -> Vec<(String, Entry)> {
     out
 }
 
-/// Select the lowest-latency eligible node; keep the current one when it is
-/// still eligible and within the tolerance band.
+/// Select the lowest-latency eligible node inside the lowest tier that has
+/// any; keep the current one when it is in that tier and within the tolerance
+/// band.
 async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -> Result<(), String> {
     let t = now();
-    let eligible: Vec<String> = nodes
+    let eligible: Vec<&Proxy> = nodes
         .iter()
         .filter(|p| cache.entries.get(&p.name).is_some_and(|e| e.eligible(t)))
-        .map(|p| p.name.clone())
         .collect();
     if eligible.is_empty() {
         if api.group(OUTBOUND).await?.now != "REJECT" {
@@ -145,11 +156,23 @@ async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -
         }
         return Ok(());
     }
-    debug!("{} eligible nodes: {:?}", eligible.len(), eligible);
+    // Tier 0 first: a working non-LTE node always beats the metered tier.
+    let best_tier = eligible.iter().map(|p| tier(&p.name)).min().unwrap_or(0);
+    let pool: Vec<String> = eligible
+        .iter()
+        .filter(|p| tier(&p.name) == best_tier)
+        .map(|p| p.name.clone())
+        .collect();
+    debug!(
+        "tier {best_tier}: {} of {} eligible nodes: {:?}",
+        pool.len(),
+        eligible.len(),
+        pool
+    );
 
     let gate = std::sync::Arc::new(Semaphore::new(8));
     let mut tasks = JoinSet::new();
-    for name in eligible {
+    for name in pool {
         let gate = gate.clone();
         let api = api.clone();
         let provider = provider.to_string();
@@ -176,7 +199,10 @@ async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -
     let selected = api.group(OUTBOUND).await?.now;
     debug!("latencies: {:?}", delays);
     let Some((best, best_delay)) = delays.iter().min_by_key(|(_, d)| **d) else {
-        warn!("no latency-eligible node: {OUTBOUND} -> REJECT");
+        // shortcut: a tier whose nodes all fail the healthcheck goes REJECT for
+        // one pass; their 600 s failure TTL drains it, so the pass after that
+        // falls through to the tier below.
+        warn!("no reachable node in tier {best_tier}: {OUTBOUND} -> REJECT");
         api.select(OUTBOUND, "REJECT").await?;
         return Ok(());
     };
@@ -189,7 +215,11 @@ async fn choose(api: &Api, provider: &str, nodes: &[Proxy], cache: &mut Cache) -
     };
     if next != selected {
         api.select(OUTBOUND, &next).await?;
-        info!("{OUTBOUND} -> {next} (best {best_delay} ms)");
+        if best_tier > 0 {
+            warn!("{OUTBOUND} -> {next} (metered fallback tier {best_tier}, {best_delay} ms)");
+        } else {
+            info!("{OUTBOUND} -> {next} (best {best_delay} ms)");
+        }
     }
     Ok(())
 }
@@ -235,14 +265,14 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
         .collect();
     info!("{} nodes, {} need exit checks", nodes.len(), stale.len());
 
-    for (n, batch) in stale.chunks(LANES).enumerate() {
+    for (n, batch) in stale.chunks(args.lanes).enumerate() {
         debug!(
             "batch {}/{}: {} nodes",
             n + 1,
-            stale.len().div_ceil(LANES),
+            stale.len().div_ceil(args.lanes),
             batch.len()
         );
-        for (name, entry) in probe_batch(api, batch).await {
+        for (name, entry) in probe_batch(api, batch, args.probe_port).await {
             info!("exit check {name:?}: {} ({})", entry.verdict, entry.reason);
             cache.entries.insert(name, entry);
         }
@@ -272,6 +302,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if token.as_deref() == Some("") {
         return Err("empty Mihomo API secret".into());
     }
+    if args.lanes == 0 {
+        return Err("--lanes must be at least 1".into());
+    }
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -284,9 +317,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         args.provider,
         args.state.display(),
         args.interval,
-        LANES,
-        PROBE_PORT,
-        PROBE_PORT + LANES as u16 - 1
+        args.lanes,
+        args.probe_port,
+        args.probe_port + args.lanes as u16 - 1
     );
     let api = Api::new(&args.api, token)?;
     let mut cache = node::load(&args.state.join("cache.json"));
@@ -297,5 +330,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(e) => error!("controller pass failed after {:?}: {e}", started.elapsed()),
         }
         tokio::time::sleep(Duration::from_secs(args.interval)).await;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::tier;
+
+    #[test]
+    fn lte_names_are_the_fallback_tier() {
+        assert_eq!(tier("🇳🇱 0.1X - LTE №3 - Torrent ✅"), 1);
+        assert_eq!(tier("LTE Авто - Нидерланды"), 1);
+        assert_eq!(tier("🇫🇮 🎮 ⚡️ ⭐️ Финляндия"), 0);
     }
 }

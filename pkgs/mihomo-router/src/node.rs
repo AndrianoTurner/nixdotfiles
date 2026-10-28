@@ -21,7 +21,7 @@ pub struct Cache {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Entry {
-    /// "non_ru" | "ru" | "unverified"
+    /// "non_ru" | "ru_lte" | "ru" | "unverified"
     pub verdict: String,
     pub reason: String,
     pub checked_at: f64,
@@ -33,8 +33,10 @@ pub struct Entry {
 }
 
 impl Entry {
+    /// "non_ru" and the fallback tier's "ru_lte" are selectable; "ru" and
+    /// "unverified" never are.
     pub fn eligible(&self, now: f64) -> bool {
-        self.verdict == "non_ru" && now < self.expires_at
+        matches!(self.verdict.as_str(), "non_ru" | "ru_lte") && now < self.expires_at
     }
 }
 
@@ -76,9 +78,11 @@ mod tests {
     }
 
     #[test]
-    fn only_fresh_non_ru_is_eligible() {
+    fn only_fresh_allowed_verdicts_are_eligible() {
         assert!(entry("non_ru", 10.0).eligible(5.0));
+        assert!(entry("ru_lte", 10.0).eligible(5.0));
         assert!(!entry("non_ru", 5.0).eligible(5.0));
+        assert!(!entry("ru_lte", 5.0).eligible(5.0));
         assert!(!entry("ru", 10.0).eligible(5.0));
         assert!(!entry("unverified", 10.0).eligible(5.0));
     }
