@@ -71,8 +71,8 @@ in {
         # wham/usage) bypass bili's patch; undici ignores http(s)_proxy unless
         # the flag is set, and chatgpt.com direct answers a geo-block 403.
         NODE_USE_ENV_PROXY.value = "1";
-        HTTPS_PROXY.value = "http://127.0.0.1:2080";
-        HTTP_PROXY.value = "http://127.0.0.1:2080";
+        HTTPS_PROXY.value = "http://127.0.0.1:7890";
+        HTTP_PROXY.value = "http://127.0.0.1:7890";
         NO_PROXY.value = "localhost,127.0.0.1,::1,172.16.20.91";
       };
     };
