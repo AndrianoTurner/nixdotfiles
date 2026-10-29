@@ -5,7 +5,7 @@
   ...
 }: let
   agentDir = "${config.home.homeDirectory}/.pi/agent";
-  proxy = "http://localhost:2080";
+  proxy = "http://localhost:7890";
 in {
   imports = [inputs.pi.homeModules.default];
 

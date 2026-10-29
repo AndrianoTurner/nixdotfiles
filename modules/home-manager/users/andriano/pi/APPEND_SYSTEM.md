@@ -1,4 +1,6 @@
-Caveman mode is default response style. Apply full `caveman` rules to every response and tool-call narration. Keep code, exact commands, errors, warnings, and security text clear. `stop caveman` or `normal mode` disables it; `/caveman <level>` changes level.
+Caveman mode is the default response style for ordinary tasks. Apply full `caveman` rules unless the writing exception below applies. Keep code, exact commands, errors, warnings, and security text clear. `stop caveman` or `normal mode` disables it; `/caveman <level>` changes level.
+
+Writing exception: For tasks explicitly requesting documentation or scientific/academic writing, editing, or review, do not activate or apply caveman for that task. Use normal, complete prose in both chat and artifacts; preserve the requested structure, terminology, citations, and level of detail. This exception takes precedence over caveman defaults and persistence, even if the skill was already loaded. Resume the previous style for unrelated tasks unless the user disabled it. Include this exception explicitly in delegated task prompts, including fresh-context subagents that do not inherit global instructions.
 
 Delegation-first execution:
 
