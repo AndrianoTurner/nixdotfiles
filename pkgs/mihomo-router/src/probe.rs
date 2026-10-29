@@ -3,7 +3,6 @@ use std::net::IpAddr;
 use std::time::Duration;
 
 use reqwest::{Client, Proxy};
-use serde_json::Value;
 
 use crate::node::{Entry, RU_TTL_SECS, SUCCESS_TTL_SECS};
 use crate::now;
@@ -29,25 +28,6 @@ async fn cloudflare(client: &Client) -> Result<Source, String> {
     let country = field("loc=").ok_or("cloudflare: no loc")?.trim().to_string();
     Ok(Source {
         ip: ip.parse().map_err(|e| format!("cloudflare: bad ip {ip}: {e}"))?,
-        country,
-    })
-}
-
-async fn ipinfo(client: &Client) -> Result<Source, String> {
-    let v: Value = client
-        .get("https://ipinfo.io/json")
-        .send()
-        .await
-        .map_err(|e| format!("ipinfo: {e}"))?
-        .error_for_status()
-        .map_err(|e| format!("ipinfo: {e}"))?
-        .json()
-        .await
-        .map_err(|e| format!("ipinfo: {e}"))?;
-    let ip = v["ip"].as_str().ok_or("ipinfo: no ip")?.to_string();
-    let country = v["country"].as_str().ok_or("ipinfo: no country")?.to_string();
-    Ok(Source {
-        ip: ip.parse().map_err(|e| format!("ipinfo: bad ip {ip}: {e}"))?,
         country,
     })
 }
@@ -78,11 +58,10 @@ fn valid_country(cc: &str) -> bool {
 }
 
 /// Probe the node currently selected in the listener's probe group.
-/// Cloudflare's trace returns the exit IP and country in one small response;
-/// ipinfo's free tier rate-limits hard (429), which would otherwise turn a
-/// healthy node into a spurious failure and cost a whole re-probe, so it is
-/// only consulted as a fallback.
-/// Whichever source answers must report a public IP and a valid country. A
+/// Cloudflare's trace returns the exit IP and country in one small response and
+/// is the only source: a fallback would only run for a node that already failed,
+/// and it cost a second timeout per dead node on every scan.
+/// The answer must report a public IP and a valid country. A
 /// Russian exit is fatal unless `allow_ru` (the metered fallback tier), which
 /// keeps the node selectable but only behind every verified non-RU node.
 pub async fn verify(port: u16, allow_ru: bool, prev_failures: u32) -> Entry {
@@ -102,16 +81,10 @@ pub async fn verify(port: u16, allow_ru: bool, prev_failures: u32) -> Entry {
             .no_proxy()
             .proxy(Proxy::all(format!("http://127.0.0.1:{port}")).map_err(|e| e.to_string())?)
             .connect_timeout(Duration::from_secs(5))
-            .timeout(Duration::from_secs(12))
+            .timeout(Duration::from_secs(6))
             .build()
             .map_err(|e| e.to_string())?;
-        let sources = match cloudflare(&client).await {
-            Ok(source) => vec![source],
-            Err(primary) => match ipinfo(&client).await {
-                Ok(source) => vec![source],
-                Err(fallback) => return Err(format!("{primary}; {fallback}")),
-            },
-        };
+        let sources = vec![cloudflare(&client).await?];
         for s in &sources {
             if !public_ip(s.ip) {
                 return Err(format!("non-public exit address {}", s.ip));

@@ -55,7 +55,7 @@ in {
 
     lanes = lib.mkOption {
       type = lib.types.ints.between 1 64;
-      default = 4;
+      default = 8;
       description = ''
         Number of probe lanes. `mihomo.nix` generates the matching
         `PROBE-<n>` select groups and probe listeners from this value, so the

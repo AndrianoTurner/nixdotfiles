@@ -62,16 +62,17 @@ pub fn now() -> f64 {
         .as_secs_f64()
 }
 
-/// Provider fingerprint. The refresh timestamp is part of it because the API
-/// never exposes full credentials: any refresh invalidates prior trust.
+/// Provider fingerprint over the node names only. The API never exposes
+/// credentials, so a name is the only stable identity there is; a refresh that
+/// keeps the same node list (the hourly one usually does) invalidates nothing,
+/// and every name that survives is still re-checked by its own TTL.
 fn revision(p: &Provider) -> String {
     let mut names: Vec<&str> = p.proxies.iter().map(|n| n.name.as_str()).collect();
     names.sort_unstable();
     let mut hasher = Sha256::new();
-    hasher.update(p.updated_at.as_bytes());
     for name in names {
-        hasher.update(b"\0");
         hasher.update(name.as_bytes());
+        hasher.update(b"\0");
     }
     format!("{:x}", hasher.finalize())
 }
@@ -102,6 +103,22 @@ fn rejected(prev_failures: u32, reason: String) -> Entry {
     }
 }
 
+/// A verdict left unknown because the probe lane could not be set up. That is
+/// not the node's fault, so it keeps its failure count and expires immediately
+/// instead of backing off: the next pass retries it.
+fn skipped(prev_failures: u32, reason: String) -> Entry {
+    let t = now();
+    Entry {
+        verdict: "unverified".into(),
+        reason,
+        checked_at: t,
+        expires_at: t,
+        exit_ips: vec![],
+        countries: vec![],
+        failures: prev_failures,
+    }
+}
+
 /// Probe one batch of nodes, one node per lane. The lane's probe group is
 /// selected explicitly and confirmed before probing, so a verdict always
 /// belongs to the node that was actually measured.
@@ -122,7 +139,10 @@ async fn probe_batch(
             debug!("lane {lane}: {name:?} via {group} on 127.0.0.1:{port}");
             let started = Instant::now();
             let entry = match api.select(&group, &name).await {
-                Err(e) => rejected(prev_failures, format!("probe selector: {e}")),
+                // A lane group can vanish while mihomo refreshes the provider;
+                // that is not the node's failure, so it must not escalate the
+                // backoff and cost a whole re-probe later.
+                Err(e) => skipped(prev_failures, format!("probe selector: {e}")),
                 Ok(()) => probe::verify(port, tier(&name) > 0, prev_failures).await,
             };
             debug!(
@@ -282,11 +302,21 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
     let cache_path = args.state.join("cache.json");
 
     if stamp != cache.revision {
-        // Provider refreshed: nothing measured against the old nodes is trusted.
-        warn!("provider refreshed: dropping all verdicts and selecting REJECT");
-        api.select(OUTBOUND, "REJECT").await?;
-        cache.entries.clear();
-        cache.delays.clear();
+        // The node list moved. Keep the verdicts of the names that survived: a
+        // name is the only identity the API gives us, its verdict has its own
+        // TTL, and forcing REJECT here is what made every reboot cost minutes.
+        let before = cache.entries.len();
+        cache.entries.retain(|name, _| nodes.iter().any(|p| &p.name == name));
+        cache.delays.retain(|name, _| nodes.iter().any(|p| &p.name == name));
+        let after = cache.entries.len();
+        if after == before {
+            debug!("provider changed, same {} nodes: keeping verdicts", after);
+        } else {
+            warn!(
+                "provider changed: dropped {} verdicts for removed nodes, kept {after}",
+                before - after
+            );
+        }
         cache.revision = stamp.clone();
         node::save(&cache_path, cache)?;
     }
@@ -294,11 +324,11 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
     // The current selection must still exist in the provider and stay verified.
     let current = api.group(OUTBOUND).await?.now;
     debug!("{OUTBOUND} currently {current:?}");
-    if current != "REJECT"
-        && !cache.entries.get(&current).is_some_and(|e| {
+    let mut live = current != "REJECT"
+        && cache.entries.get(&current).is_some_and(|e| {
             e.eligible(now()) && nodes.iter().any(|p| p.name == current)
-        })
-    {
+        });
+    if current != "REJECT" && !live {
         warn!("dropping selection {current:?}: not verified or no longer in the provider");
         api.select(OUTBOUND, "REJECT").await?;
     }
@@ -320,7 +350,20 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
         );
         for (name, entry) in probe_batch(api, batch, args.probe_port, &cache.entries).await {
             info!("exit check {name:?}: {} ({})", entry.verdict, entry.reason);
-            cache.entries.insert(name, entry);
+            // Do not wait for the whole scan before carrying traffic: the first
+            // node that verifies goes live at once and `choose` refines it to
+            // the fastest one when the scan is over.
+            let usable = !live && tier(&name) == 0 && entry.eligible(now());
+            cache.entries.insert(name.clone(), entry);
+            if usable {
+                match api.select(OUTBOUND, &name).await {
+                    Ok(()) => {
+                        info!("{OUTBOUND} -> {name:?} (first verified node)");
+                        live = true;
+                    }
+                    Err(e) => warn!("could not select {name:?}: {e}"),
+                }
+            }
         }
         node::save(&cache_path, cache)?;
     }
@@ -328,12 +371,17 @@ async fn pass(api: &Api, args: &Args, cache: &mut Cache) -> Result<(), String> {
     // One revision check for the whole scan: the provider blob is ~90 KB and
     // fully parsed, so checking it per batch costs far more than it saves.
     if revision(&api.provider(&args.provider).await?) != stamp {
-        api.select(OUTBOUND, "REJECT").await?;
-        cache.entries.clear();
-        cache.delays.clear();
-        cache.revision.clear();
+        // The node list moved under the scan. Every verdict measured here is
+        // still valid for the name it was measured on, so keep it and skip the
+        // ranking, which would rank a list that may have changed. The next pass
+        // prunes the delta. Discarding instead is what turned a reboot into a
+        // minutes-long outage.
+        warn!(
+            "provider changed mid-scan: keeping {} verdicts for the next pass",
+            cache.entries.len()
+        );
         node::save(&cache_path, cache)?;
-        return Err("provider changed mid-scan; verdicts discarded".into());
+        return Ok(());
     }
 
     choose(api, &args.provider, &nodes, cache, !stale.is_empty()).await?;
@@ -386,12 +434,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 #[cfg(test)]
 mod tests {
-    use super::tier;
+    use super::{revision, tier};
+    use crate::api::{Provider, Proxy};
+
+    fn provider(updated_at: &str, names: &[&str]) -> Provider {
+        Provider {
+            updated_at: updated_at.into(),
+            proxies: names.iter().map(|n| Proxy { name: (*n).into() }).collect(),
+        }
+    }
 
     #[test]
     fn lte_names_are_the_fallback_tier() {
         assert_eq!(tier("🇳🇱 0.1X - LTE №3 - Torrent ✅"), 1);
         assert_eq!(tier("LTE Авто - Нидерланды"), 1);
         assert_eq!(tier("🇫🇮 🎮 ⚡️ ⭐️ Финляндия"), 0);
+    }
+
+    /// The hourly provider refresh bumps `updatedAt` but rarely changes the
+    /// node list; that must not invalidate the verdicts.
+    #[test]
+    fn refresh_with_the_same_nodes_keeps_the_revision() {
+        let before = provider("2026-10-29T15:00:00Z", &["a", "b"]);
+        let refreshed = provider("2026-10-29T16:00:00Z", &["b", "a"]);
+        assert_eq!(revision(&before), revision(&refreshed));
+        let changed = provider("2026-10-29T16:00:00Z", &["a", "b", "c"]);
+        assert_ne!(revision(&before), revision(&changed));
     }
 }
