@@ -5,7 +5,7 @@ use std::time::Duration;
 use reqwest::{Client, Proxy};
 use serde_json::Value;
 
-use crate::node::{Entry, FAILURE_TTL_SECS, SUCCESS_TTL_SECS};
+use crate::node::{Entry, RU_TTL_SECS, SUCCESS_TTL_SECS};
 use crate::now;
 
 struct Source {
@@ -78,18 +78,24 @@ fn valid_country(cc: &str) -> bool {
 }
 
 /// Probe the node currently selected in the listener's probe group.
-/// Both sources must succeed with a public, valid country. A Russian exit is
-/// fatal unless `allow_ru` (the metered fallback tier), which keeps the node
-/// selectable but only behind every verified non-RU node.
-pub async fn verify(port: u16, allow_ru: bool) -> Entry {
+/// Cloudflare's trace returns the exit IP and country in one small response;
+/// ipinfo's free tier rate-limits hard (429), which would otherwise turn a
+/// healthy node into a spurious failure and cost a whole re-probe, so it is
+/// only consulted as a fallback.
+/// Whichever source answers must report a public IP and a valid country. A
+/// Russian exit is fatal unless `allow_ru` (the metered fallback tier), which
+/// keeps the node selectable but only behind every verified non-RU node.
+pub async fn verify(port: u16, allow_ru: bool, prev_failures: u32) -> Entry {
     let checked_at = now();
+    let failures = prev_failures.saturating_add(1);
     let mut entry = Entry {
         verdict: "unverified".into(),
         reason: "pending".into(),
         checked_at,
-        expires_at: checked_at + FAILURE_TTL_SECS as f64,
+        expires_at: checked_at + Entry::failure_ttl(failures) as f64,
         exit_ips: vec![],
         countries: vec![],
+        failures,
     };
     let result = async {
         let client = Client::builder()
@@ -99,8 +105,13 @@ pub async fn verify(port: u16, allow_ru: bool) -> Entry {
             .timeout(Duration::from_secs(12))
             .build()
             .map_err(|e| e.to_string())?;
-        let (a, b) = tokio::join!(cloudflare(&client), ipinfo(&client));
-        let sources = vec![a?, b?];
+        let sources = match cloudflare(&client).await {
+            Ok(source) => vec![source],
+            Err(primary) => match ipinfo(&client).await {
+                Ok(source) => vec![source],
+                Err(fallback) => return Err(format!("{primary}; {fallback}")),
+            },
+        };
         for s in &sources {
             if !public_ip(s.ip) {
                 return Err(format!("non-public exit address {}", s.ip));
@@ -116,6 +127,7 @@ pub async fn verify(port: u16, allow_ru: bool) -> Entry {
 
     match result {
         Ok((sources, ru)) => {
+            entry.failures = 0;
             entry.exit_ips = sources.iter().map(|s| s.ip.to_string()).collect();
             entry.countries = sources.iter().map(|s| s.country.to_uppercase()).collect();
             if ru {
@@ -129,6 +141,7 @@ pub async fn verify(port: u16, allow_ru: bool) -> Entry {
                 } else {
                     entry.verdict = "ru".into();
                     entry.reason = format!("exit {} is RU", entry.exit_ips.join(","));
+                    entry.expires_at = checked_at + RU_TTL_SECS as f64;
                 }
             } else {
                 entry.verdict = "non_ru".into();

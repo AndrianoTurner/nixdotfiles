@@ -80,7 +80,7 @@ in {
 
     logLevel = lib.mkOption {
       type = lib.types.enum ["trace" "debug" "info" "warn" "error"];
-      default = "debug";
+      default = "info";
       description = ''
         Log level for mihomo-router itself (the `mihomo_router` RUST_LOG
         target). `debug` logs every lane, verdict, latency and API call.
@@ -190,6 +190,13 @@ in {
           StateDirectory = cfg.stateDirectory;
           Restart = cfg.restart;
           RestartSec = cfg.restartSec;
+
+          # Backstop: the controller is a background helper and must never
+          # compete with interactive work.
+          MemoryMax = "64M";
+          CPUQuota = "20%";
+          Nice = 10;
+          IOSchedulingClass = "idle";
 
           # Loopback API and HTTPS exits are all it needs.
           RestrictAddressFamilies = ["AF_INET" "AF_INET6"];

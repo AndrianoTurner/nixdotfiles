@@ -109,14 +109,20 @@ impl Api {
             .map_err(|e| e.to_string())
     }
 
-    /// Select `node` in `group` and confirm the switch really happened.
-    pub async fn select(&self, group: &str, node: &str) -> Result<(), String> {
+    /// Select `node` in `group` without reading the group back.
+    pub async fn set(&self, group: &str, node: &str) -> Result<(), String> {
         self.request(
             Method::PUT,
             &["proxies", group],
             Some(serde_json::json!({ "name": node })),
         )
-        .await?;
+        .await
+        .map(|_| ())
+    }
+
+    /// Select `node` in `group` and confirm the switch really happened.
+    pub async fn select(&self, group: &str, node: &str) -> Result<(), String> {
+        self.set(group, node).await?;
         let active = self.group(group).await?;
         if active.now != node {
             return Err(format!(

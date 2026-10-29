@@ -40,6 +40,9 @@ in {
       Restart = "always";
       RestartSec = "3s";
     };
+    # Go sizes its scheduler and per-P allocation arenas to GOMAXPROCS; a home
+    # proxy does not need one thread per core.
+    environment.GOMAXPROCS = "4";
   };
 
   # Static config: one select group the controller drives over the REST API,
@@ -51,8 +54,9 @@ in {
         mixed-port: 7890
         allow-lan: false
         mode: rule
-        log-level: info
-        ipv6: true
+        log-level: warning
+        # No working IPv6 uplink here: AAAA dials would only waste time.
+        ipv6: false
         unified-delay: true
         tcp-concurrent: true
 
