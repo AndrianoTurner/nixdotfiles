@@ -20,16 +20,16 @@ in {
         quietStartup = false;
 
         packages = [
-          "npm:pi-web-access@0.44.0"
+          "npm:pi-web-access@0.46.0"
           "npm:pi-agent-browser-native@0.9.6"
-          "npm:@juicesharp/rpiv-todo@2.14.0"
-          "npm:@juicesharp/rpiv-ask-user-question@2.14.0"
+          "npm:@juicesharp/rpiv-todo@2.15.0"
+          "npm:@juicesharp/rpiv-ask-user-question@2.15.0"
           "npm:billion-context"
           "npm:pi-powerline-footer"
           "npm:@narumitw/pi-usage"
           "npm:pi-mcp-adapter"
           "npm:@narumitw/pi-btw"
-          "npm:pi-subagents@0.81.0"
+          "npm:pi-subagents@0.84.0"
           "npm:@plannotator/pi-extension"
           "npm:pi-lens"
           "npm:@dietrichgebert/ponytail"
