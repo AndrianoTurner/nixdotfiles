@@ -2,6 +2,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }: {
   imports = [
@@ -20,6 +21,8 @@
     initrd.kernelModules = ["amdgpu"];
     kernelModules = ["kvm-amd"];
     extraModulePackages = [];
+
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   networking.useDHCP = lib.mkDefault true;
@@ -32,6 +35,10 @@
       size = 8192;
     }
   ];
+
+  services = {
+    power-profiles-daemon.enable = true;
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
