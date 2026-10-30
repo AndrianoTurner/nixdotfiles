@@ -33,6 +33,8 @@
       "git-firefly"
       "sql"
       "latex"
+      "typespec"
+      "proto"
     ];
   };
 }
