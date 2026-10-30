@@ -6,5 +6,6 @@ pkgs: {
   agent-office = pkgs.callPackage ./agent-office {};
   pi-acp = pkgs.callPackage ./pi-acp {};
   agent-browser-bin = pkgs.callPackage ./agent-browser-bin {};
+  herdr-annotate = pkgs.callPackage ./herdr-annotate {};
   mihomo-router = pkgs.callPackage ./mihomo-router {};
 }
