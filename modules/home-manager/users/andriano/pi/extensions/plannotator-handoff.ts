@@ -28,6 +28,7 @@ const queue: PlannotatorPlanApprovedEvent[] = [];
 let activePi: ExtensionAPI | undefined;
 let dispatching = false;
 let pendingThinkingLevel: ThinkingLevel | undefined;
+let pendingModel: { provider: string; id: string } | undefined;
 
 function dispatchNext() {
   if (dispatching || !activePi || queue.length === 0) return;
@@ -40,14 +41,41 @@ function dispatchNext() {
 export default function (pi: ExtensionAPI) {
   activePi = pi;
 
-  pi.on("session_start", () => {
-    // Runs in the replacement session's fresh extension instance. This is the
-    // only place pi.setThinkingLevel is valid after newSession(); the context
-    // passed to withSession has no setter and the old pi is stale.
-    if (pendingThinkingLevel) {
-      pi.setThinkingLevel(pendingThinkingLevel);
-      pendingThinkingLevel = undefined;
+  pi.on("before_agent_start", (event, ctx) => {
+    const sections = event.systemPromptOptions.sections;
+    if (!pi.getActiveTools().includes("plannotator_submit_plan")) {
+      delete sections.plannotator_implementation_model;
+      return;
     }
+    sections.plannotator_implementation_model = [
+      "Before submitting a Plannotator plan, recommend an implementation model based on the plan's complexity and risk.",
+      "Include exactly one line in the plan: Implementation model: provider/model-id",
+      "Follow it with a short explanation. Prefer a lower-cost model for routine work; prioritize capability for architecture, difficult implementation, or security. Do not invent capabilities or prices.",
+      "Choose only from these currently available models:",
+      ...ctx.modelRegistry.getAvailable().map(
+        (model) => `${model.provider}/${model.id} (${model.name})`,
+      ),
+      "The user will confirm or override this recommendation before implementation.",
+    ].join("\n");
+  });
+
+  pi.on("session_start", async (_event, ctx) => {
+    // Apply settings through the replacement session's fresh extension instance;
+    // the old pi is stale after newSession(). Set the model before thinking.
+    const modelRef = pendingModel;
+    const thinkingLevel = pendingThinkingLevel;
+    pendingModel = undefined;
+    pendingThinkingLevel = undefined;
+    if (modelRef) {
+      const model = ctx.modelRegistry.find(modelRef.provider, modelRef.id);
+      if (!model || !(await pi.setModel(model))) {
+        ctx.ui.notify(
+          "Could not select the implementation model. The plan will not start.",
+          "error",
+        );
+      }
+    }
+    if (thinkingLevel) pi.setThinkingLevel(thinkingLevel);
     // A handoff may have queued while the previous session was being replaced.
     dispatching = false;
     dispatchNext();
@@ -73,6 +101,44 @@ export default function (pi: ExtensionAPI) {
           return;
         }
 
+        const models = ctx.modelRegistry.getAvailable();
+        const recommendation = handoff.planContent.match(
+          /^Implementation model:[ \t]*`?([^`\r\n]+?)`?[ \t]*$/im,
+        )?.[1];
+        const recommendedModel = models.find(
+          (model) => `${model.provider}/${model.id}` === recommendation,
+        );
+        const currentModel = ctx.model;
+        const inheritModel = currentModel
+          ? `Inherit current (${currentModel.provider}/${currentModel.id})`
+          : "Inherit current model";
+        const modelChoices = models.map((model) => ({
+          model,
+          label: `${model.provider}/${model.id}${model === recommendedModel ? " (Recommended)" : ""}`,
+        }));
+        const recommendedChoice = modelChoices.find(
+          ({ model }) => model === recommendedModel,
+        );
+        if (recommendation && !recommendedModel) {
+          ctx.ui.notify(
+            "The recommended implementation model is unavailable. Choose another model.",
+            "warning",
+          );
+        }
+        const modelChoice = await ctx.ui.select("Model for implementation", [
+          ...(recommendedChoice ? [recommendedChoice.label] : []),
+          inheritModel,
+          ...modelChoices
+            .filter((choice) => choice !== recommendedChoice)
+            .map(({ label }) => label),
+        ]);
+        if (!modelChoice) {
+          ctx.ui.notify("Plannotator handoff cancelled.", "info");
+          return;
+        }
+        const selectedModel =
+          modelChoices.find(({ label }) => label === modelChoice)?.model ?? currentModel;
+
         const currentThinkingLevel = pi.getThinkingLevel();
         const inherit = `Inherit current (${currentThinkingLevel})`;
         const choice = await ctx.ui.select(
@@ -83,6 +149,9 @@ export default function (pi: ExtensionAPI) {
           ctx.ui.notify("Plannotator handoff cancelled.", "info");
           return;
         }
+        pendingModel = selectedModel
+          ? { provider: selectedModel.provider, id: selectedModel.id }
+          : undefined;
         pendingThinkingLevel =
           choice === inherit ? currentThinkingLevel : (choice as ThinkingLevel);
 
@@ -100,6 +169,18 @@ export default function (pi: ExtensionAPI) {
         const result = await ctx.newSession({
           parentSession: ctx.sessionManager.getSessionFile(),
           withSession: async (replacementCtx) => {
+            if (
+              selectedModel && (
+                replacementCtx.model?.provider !== selectedModel.provider ||
+                replacementCtx.model?.id !== selectedModel.id
+              )
+            ) {
+              replacementCtx.ui.notify(
+                "Implementation model was not applied. The plan has not started.",
+                "error",
+              );
+              return;
+            }
             replacementCtx.ui.notify(
               "Executing the approved plan in a clean session.",
               "info",
@@ -114,7 +195,10 @@ export default function (pi: ExtensionAPI) {
         if (result.cancelled)
           ctx.ui.notify("Plannotator handoff cancelled.", "info");
       } finally {
-        if (!replaced) pendingThinkingLevel = undefined;
+        if (!replaced) {
+          pendingThinkingLevel = undefined;
+          pendingModel = undefined;
+        }
         // Reset before draining so a queued handoff is picked up even if this
         // one was cancelled or failed. activePi points at the replacement
         // session's extension instance when a replacement happened.
