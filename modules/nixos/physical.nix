@@ -28,7 +28,8 @@
   ];
 
   boot = {
-    kernelPackages = lib.mkDefault pkgs.linuxKernel.packages.linux_xanmod_latest;
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+
     # Compressed RAM cache.
     zswap = {
       enable = false;
