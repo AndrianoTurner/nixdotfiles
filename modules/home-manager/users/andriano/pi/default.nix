@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   json = pkgs.formats.json {};
 
   plannotatorConfig = json.generate "plannotator.json" {
@@ -16,24 +20,23 @@ in {
     compaction.modelOverrides."claude-n-codex/claude-sonnet-5".reserveTokens = 100000;
   };
 
-  home.file = {
-    ".pi/agent/models.json".source = ./models.json;
+  home.file =
+    (lib.mapAttrs' (name: text: lib.nameValuePair ".pi/agent/agents/${name}.md" {inherit text;}) (import ./_agents.nix))
+    // {
+      ".pi/agent/models.json".source = ./models.json;
 
-    ".pi/agent/APPEND_SYSTEM.md".source =
-      ./APPEND_SYSTEM.md;
+      ".pi/agent/APPEND_SYSTEM.md".source =
+        ./APPEND_SYSTEM.md;
 
-    ".pi/agent/agents" = {
-      source = ./agents;
-      recursive = true;
+      ".pi/agent/AGENTS.md".source = ./AGENTS.md;
+
+      ".pi/agent/extensions/plannotator-handoff.ts".source =
+        ./extensions/plannotator-handoff.ts;
+
+      ".pi/agent/plannotator.json".source =
+        plannotatorConfig;
+
+      ".pi/agent/extensions/subagent/config.json".source =
+        subagentConfig;
     };
-
-    ".pi/agent/extensions/plannotator-handoff.ts".source =
-      ./extensions/plannotator-handoff.ts;
-
-    ".pi/agent/plannotator.json".source =
-      plannotatorConfig;
-
-    ".pi/agent/extensions/subagent/config.json".source =
-      subagentConfig;
-  };
 }

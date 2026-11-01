@@ -11,6 +11,10 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 ## Hard rules
 
+- Load the shared `nix` skill before Nix operations (repository source:
+  `modules/home-manager/features/cli/pi-skills/nix/SKILL.md`). Never use `path:.`
+  or equivalent explicit path-flake workarounds, directly or through scripts
+  or children. Use this repository's canonical Git-flake commands.
 - Never print, diff, or commit decrypted secrets. Secrets are sops-encrypted
   YAML; only edit them through `sops`.
 - `hosts/*/hardware-configuration.nix` is machine-generated. Regenerate with
@@ -54,8 +58,8 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 | Host        | Notable contents                                                                           |
 | ----------- | ------------------------------------------------------------------------------------------ |
-| `freedompc` | Current machine. Nvidia PRIME (amdgpu + nvidia), systemd-boot, docker, steam, throne, l2tp |
-| `homepc`    | AMD ROCm/OpenCL, grub-boot, docker, throne                                                 |
+| `freedompc` | Nvidia PRIME (amdgpu + nvidia), systemd-boot, docker, steam, throne, l2tp                  |
+| `homepc`    | Current machine. AMD ROCm/OpenCL, grub-boot, docker, throne                                |
 | `mdr018`    | Static IP 172.16.20.2, systemd-boot, docker, throne, qemu                                  |
 
 ## No auto-discovery

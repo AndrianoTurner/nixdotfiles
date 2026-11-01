@@ -25,10 +25,11 @@ in {
         "big-parallel"
         "nixos-test"
       ];
+      # Lower numbers win; prefer the mirror over the upstream cache.
       substituters = [
-        "http://mirror.yandex.ru/nixos/"
-        "https://mirror.yandex.ru/nixos/"
-        "https://cache.nixos.org/"
+        "https://mirror.yandex.ru/nixos/?priority=10"
+        "http://mirror.yandex.ru/nixos/?priority=20"
+        "https://cache.nixos.org/?priority=40"
       ];
 
       flake-registry = ""; # Disable global flake registry

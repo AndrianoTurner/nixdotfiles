@@ -35,6 +35,7 @@
       "latex"
       "typespec"
       "proto"
+      "just"
     ];
   };
 }

@@ -31,7 +31,6 @@ in {
           "npm:@narumitw/pi-btw"
           "npm:pi-subagents@0.84.0"
           "npm:@plannotator/pi-extension"
-          "npm:pi-lens"
           "npm:@dietrichgebert/ponytail"
           "npm:pi-cliproxyapi-provider"
         ];
@@ -59,6 +58,7 @@ in {
       # (skills/caveman/SKILL.md, MIT). Terse-prose mode, pairs with ponytail.
       skills = [
         ./pi-skills/caveman
+        ./pi-skills/nix
       ];
 
       environment = {
