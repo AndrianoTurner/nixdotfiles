@@ -195,6 +195,8 @@ in {
         proxy-providers:
           ${cfg.provider}:
             type: http
+            # Fetch before FOREIGN-OUT has nodes; its initial selection is REJECT.
+            proxy: DIRECT
             url: "${config.sops.placeholder."mihomo-subscription"}"
             interval: 3600
 
