@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.services.mihomo-router;
+  workVpn = config.networking.networkmanager.ensureProfiles.profiles.mdr or null;
   mihomo-tun = pkgs.writeShellApplication {
     name = "mihomo-tun";
 
@@ -183,6 +184,12 @@ in {
         dns:
           enable: true
           ipv6: false
+      ''
+      + lib.optionalString (workVpn != null) (
+        "  nameserver-policy:\n"
+        + "    \"+.internal.madrigal.ru\": \"172.16.0.101#WORK-VPN\"\n"
+      )
+      + ''
 
         tun:
           enable: false
@@ -191,6 +198,15 @@ in {
           auto-detect-interface: true
           dns-hijack:
             - any:53
+
+      ''
+      + lib.optionalString (workVpn != null) ''
+        proxies:
+          - name: WORK-VPN
+            type: direct
+            interface-name: ${workVpn.vpn.ifname}
+      ''
+      + ''
 
         proxy-providers:
           ${cfg.provider}:
@@ -206,6 +222,12 @@ in {
             proxies: [REJECT]
             use: [${cfg.provider}]
       ''
+      + lib.optionalString (workVpn != null) (
+        "  - name: VPN-UPLINK\n"
+        + "    type: select\n"
+        + "    proxies: [REJECT]\n"
+        + "    use: [${cfg.provider}]\n"
+      )
       + lib.concatMapStrings probeGroup lanes
       + ''
 
@@ -215,7 +237,16 @@ in {
       + ''
 
         rules:
-          - MATCH,FOREIGN-OUT
-      '';
+      ''
+      + lib.optionalString (workVpn != null) (
+        "  - AND,((NETWORK,udp),(OR,((DST-PORT,500),(DST-PORT,4500)))),VPN-UPLINK\n"
+        # Mihomo skips an outbound that does not support UDP; never fall through.
+        + "  - AND,((NETWORK,udp),(OR,((DST-PORT,500),(DST-PORT,4500)))),REJECT\n"
+        + "  - DOMAIN-SUFFIX,internal.madrigal.ru,WORK-VPN\n"
+        + "  - IP-CIDR,172.16.0.100/32,WORK-VPN,no-resolve\n"
+        + "  - IP-CIDR,172.16.0.101/32,WORK-VPN,no-resolve\n"
+        + "  - IP-CIDR,172.16.16.0/20,WORK-VPN,no-resolve\n"
+      )
+      + "  - MATCH,FOREIGN-OUT\n";
   };
 }

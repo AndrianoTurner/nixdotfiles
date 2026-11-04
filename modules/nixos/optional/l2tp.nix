@@ -18,13 +18,23 @@ in {
   networking.firewall.checkReversePath = "loose";
   networking.firewall.allowedUDPPorts = [500 4500 1701];
   networking.networkmanager.plugins = [
-    (pkgs.networkmanager-l2tp.override {
-      strongswan = strongswanIKEv1;
-    })
+    ((pkgs.networkmanager-l2tp.override {
+        strongswan = strongswanIKEv1;
+      })
+      .overrideAttrs (old: {
+        # Upstream 1.52.0 cannot name a PPP link per VPN profile.
+        patches = (old.patches or []) ++ [./networkmanager-l2tp-ifname.patch];
+        patchFlags = ["-p1" "--fuzz=0"];
+        doCheck = true;
+      }))
     pkgs.networkmanager-strongswan
   ];
   environment.etc."strongswan.conf" = {
-    text = '''';
+    text = ''
+      charon {
+        install_routes = no
+      }
+    '';
   };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [config.sops.templates.l2tp-env.path];
@@ -40,11 +50,17 @@ in {
           service-type = "org.freedesktop.NetworkManager.l2tp";
           gateway = "$L2TP_DOMAIN";
           user = "$L2TP_USER";
+          ifname = "mdr-vpn";
 
           ipsec-enabled = "yes";
           ipsec-psk = "$L2TP_PSK";
           ipsec-gateway-id = "%any";
           password-flags = "0";
+
+          # For encapsulation inside proxy
+          ipsec-forceencaps = "yes";
+          mtu = "1280";
+          mru = "1280";
         };
 
         vpn-secrets = {
@@ -58,6 +74,7 @@ in {
 
           ignore-auto-routes = "true";
           ignore-auto-dns = "false";
+          auto-route-ext-gw = 0;
 
           route1 = "172.16.0.100/32,,0";
           route2 = "172.16.0.101/32,,0";
