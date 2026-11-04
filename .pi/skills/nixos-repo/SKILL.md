@@ -59,7 +59,7 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 | Host        | Notable contents                                                                           |
 | ----------- | ------------------------------------------------------------------------------------------ |
 | `freedompc` | Nvidia PRIME (amdgpu + nvidia), systemd-boot, docker, steam, throne, l2tp                  |
-| `homepc`    | Current machine. AMD ROCm/OpenCL, grub-boot, docker, throne                                |
+| `homepc`    | AMD ROCm/OpenCL, grub-boot, docker, throne                                |
 | `mdr018`    | Static IP 172.16.20.2, systemd-boot, docker, throne, qemu                                  |
 
 ## No auto-discovery

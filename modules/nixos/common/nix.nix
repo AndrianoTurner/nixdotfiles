@@ -30,6 +30,10 @@ in {
         "https://mirror.yandex.ru/nixos/?priority=10"
         "http://mirror.yandex.ru/nixos/?priority=20"
         "https://cache.nixos.org/?priority=40"
+        "https://cache.nixos-cuda.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
       ];
 
       flake-registry = ""; # Disable global flake registry

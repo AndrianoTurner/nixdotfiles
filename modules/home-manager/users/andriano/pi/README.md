@@ -44,7 +44,7 @@ node --test modules/home-manager/users/andriano/pi/tests/plannotator-handoff.tes
 The first test consumes `nix eval --json --file
 modules/home-manager/users/andriano/pi/_agents.nix`, not a duplicate fixture.
 Its command-choice scenarios check policy coverage only, not model obedience.
-Follow `.pi/skills/nixos-checks/SKILL.md` for the format and homepc-only gates;
+Follow `.pi/skills/nixos-checks/SKILL.md` for the format and current-host-only gates;
 stage newly created task inputs first. Never use an explicit path flake to
 include untracked files.
 

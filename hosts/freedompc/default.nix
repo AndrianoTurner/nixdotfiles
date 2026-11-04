@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   inputs,
   repoRoot,
   ...
@@ -25,6 +26,10 @@
   home-manager.users.andriano = import ./home.nix;
 
   system.nixos.tags = ["portable"];
+
+  environment.systemPackages = [
+    (pkgs.llama-cpp.override {cudaSupport = true;})
+  ];
 
   hardware.graphics.enable = true;
 

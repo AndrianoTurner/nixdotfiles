@@ -26,7 +26,7 @@ Rules:
 - Never use `path:.` or an equivalent explicit path-flake workaround for this
   checkout, including through scripts, nested commands, or delegated children.
   Use the canonical Git-flake commands above; do not bypass missing Git inputs.
-- Build and check only the host you are on (`homepc`), never the other hosts'
+- Build and check only the host you are on, never the other hosts'
   `nixosConfigurations`; that costs minutes and proves nothing about this
   machine. Only the user's explicit request may widen the scope.
 - Build and check only. Never run `nh os switch` / `nixos-rebuild switch|test`

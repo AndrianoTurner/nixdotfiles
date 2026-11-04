@@ -81,13 +81,15 @@ targets the local desktop; upstream SSH selection limitations remain.
 
 ## Verification
 
-From the repository root, build only this host; none of these commands activates:
+From the repository root, build only the current host; none of these commands
+activates. Check that `hostname` matches a flake configuration before proceeding:
 
 ```sh
+host=$(hostname)
 nix build .#herdr-annotate
 nix build .#checks.x86_64-linux.format
-nix eval .#nixosConfigurations.homepc.config.system.build.toplevel.drvPath
-nix build .#nixosConfigurations.homepc.config.system.build.toplevel --no-link
+nix eval ".#nixosConfigurations.${host}.config.system.build.toplevel.drvPath"
+nix build ".#nixosConfigurations.${host}.config.system.build.toplevel" --no-link
 ```
 
 To repeat the isolated integration checks (Python 3.11+), keep the evaluated
@@ -96,17 +98,18 @@ and socket paths, start and stop their own headless server, and never register a
 plugin in the live user's registry:
 
 ```sh
+host=$(hostname)
 work=$(mktemp -d)
 plugin=$(nix build .#herdr-annotate --no-link --print-out-paths)
-nix build '.#nixosConfigurations.homepc.config.home-manager.users.andriano.xdg.configFile."herdr/config.toml".source' --no-link
-nix eval --json .#nixosConfigurations.homepc.config.home-manager.users.andriano \
+nix build ".#nixosConfigurations.${host}.config.home-manager.users.andriano.xdg.configFile.\"herdr/config.toml\".source" --no-link
+nix eval --json ".#nixosConfigurations.${host}.config.home-manager.users.andriano" \
   --apply 'hm: {
     activation = hm.home.activation.herdrAnnotate.data;
     config = toString hm.xdg.configFile."herdr/config.toml".source;
     configHome = hm.xdg.configHome;
     stateHome = hm.xdg.stateHome;
   }' > "$work/hm.json"
-herdr=$(nix eval --raw .#nixosConfigurations.homepc.config.home-manager.users.andriano.home.packages \
+herdr=$(nix eval --raw ".#nixosConfigurations.${host}.config.home-manager.users.andriano.home.packages" \
   --apply 'ps: toString (builtins.head (builtins.filter (p: (p.pname or "") == "herdr") ps))')
 python3 tests/herdr-annotate.py "$herdr/bin/herdr" "$plugin" "$work/hm.json"
 rm -r "$work"

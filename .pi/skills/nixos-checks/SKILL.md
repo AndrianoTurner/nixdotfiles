@@ -35,7 +35,7 @@ Eval gate — current host, no build (fast):
 nix eval .#nixosConfigurations.<current>.config.system.build.toplevel.drvPath
 ```
 
-Build gate — current host (this repo's working machine is `homepc`):
+Build gate — current host:
 
 ```console
 nix build .#nixosConfigurations.<current>.config.system.build.toplevel --no-link
@@ -56,8 +56,10 @@ sudo sops -d secrets/system/shared.yaml > /dev/null
 
 ## Picking the gates
 
-Always verify against the host the agent is running on (`homepc`); other hosts'
-configurations are out of scope unless the user names them.
+Determine the current hostname with `hostname` and use it in place of `<current>`.
+Always verify against the host the agent is running on; other hosts'
+configurations are out of scope unless the user names them. If the hostname does
+not match a flake configuration, ask the user which host to check.
 
 | Change | Minimum | Preferred |
 | --- | --- | --- |
