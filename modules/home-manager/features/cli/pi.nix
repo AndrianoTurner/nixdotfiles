@@ -27,7 +27,6 @@ in {
           "npm:billion-context"
           "npm:pi-powerline-footer"
           "npm:@narumitw/pi-usage"
-          "npm:pi-mcp-adapter"
           "npm:@narumitw/pi-btw"
           "npm:pi-subagents@0.84.0"
           "npm:@plannotator/pi-extension"
