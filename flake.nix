@@ -38,6 +38,12 @@
       flake = false;
     };
 
+    # Tor bridges refreshed by upstream every 6h; `nix flake update tor-bridges`.
+    tor-bridges = {
+      url = "github:igareck/vpn-configs-for-russia?shallow=1";
+      flake = false;
+    };
+
     pi = {
       url = "github:lukasl-dev/pi.nix";
       inputs.nixpkgs.follows = "nixpkgs";

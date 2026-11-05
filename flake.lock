@@ -424,6 +424,7 @@
         "noctalia-greeter": "noctalia-greeter",
         "pi": "pi",
         "sops-nix": "sops-nix",
+        "tor-bridges": "tor-bridges",
         "wallpaper-bank": "wallpaper-bank",
         "zen-browser": "zen-browser"
       }
@@ -460,6 +461,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tor-bridges": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793903584,
+        "narHash": "sha256-egGMXTe3LyjG4Pfrrh4fwnhtQygFiZIqGhT2s/bfVKc=",
+        "owner": "igareck",
+        "repo": "vpn-configs-for-russia",
+        "rev": "6536c9a2aa9125579c25ddd1e11e44ba3e0c34eb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "igareck",
+        "repo": "vpn-configs-for-russia",
         "type": "github"
       }
     },
