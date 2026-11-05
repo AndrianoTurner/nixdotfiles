@@ -18,15 +18,9 @@ in {
   networking.firewall.checkReversePath = "loose";
   networking.firewall.allowedUDPPorts = [500 4500 1701];
   networking.networkmanager.plugins = [
-    ((pkgs.networkmanager-l2tp.override {
-        strongswan = strongswanIKEv1;
-      })
-      .overrideAttrs (old: {
-        # Upstream 1.52.0 cannot name a PPP link per VPN profile.
-        patches = (old.patches or []) ++ [./networkmanager-l2tp-ifname.patch];
-        patchFlags = ["-p1" "--fuzz=0"];
-        doCheck = true;
-      }))
+    (pkgs.networkmanager-l2tp.override {
+      strongswan = strongswanIKEv1;
+    })
     pkgs.networkmanager-strongswan
   ];
   environment.etc."strongswan.conf" = {
@@ -50,7 +44,6 @@ in {
           service-type = "org.freedesktop.NetworkManager.l2tp";
           gateway = "$L2TP_DOMAIN";
           user = "$L2TP_USER";
-          ifname = "mdr-vpn";
 
           ipsec-enabled = "yes";
           ipsec-psk = "$L2TP_PSK";

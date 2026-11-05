@@ -204,7 +204,6 @@ in {
         proxies:
           - name: WORK-VPN
             type: direct
-            interface-name: ${workVpn.vpn.ifname}
       ''
       + ''
 
