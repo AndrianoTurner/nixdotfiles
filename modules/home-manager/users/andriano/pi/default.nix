@@ -1,9 +1,21 @@
 {
+  config,
   lib,
   pkgs,
   ...
 }: let
   json = pkgs.formats.json {};
+
+  # Context7 remote MCP (streamable HTTP). The API key is read from the
+  # sops-nix secret file at connect time so it never lands in the store.
+  mcpConfig = json.generate "pi-mcp.json" {
+    mcpServers.context7 = {
+      url = "https://mcp.context7.com/mcp";
+      headers.CONTEXT7_API_KEY = "!cat ${config.sops.secrets."context7-api-key".path}";
+      exposure = "direct";
+      description = "Context7: current, version-specific library documentation lookup";
+    };
+  };
 
   plannotatorConfig = json.generate "plannotator.json" {
     executionMode = "external";
@@ -24,6 +36,9 @@ in {
     (lib.mapAttrs' (name: text: lib.nameValuePair ".pi/agent/agents/${name}.md" {inherit text;}) (import ./_agents.nix))
     // {
       ".pi/agent/models.json".source = ./models.json;
+
+      # Read-only store symlink: `pi mcp add` writes will fail, edit here.
+      ".pi/agent/mcp.json".source = mcpConfig;
 
       ".pi/agent/APPEND_SYSTEM.md".source =
         ./APPEND_SYSTEM.md;
