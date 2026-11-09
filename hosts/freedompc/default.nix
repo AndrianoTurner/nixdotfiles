@@ -28,6 +28,14 @@
 
   system.nixos.tags = ["portable"];
 
+  # CUDA binaries are only built/cached here; other hosts stay off this cache.
+  nix.settings = {
+    substituters = ["https://cache.nixos-cuda.org/?priority=100"];
+    trusted-public-keys = [
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+    ];
+  };
+
   environment.systemPackages = [
     (pkgs.llama-cpp.override {cudaSupport = true;})
   ];
