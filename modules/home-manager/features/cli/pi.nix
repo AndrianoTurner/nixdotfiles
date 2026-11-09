@@ -20,18 +20,18 @@ in {
         quietStartup = false;
 
         packages = [
-          "npm:pi-web-access@0.46.0"
-          "npm:pi-agent-browser-native@0.9.6"
+          "npm:pi-web-access@0.47.0"
+          "npm:pi-agent-browser-native@0.9.18"
           "npm:@juicesharp/rpiv-todo@2.15.0"
           "npm:@juicesharp/rpiv-ask-user-question@2.15.0"
-          "npm:billion-context"
-          "npm:pi-powerline-footer"
-          "npm:@narumitw/pi-usage"
-          "npm:@narumitw/pi-btw"
-          "npm:pi-subagents@0.84.0"
-          "npm:@plannotator/pi-extension"
-          "npm:@dietrichgebert/ponytail"
-          "npm:pi-cliproxyapi-provider"
+          "npm:billion-context@0.1.213"
+          "npm:pi-powerline-footer@0.22.0"
+          "npm:@narumitw/pi-usage@0.69.2"
+          "npm:@narumitw/pi-btw@0.63.5"
+          "npm:pi-subagents@0.87.0"
+          "npm:@plannotator/pi-extension@0.28.56"
+          "npm:@dietrichgebert/ponytail@5.3.3"
+          "npm:pi-cliproxyapi-provider@0.16.8"
         ];
 
         compaction = {
