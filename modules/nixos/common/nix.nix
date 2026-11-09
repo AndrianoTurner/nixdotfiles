@@ -9,6 +9,9 @@ in {
     settings = {
       max-jobs = 2;
       cores = 1;
+      connect-timeout = 10;
+      stalled-download-timeout = 30;
+      download-attempts = 2;
       trusted-users = [
         "root"
         "@wheel"
