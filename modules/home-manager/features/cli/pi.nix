@@ -57,6 +57,7 @@ in {
       # (skills/caveman/SKILL.md, MIT). Terse-prose mode, pairs with ponytail.
       skills = [
         ./pi-skills/caveman
+        ./pi-skills/gitlab
         ./pi-skills/nix
       ];
 
@@ -104,6 +105,7 @@ in {
       stdenv.cc
       git
       gh
+      glab
       ripgrep
       fd
       jq
