@@ -72,8 +72,6 @@ in {
         # wham/usage) bypass bili's patch; undici ignores http(s)_proxy unless
         # the flag is set, and chatgpt.com direct answers a geo-block 403.
         NODE_USE_ENV_PROXY.value = "1";
-        HTTPS_PROXY.value = "${proxy}";
-        HTTP_PROXY.value = "${proxy}";
         NO_PROXY.value = "localhost,127.0.0.1,::1,172.16.20.91";
       };
     };
@@ -84,6 +82,10 @@ in {
       autoUpdate = false;
       advisoryCheck = false;
       pi.subagents = false;
+      # Inline posture re-wraps globalThis.fetch alongside pi-web-access
+      # (#1158/#1662) and every model request dies as "Connection error."
+      # (seen 2026-11-10: cpa and deepseek both, 0 tokens, ~620ms).
+      pi.inline = false;
       # Model egress must ride Throne (localhost:2080): chatgpt.com answers a
       # geo-block 403 HTML page otherwise, which bili reports as
       # "Responses exchange ended without a terminal event". bili strips
