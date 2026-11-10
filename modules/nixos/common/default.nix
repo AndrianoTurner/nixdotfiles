@@ -8,6 +8,7 @@
 }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager
+    ./bootvine.nix
     ./fish.nix
     ./nix.nix
     ./security.nix
