@@ -12,6 +12,7 @@ in {
       connect-timeout = 10;
       stalled-download-timeout = 30;
       download-attempts = 2;
+      tarball-ttl = 604800; # 7 days
       trusted-users = [
         "root"
         "@wheel"
