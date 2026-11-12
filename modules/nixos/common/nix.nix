@@ -34,6 +34,11 @@ in {
         "https://mirror.yandex.ru/nixos/?priority=10"
         "http://mirror.yandex.ru/nixos/?priority=20"
         "https://cache.nixos.org/?priority=40"
+        "https://noctalia.cachix.org/?priority=50"
+      ];
+
+      trusted-public-keys = [
+        "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
       ];
 
       flake-registry = ""; # Disable global flake registry
