@@ -32,6 +32,7 @@ in {
           "npm:@plannotator/pi-extension@0.28.56"
           "npm:@dietrichgebert/ponytail@5.3.3"
           "npm:pi-cliproxyapi-provider@0.16.8"
+          "npm:rea-agents@6.9.0"
         ];
 
         compaction = {
