@@ -98,6 +98,7 @@ in {
       providers."http://172.16.20.91:8317".proxy = "";
       providers."https://claude-n-codex.com:8443".proxy = "";
       providers."https://api.deepseek.com".proxy = "";
+      providers."https://opencode.ai".proxy = "";
     };
 
     home.packages = with pkgs; [
