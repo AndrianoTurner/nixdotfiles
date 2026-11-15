@@ -37,15 +37,11 @@
 in {
   programs.pi.coding-agent.settings = {
     extensions = ["+builtin:mcp"];
-    modelThinkingLevels."claude-n-codex/claude-sonnet-5" = "xhigh";
-    compaction.modelOverrides."claude-n-codex/claude-sonnet-5".reserveTokens = 100000;
   };
 
   home.file =
     (lib.mapAttrs' (name: text: lib.nameValuePair ".pi/agent/agents/${name}.md" {inherit text;}) (import ./_agents.nix))
     // {
-      ".pi/agent/models.json".source = ./models.json;
-
       # Read-only store symlink: `pi mcp add` writes will fail, edit here.
       ".pi/agent/mcp.json".source = mcpConfig;
 
