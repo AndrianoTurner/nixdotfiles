@@ -62,24 +62,28 @@ test("only implementers can write, and both use the complete shared contract", (
     assert.deepEqual(tools, ["read", "grep", "find", "ls", "bash", "contact_supervisor", ...(writer ? ["edit", "write"] : [])]);
     assert.equal(fields.acceptanceRole, writer ? "writer" : "read-only");
     if (writer) assert.equal(body, contract);
-    else assert.match(body, /Do not modify/);
+    else {
+      assert.match(body, /Do not modify/);
+      assert.match(body, /Bash|scripts/);
+    }
     assert.match(body, /Do not delegate|or delegate/);
-    assert.match(body, /Bash|scripts/);
-    assert.match(body, /Load the `nix` skill/);
-    assert.match(body, /Never use `path:\.`/);
+    assert.match(body, /Follow the current repository's tooling, skills, and approval boundaries/);
+    assert.match(body, /Do not import another repository's workflow or environment assumptions/);
+    assert.doesNotMatch(body, /\bNix(?:OS)?\b|`nix`|path:\./i);
     assert.match(body, /normal, complete prose/);
   }
   assert.match(contract, /Finish all agreed requirements, tests, integration, validation, and error/);
   assert.match(contract, /Inspect your final diff/);
 });
 
-test("shared instructions, discoverable skill, and deployment wiring exist", () => {
+test("global preferences and deployment wiring stay repository-neutral", () => {
   const policy = read(`${directory}/AGENTS.md`);
-  const skill = read("modules/home-manager/features/cli/pi-skills/nix/SKILL.md");
-  assert.match(skill, /^---\nname: nix\ndescription: .+\n---\n/);
-  assert.doesNotMatch(skill, /homepc|freedompc/);
-  assert.match(policy, /Never use `path:\.`/);
-  assert.match(policy, /scripts, nested commands, or delegated children/);
+  assert.match(policy, /staged, unstaged, and\nuntracked files/);
+  assert.match(policy, /wait for the user's decision/);
+  assert.match(policy, /Use `gh` only when the user explicitly authorizes/);
+  assert.match(policy, /Keep repository-specific instructions, skills, commands, and environment\nassumptions scoped to that repository/);
+  assert.match(policy, /Use the main agent's current provider/);
+  assert.doesNotMatch(policy, /\bNix(?:OS)?\b|`nix`|path:\.|nixosConfigurations|nh os switch/i);
   assert.match(policy, /normal, complete prose/);
   assert.match(policy, /do not silently switch the resolved provider\/model/);
   assert.match(read(`${directory}/APPEND_SYSTEM.md`), /Writing exception:/);
@@ -87,18 +91,28 @@ test("shared instructions, discoverable skill, and deployment wiring exist", () 
   assert.match(module, /import \.\/_agents\.nix/);
   assert.match(module, /"\.pi\/agent\/AGENTS\.md"\.source = \.\/AGENTS\.md/);
   assert.doesNotMatch(module, /recursive = true/);
-  assert.match(read("modules/home-manager/features/cli/pi.nix"), /\.\/pi-skills\/nix/);
+});
+
+test("Nix skill is repository-local, not globally registered", () => {
+  const path = ".pi/skills/nix/SKILL.md";
+  const skill = read(path);
+  assert.match(skill, /^---\nname: nix\ndescription: .+\n---\n/);
+  assert.doesNotMatch(skill, /homepc|freedompc/);
+  assert.doesNotMatch(read("modules/home-manager/features/cli/pi.nix"), /\.\/pi-skills\/nix/);
+  for (const source of ["AGENTS.md", ".pi/skills/nixos-repo/SKILL.md", ".pi/skills/nixos-checks/SKILL.md"]) {
+    assert.ok(read(source).includes(path), source);
+  }
 });
 
 // These are static policy coverage checks, not proof of model obedience.
-const skill = read("modules/home-manager/features/cli/pi-skills/nix/SKILL.md");
+const skill = read(".pi/skills/nix/SKILL.md");
 const local = read("AGENTS.md") + read(".pi/skills/nixos-checks/SKILL.md");
 for (const [scenario, text, requirements] of [
   ["package build", skill, [/nix build \.#<package>/, /Confirm the output exists/]],
   ["project dev shell", skill, [/nix develop \.#<shell> -c <command>/]],
   ["untracked input", skill, [/Untracked build inputs are invisible/, /ask when staging is not authorized/, /Never stage secrets or unrelated files/]],
   ["path-flake workaround", skill, [/Never use `path:\.`/, /Do not substitute `path:<checkout>`/, /scripts, nested commands, and delegated children/]],
-  ["wrong-host build", local, [/only the host you are on \(`homepc`\)/, /unless the user names them/]],
+  ["wrong-host build", local, [/only the host you are on, never the other hosts'/, /unless the user names them/]],
   ["all-host check", local, [/Do not run it by default/, /other hosts'/]],
   ["unauthorized activation", skill + local, [/Activation requires explicit user authorization/, /unless the user explicitly asks/]],
 ]) {

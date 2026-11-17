@@ -6,8 +6,10 @@ the body-only fragments in `agents/`, not the deployed files in `~/.pi`.
 Both implementers use `agents/worker.md`; that source filename is not a role
 or compatibility alias. No custom `worker` override or alias is deployed;
 pi-subagents may still expose its own bundled `worker` role.
-Repository-specific NixOS instructions remain at the repository root and in
-`.pi/skills/`. The reusable `nix` skill is registered in the CLI feature module.
+Repository-specific NixOS instructions and the `nix` skill live only at the
+repository root and in `.pi/skills/`. Global preferences and generated roles use
+the current project's tooling and instructions, without imposing this
+repository's Nix workflow on unrelated projects.
 
 ## Routing and overrides
 
@@ -23,14 +25,16 @@ metadata neither sandbox Bash nor establish successful completion.
 
 Models use bare IDs, not provider-specific presets. The installed resolver
 prefers the current provider when it offers the ID, then a unique registry
-match. Missing or ambiguous matches require an explicit provider/model choice.
+match. Global policy requires the parent's current provider unless the user
+requests another; ask before launching a role that would resolve elsewhere.
+Missing or ambiguous matches require an explicit provider/model choice.
 Registry presence does not prove authentication. After resolution, model,
 auth, and quota failures must be reported, not hidden by provider/model or
 execution-mechanism fallback. Normal project agent overrides and explicit
 per-run `model: "provider/id"` overrides remain available. For example, select
 `openai-codex/gpt-6-luna` for a Luna scout or `deepseek/deepseek-flash` for
-routine work when appropriate. These are explicit alternatives, not automatic
-fallbacks; the parent model and default provider are unchanged.
+routine work when authorized by the user. These are explicit alternatives, not
+automatic fallbacks; the parent model and default provider are unchanged.
 
 ## Verification and deployment
 
@@ -51,6 +55,6 @@ include untracked files.
 Building does not deploy. After separately authorizing and deploying the Home
 Manager/NixOS change, reload/restart Pi. Confirm discovery of all five generated
 roles, absence of our old `worker` override/alias (not the bundled role), the
-`nix` skill, inherited global instructions in children, and resolved provider/model
-mappings. No activation
-or post-deployment smoke test is performed by the configuration tests.
+`nix` skill inside this repository but not in an unrelated project, inherited
+global instructions in children, and resolved provider/model mappings. No
+activation or post-deployment smoke test is performed by the configuration tests.

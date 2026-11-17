@@ -10,8 +10,8 @@ figure out how to test something. All commands here are read-only; none of them
 touch the running system. See `.pi/skills/nixos-repo/SKILL.md` for where
 changes belong.
 
-Load the shared `nix` skill before Nix operations (repository source:
-`modules/home-manager/features/cli/pi-skills/nix/SKILL.md`). Never use `path:.`
+Load the repository-local `nix` skill before Nix operations
+(`.pi/skills/nix/SKILL.md`). Never use `path:.`
 or equivalent explicit path-flake workarounds, including through scripts or
 children. Use the canonical Git-flake commands here.
 

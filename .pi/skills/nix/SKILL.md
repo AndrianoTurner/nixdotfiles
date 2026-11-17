@@ -1,6 +1,6 @@
 ---
 name: nix
-description: Choose safe, narrow Nix commands for flakes, packages, checks, and dev shells. Load before any Nix operation; follow repository-local host, staging, and activation rules.
+description: Choose safe, narrow Nix commands for this NixOS configuration repository. Load before Nix operations here; follow local host, staging, and activation rules.
 ---
 
 # Nix operations

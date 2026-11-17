@@ -11,8 +11,7 @@ anything, read:
 
 - `.pi/skills/nixos-repo/SKILL.md` — layout, conventions, where a change belongs
 - `.pi/skills/nixos-checks/SKILL.md` — canonical verification commands
-- The shared `nix` skill before Nix operations (source:
-  `modules/home-manager/features/cli/pi-skills/nix/SKILL.md`)
+- `.pi/skills/nix/SKILL.md` — load the repository-local `nix` skill before Nix operations
 
 Fast gates (run from the repo root):
 

@@ -11,8 +11,8 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 
 ## Hard rules
 
-- Load the shared `nix` skill before Nix operations (repository source:
-  `modules/home-manager/features/cli/pi-skills/nix/SKILL.md`). Never use `path:.`
+- Load the repository-local `nix` skill before Nix operations
+  (`.pi/skills/nix/SKILL.md`). Never use `path:.`
   or equivalent explicit path-flake workarounds, directly or through scripts
   or children. Use this repository's canonical Git-flake commands.
 - Never print, diff, or commit decrypted secrets. Secrets are sops-encrypted

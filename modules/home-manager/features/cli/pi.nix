@@ -59,7 +59,6 @@ in {
       skills = [
         ./pi-skills/caveman
         ./pi-skills/gitlab
-        ./pi-skills/nix
       ];
 
       environment = {
