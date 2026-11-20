@@ -30,6 +30,14 @@ authentication flow. Do not change protocols, rewrite remote URLs, or substitute
 another access method without explicit authorization. Allow authentication
 prompts; do not suppress them or force noninteractive authentication.
 
+## Privileged commands
+
+Use `run0` for commands that need root; `sudo` cannot authenticate from
+non-interactive tool calls. `run0` asks for the password in a GUI dialog, so it
+blocks until the user answers. It starts a fresh session without the caller's
+environment, so run it as `run0 --setenv=PATH <command>` unless the command is
+an absolute path. Elevated access does not relax the approval boundaries above.
+
 Prefer the smallest change that fully satisfies the request. Add documentation,
 rules, or abstractions only when they meet a concrete need; avoid repeating
 existing guidance. Keep feature documentation proportional to the feature's

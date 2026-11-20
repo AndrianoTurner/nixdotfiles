@@ -20,8 +20,8 @@ verification commands see `.pi/skills/nixos-checks/SKILL.md`.
 - `hosts/*/hardware-configuration.nix` is machine-generated. Regenerate with
   `nixos-generate-config` on that machine; do not hand-edit for another host.
 - Activation (`nh os switch`, `nixos-rebuild switch/test/boot`) is a human
-  action: it needs sudo and mutates the running system. Agents build and check
-  only, unless the user explicitly asks to activate.
+  action: it needs root access and mutates the running system. Agents build and
+  check only, unless the user explicitly asks to activate.
 - New files are invisible to flake commands until `git add`ed (untracked files
   are excluded from the flake source).
 

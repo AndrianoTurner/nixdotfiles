@@ -51,7 +51,7 @@ Secrets gate:
 
 ```console
 sops -d secrets/users/andriano.yaml > /dev/null
-sudo sops -d secrets/system/shared.yaml > /dev/null
+run0 --setenv=PATH --setenv=SOPS_AGE_KEY_FILE=/var/lib/sops-nix/key.txt sops -d secrets/system/shared.yaml > /dev/null
 ```
 
 ## Picking the gates
@@ -78,8 +78,8 @@ not match a flake configuration, ask the user which host to check.
 - Builds do not decrypt secrets; a broken secrets file passes every build. Only
   `sops -d` (or activation) catches it.
 - `nh os switch`, `nixos-rebuild switch`, and `nixos-rebuild test` are
-  activation: they need sudo and change the running system. Run them only when
-  the user explicitly asks.
+  activation: they need root access and change the running system. Run them
+  only when the user explicitly asks.
 - First build of the current host can take 10–30+ minutes and many GB of
   downloads; subsequent builds are incremental.
 

@@ -19,6 +19,9 @@
     ./telegram.nix
   ];
 
+  # GUI password prompt for polkit actions (run0, pkexec) on Wayland.
+  services.polkit-gnome.enable = true;
+
   xdg = {
     mimeApps = {
       enable = true;
