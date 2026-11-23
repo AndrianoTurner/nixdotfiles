@@ -17,7 +17,6 @@
     "${repoRoot}/modules/nixos/optional/throne.nix"
     "${repoRoot}/modules/nixos/optional/l2tp.nix"
     "${repoRoot}/modules/nixos/optional/mihomo.nix"
-    "${repoRoot}/modules/nixos/optional/yggdrasil.nix"
     "${repoRoot}/modules/nixos/optional/tor.nix"
     "${repoRoot}/modules/nixos/optional/qemu.nix"
   ];
