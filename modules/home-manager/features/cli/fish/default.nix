@@ -79,6 +79,7 @@
     };
 
     interactiveShellInit = ''
+      fish_vi_key_bindings
 
       set -g fish_color_normal normal
       set -g fish_color_command F75D00
