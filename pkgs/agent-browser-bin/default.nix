@@ -6,11 +6,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "agent-browser-bin";
-  version = "0.38.2";
+  version = "0.43.0";
 
   src = fetchurl {
     url = "https://github.com/vercel-labs/agent-browser/releases/download/v${version}/agent-browser-linux-x64";
-    hash = "sha256-pUt2UZLbd0Zm8FE/qLVFoph1O28p5zvN9KHnjxjnwOE=";
+    hash = "sha256-jmnJ+2YlFMnPNuSRHpTpE3QroGblUQJIY1DgSd2EdhI=";
   };
 
   nativeBuildInputs = [autoPatchelfHook];
