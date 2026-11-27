@@ -26,7 +26,7 @@ in {
           "npm:@juicesharp/rpiv-ask-user-question@2.15.0"
           "npm:billion-context@0.1.216"
           "npm:pi-powerline-footer@0.22.0"
-          "npm:@narumitw/pi-usage@0.69.4"
+          "git:github.com/monadix/pi-universal-usage@52aed97d5c6c406aa45e09bbe235b866f8848677"
           "npm:@narumitw/pi-btw@0.63.9"
           "npm:pi-subagents@0.90.0"
           "npm:@plannotator/pi-extension@0.29.2"
@@ -68,7 +68,7 @@ in {
         AGENT_BROWSER_EXECUTABLE_PATH.value = "${pkgs.chromium}/bin/chromium";
         JAVA_HOME.value = "${pkgs.jdk21}/lib/openjdk";
         REA_JADX_MCP_JAR.value = "${config.home.homeDirectory}/.local/share/rea/android/jadx-headless-mcp-0.7.1-all.jar";
-        # Extensions calling bare globalThis.fetch (pi-usage's chatgpt.com
+        # Extensions calling bare globalThis.fetch (usage monitors' chatgpt.com
         # wham/usage) bypass bili's patch; undici ignores http(s)_proxy unless
         # the flag is set, and chatgpt.com direct answers a geo-block 403.
         NODE_USE_ENV_PROXY.value = "1";

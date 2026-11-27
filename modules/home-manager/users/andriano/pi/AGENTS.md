@@ -118,13 +118,18 @@ state, checkpoint it and hand off a narrowly scoped task to a fresh session
 instead of repeatedly resuming it.
 
 Run local checks appropriate to the change and available diagnostics before
-asking the user to run them. Request independent review when explicitly asked,
-or for concrete compatibility requirements, substantial structural changes,
-or meaningful performance, correctness, or security risk. Routine, low-impact
-edits do not require independent review. Review against the requirements and
-risks. Only report independent review as passed after the reviewer checks the
-final implementation, including all fixes, and finds no new actionable issues.
-Changes following a review require another review before claiming it passed.
+asking the user to run them. For tasks that change Rust code, run the read-only
+`code-quality-reviewer` on the stable final diff after local checks and before
+reporting completion. This is standing authorization for that review. Use it
+for whole-repository audits only when requested.
+
+Request general independent review when explicitly asked, or for concrete
+compatibility requirements, substantial structural changes, or meaningful
+performance, correctness, or security risk. Routine, low-impact edits do not
+require general review. Review against the requirements and risks. Only report
+independent review as passed after the reviewer checks the final implementation,
+including all fixes, and finds no new actionable issues. Changes following a
+review require another review before claiming it passed.
 
 Distinguish observed checks from proposed or skipped checks. Completion
 markers and checkpoints are not proof of completion. Tool lists and

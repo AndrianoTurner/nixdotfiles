@@ -8,8 +8,8 @@ let
       writer = false;
     };
     implementer-fast = {
-      model = "gpt-6-luna";
-      thinking = "high";
+      model = "gpt-6.2-sol";
+      thinking = "low";
       description = "Complete scoped implementation with a clear approach";
       body = ./agents/worker.md;
       writer = true;
@@ -26,6 +26,13 @@ let
       thinking = "xhigh";
       description = "Independent read-only review of a stable final diff";
       body = ./agents/reviewer.md;
+      writer = false;
+    };
+    code-quality-reviewer = {
+      model = "gpt-6.2-sol";
+      thinking = "high";
+      description = "Read-only Rust idiom and maintainability review";
+      body = ./agents/code-quality-reviewer.md;
       writer = false;
     };
     checker = {
