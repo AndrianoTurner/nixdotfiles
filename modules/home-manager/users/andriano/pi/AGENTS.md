@@ -98,6 +98,8 @@ Route reconnaissance to `scout`, routine scoped implementation to
 `implementer-hard`, deterministic checks to `checker`, and warranted
 independent review to `reviewer`. Luna or DeepSeek may be selected when the
 user explicitly requests the alternative; never silently change models.
+When delegating to DeepSeek, use `deepseek/deepseek-flash`, not
+`deepseek/deepseek-v4-pro`.
 Use the main agent's current provider unless the user explicitly requests a
 different provider. If no suitable subagent is available on that provider, ask
 before switching providers.
